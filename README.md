@@ -34,9 +34,9 @@ make docker-logs
 
 #### Accéder aux conteneurs
 
-    Backend : `make docker-backend-sh`
-    Frontend : `make docker-client-sh`
-    AI Service : `make docker-ai-sh`
+    Backend : make docker-backend-sh
+    Frontend : make docker-client-sh
+    AI Service : make docker-ai-sh
 
 #### 📌 Configuration
 
