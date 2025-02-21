@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  backend:
+    build: 
+      context: ./calliope-backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./calliope-backend:/app
+    depends_on:
+      - ai
+    environment:
+      - NODE_ENV=production
+
+  client:
+    build: 
+      context: ./calliope-client
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./calliope-client:/app
+      # - /app/node_modules
+    depends_on:
+      - backend
+      - ai
+    environment:
+      - VITE_API_URL=http://localhost:5000
+    restart: always
+
+  ai:
+    build: 
+      context: ./calliope-ai
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./calliope-ai:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
