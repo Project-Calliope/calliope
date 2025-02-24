@@ -1,9 +1,14 @@
 # Variables
 COMPOSE_FILE = docker-compose.yml
+COMPOSE_FILE_DEV = docker-compose.dev.yml
 
 # Démarrer les conteneurs
 docker-up:
 	docker compose -f $(COMPOSE_FILE) up -d --build
+
+# Démarrer les conteneurs en mode développement
+docker-up-dev:
+	docker compose -f $(COMPOSE_FILE_DEV) up -d --build
 
 # Arrêter les conteneurs
 docker-down:
@@ -26,5 +31,5 @@ docker-client-sh:
 	docker exec -it calliope-client sh
 
 # Accéder au shell du service AI
-docker-ai-sh:
+docker-ai-sh:docker-compose.yml
 	docker exec -it calliope-ai sh
