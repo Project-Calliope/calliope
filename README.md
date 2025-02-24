@@ -17,6 +17,11 @@ Ce projet utilise Docker pour exécuter trois services :
 make docker-up
 ```
 
+#### Démarrer les servives en mode développement
+```sh
+make docker-up-dev
+```
+
 #### Arrêter les services
 ```sh
 make docker-down
