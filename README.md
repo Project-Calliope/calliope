@@ -21,6 +21,7 @@ make docker-up
 ```sh
 make docker-up-dev
 ```
+Permet de démarrer le backend en hot-relaod
 
 #### Arrêter les services
 ```sh
