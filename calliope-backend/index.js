@@ -25,6 +25,9 @@ app.get('/api', (req, res) => {
   res.send(`${process.env.JWT_TOKEN}`)
 })
 
+const audioRoutes = require('./routes/audio.routes')
+app.use('/api/audio', audioRoutes)
+
 app.listen(port, () => {
   console.log(`Calliope Backend listening on port ${port}`)
 })
