@@ -2,8 +2,6 @@
 
 module.exports = (req, res, next) => {
 
-    console.log(req.body);
-
     if (!req.file) {
       return res.status(400).json({ message: 'Aucun fichier reçu' });
     }
@@ -16,11 +14,10 @@ module.exports = (req, res, next) => {
   
     // Vérification de la taille du fichier (par exemple, 10 Mo)
     const maxSize = 10 * 1024 * 1024; // 10 Mo en octets
-    if (req.file > maxSize) {
+    if (req.file.size > maxSize) {
       return res.status(400).json({ message: 'Le fichier est trop volumineux. La taille maximale est de 10 Mo.' });
     }
   
-    // Si tout est valide, on passe au prochain middleware ou au contrôleur
     next();
   };
   
