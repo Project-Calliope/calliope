@@ -24,4 +24,5 @@ docker-restart:
 
 tests:
 	docker compose run -T --rm backend npm run test
+	docker compose run -T --rm ai pytest
 
