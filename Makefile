@@ -35,4 +35,4 @@ docker-ai-sh:docker-compose.yml
 	docker exec -it calliope-ai sh
 
 tests:
-	docker compose run --rm backend npm install && npm run test
+	docker compose run --rm backend npm run test
