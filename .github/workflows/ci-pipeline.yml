@@ -1,3 +1,13 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches:
+      - main # ou la branche sur laquelle tu veux que l'action se déclenche
+  pull_request:
+    branches:
+      - main # ou la branche sur laquelle tu veux que l'action se déclenche
+
 jobs:
   build:
     runs-on: ubuntu-latest
