@@ -10,7 +10,7 @@ services:
     depends_on:
       - ai
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=developpement
     env_file:
       - ./calliope-backend/.env
 
