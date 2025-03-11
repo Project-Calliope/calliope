@@ -2,14 +2,20 @@ FROM node:18-alpine
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+# Copier package.json et package-lock.json dans le conteneur
+COPY package*.json ./
 
+# Utiliser npm ci pour installer les dépendances selon package-lock.json
 RUN npm install
+
+# Lancer les audits de sécurité
 RUN npm audit
 RUN npm audit fix
 
+# Copier le reste du code source dans le conteneur
 COPY . .
 
 EXPOSE 5173
 
-CMD [ "npm", "run", "dev" ]
+# Lancer le serveur de développement
+CMD ["npm", "run", "dev"]

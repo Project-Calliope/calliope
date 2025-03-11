@@ -8,4 +8,4 @@ RUN npm audit fix
 COPY . .
 
 EXPOSE 5000
-CMD ["npm", "run", "start:dev"]
+CMD ["npm", "run", "start"]

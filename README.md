@@ -38,6 +38,11 @@ make docker-restart
 make docker-logs
 ```
 
+### Exécuter les tests
+```sh
+make tests
+```
+
 #### Accéder aux conteneurs
 
     Backend : make docker-backend-sh
