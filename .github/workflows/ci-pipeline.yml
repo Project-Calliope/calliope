@@ -51,7 +51,6 @@ jobs:
       - name: Run tests
         run: make tests
 
-
       # Optionnellement, arrêter les conteneurs
       - name: Stop containers
         run: make docker-down
