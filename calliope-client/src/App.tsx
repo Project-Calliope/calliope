@@ -1,3 +1,5 @@
+import FileUploadDialog from "./components/upload-file"
+
 function App() {
 
   return (
@@ -9,6 +11,7 @@ function App() {
         <p className="mt-3 text-lg">
           This is a Calliope app.
         </p>
+        <FileUploadDialog />
       </div>
     </>
   )
