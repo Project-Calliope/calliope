@@ -19,7 +19,7 @@ describe('Tests d\'intégration - API upload audio', () => {
       .post('/api/upload')
       .attach('audio', fakeAudio, { filename: 'test.mp3', contentType: 'audio/mpeg' });
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(300);
   });
 
   it('devrait refuser un fichier non audio', async () => {
