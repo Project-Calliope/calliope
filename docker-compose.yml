@@ -7,10 +7,9 @@ services:
       - "5000:5000"
     volumes:
       - ./calliope-backend:/app
+      - /app/node_modules
     depends_on:
       - ai
-    environment:
-      - NODE_ENV=production
     env_file:
       - ./calliope-backend/.env
 
