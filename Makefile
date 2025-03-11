@@ -33,3 +33,6 @@ docker-client-sh:
 # Accéder au shell du service AI
 docker-ai-sh:docker-compose.yml
 	docker exec -it calliope-ai sh
+
+tests:
+	docker compose run --rm backend npm run test
