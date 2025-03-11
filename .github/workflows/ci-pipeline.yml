@@ -40,13 +40,6 @@ jobs:
       - name: Build and start containers
         run: make docker-up
 
-      - name: Install dependencies
-        run: docker compose run --rm backend npm install
-
-      - name: Verify Jest installation
-        run: docker compose run --rm backend npm list jest
-
-
       # Exécuter les tests avec Make
       - name: Run tests
         run: make tests
