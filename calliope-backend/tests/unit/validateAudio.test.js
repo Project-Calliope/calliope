@@ -1,7 +1,7 @@
 const validateAudio = require('../../middleware/validateAudio.middleware'); // Import du middleware
 
 describe('Middleware validateAudio', () => {
-  // 🔹 Mocks pour req, res et next
+  //  Mocks pour req, res et next
   const mockRequest = (file) => ({ file }); // Simule req.file
   const mockResponse = () => {
     const res = {};
