@@ -31,6 +31,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
 
+      - name: Set environment variables for Docker
+        run: |
+          echo "NODE_ENV=production" >> .env
+          echo "DATABASE_URL=your_database_url" >> .env  # Ajoute toutes les variables nécessaires
+
       # Construire et démarrer les conteneurs avec Make
       - name: Build and start containers
         run: make docker-up
