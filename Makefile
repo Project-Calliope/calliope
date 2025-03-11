@@ -4,11 +4,12 @@ COMPOSE_FILE_DEV = docker-compose.dev.yml
 
 # Démarrer les conteneurs
 docker-up:
-	docker compose -f $(COMPOSE_FILE) up -d --build
+	# Démarre les conteneurs avec la construction, nettoyage des conteneurs orphelins
+	docker compose -f $(COMPOSE_FILE) up -d --build --remove-orphans
 
 # Démarrer les conteneurs en mode développement
 docker-up-dev:
-	docker compose -f $(COMPOSE_FILE_DEV) up -d --build
+	docker compose -f $(COMPOSE_FILE_DEV) up -d --build --remove-orphans
 
 # Arrêter les conteneurs
 docker-down:
@@ -24,7 +25,7 @@ docker-restart:
 
 # Accéder au shell du backend
 docker-backend-sh:
-	docker exec -it calliope-backend sh
+	docker exec -it calliope-backend-1 sh
 
 # Accéder au shell du client
 docker-client-sh:
@@ -32,7 +33,7 @@ docker-client-sh:
 
 # Accéder au shell du service AI
 docker-ai-sh:
-	docker exec -it calliope-ai sh
+	docker exec -it calliope-ai-1 sh
 
 tests:
 	docker compose run --rm backend npm run test
