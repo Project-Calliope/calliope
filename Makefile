@@ -31,7 +31,7 @@ docker-client-sh:
 	docker exec -it calliope-client sh
 
 # Accéder au shell du service AI
-docker-ai-sh:docker-compose.yml
+docker-ai-sh:
 	docker exec -it calliope-ai sh
 
 tests:
