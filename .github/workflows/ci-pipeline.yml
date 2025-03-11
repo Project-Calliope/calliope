@@ -44,10 +44,6 @@ jobs:
       - name: Run tests
         run: make tests
 
-      # Afficher les logs
-      - name: Display logs
-        run: make docker-logs
-
       # Optionnellement, arrêter les conteneurs
       - name: Stop containers
         run: make docker-down
