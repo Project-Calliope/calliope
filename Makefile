@@ -28,6 +28,7 @@ tests:
 lint:
 	docker compose run -T --rm backend npm run lint:fix
 	docker compose run -T --rm client npm run lint:fix
+	docker compose run -T --rm ai sh -c "black . && pylint ."
 
 
 pre-push:
