@@ -1,15 +1,11 @@
 const request = require('supertest');
 const express = require('express');
-const multer = require('multer');
 const audioRoutes = require('../../routes/audio.routes');
 
 const app = express();
 app.use('/api', audioRoutes);
 
-describe('Tests d\'intégration - API upload audio', () => {
-
-    const mockRequest = (audio) => ({ audio });
-        
+describe('Tests d\'intégration - API upload audio', () => {       
 
   it('devrait accepter un fichier audio valide', async () => {
 
