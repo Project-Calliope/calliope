@@ -30,5 +30,5 @@ lint:
 
 
 pre-push:
-	make tests
 	make lint
+	make tests
