@@ -25,3 +25,10 @@ docker-restart:
 tests:
 	docker compose run -T --rm backend npm run test
 
+lint:
+	docker compose run -T --rm backend npm run lint
+
+
+pre-push:
+	make tests
+	make lint
