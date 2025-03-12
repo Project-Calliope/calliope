@@ -14,15 +14,11 @@ def transcribe_audio():
 
     audio_file = request.files['file']
 
-    print(audio_file)
-
     # TODO: Check if the filename is empty
     if audio_file.filename == '':
         return jsonify({"error": "Audio file is required"}), 400
 
     file_format = audio_file.mimetype.split('/')[1]
-
-    print(file_format)
 
     # TODO: Check if the file format is supported
     if file_format not in SUPPORTED_FORMATS:
