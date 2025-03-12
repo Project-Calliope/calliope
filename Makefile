@@ -23,6 +23,5 @@ docker-restart:
 	make docker-down && make docker-up
 
 tests:
-	docker compose run -T --rm backend npm run test
-	docker compose run -T --rm ai pytest
+	docker compose run -T --rm backend npm run test && docker compose run -T --rm ai pytest
 
