@@ -7,7 +7,8 @@
     "test:unit": "jest tests/unit/",
     "test:integration": "jest tests/integration/",
     "test:watch": "jest --watch",
-    "lint": "eslint . --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
     "start:dev": "nodemon -L index.js",
     "start": "node index.js"
   },

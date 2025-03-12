@@ -26,7 +26,8 @@ tests:
 	docker compose run -T --rm backend npm run test
 
 lint:
-	docker compose run -T --rm backend npm run lint
+	docker compose run -T --rm backend npm run lint:fix
+	docker compose run -T --rm client npm run lint:fix
 
 
 pre-push:
