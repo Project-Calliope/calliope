@@ -6,4 +6,4 @@ RUN pip install --no-cache-dir -r requirement.txt
 COPY . .
 
 EXPOSE 8000
-CMD ["python", "api/app.py"]
+CMD ["python", "app.py"]
