@@ -26,10 +26,14 @@ tests:
 	docker compose run -T --rm backend npm run test
 
 lint:
-	docker compose run -T --rm backend npm run lint:fix
-	docker compose run -T --rm client npm run lint:fix
-	docker compose run -T --rm ai sh -c "black . && pylint ."
+	docker compose exec -T backend npm run lint:fix
+	docker compose exec -T client npm run lint:fix
+	docker compose exec -T ai sh -c "black . && pylint ."
 
+format:
+	docker compose exec -T ai black .
+	docker compose exec -T backend npm run format
+	docker compose exec -T client npm run format
 
 pre-push:
 	make lint
