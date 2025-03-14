@@ -30,7 +30,7 @@ lint:
 	docker compose exec -T client npm run lint:fix
 	docker compose exec -T ai sh -c "black . && pylint ."
 
-formatage:
+format:
 	docker compose exec -T ai black .
 	docker compose exec -T backend npm run format
 	docker compose exec -T client npm run format
