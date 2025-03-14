@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button, Dialog } from "@radix-ui/themes";
 import AudioService from "../services/AudioService";
+import toast from "react-hot-toast";
 
 const FileUploadDialog = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -18,21 +20,36 @@ const FileUploadDialog = () => {
       try {
         const response = await AudioService.upload(selectedFile);
         console.log("Réponse de l'API :", response);
+        setIsDialogOpen(false); // Fermer la boîte de dialogue après l'envoi
+        toast.success("Fichier envoyé avec succès !");
       } catch (error) {
-        console.error("Erreur lors de l'envoi du fichier :", error);
+        if (error instanceof Error) {
+          toast.error("Erreur lors de l'envoi du fichier : " + error.message);
+          console.error("Erreur lors de l'envoi du fichier :", error);
+        } else {
+          toast.error("Erreur lors de l'envoi du fichier");
+          console.error("Erreur lors de l'envoi du fichier :", error);
+        }
       }
-      // Ajouter ici la logique d'upload du fichier
     }
   };
 
   return (
-    <Dialog.Root>
+    <Dialog.Root
+      open={isDialogOpen}
+      onOpenChange={() => setIsDialogOpen(!isDialogOpen)}
+    >
       {/* Bouton pour ouvrir la modale */}
       <Dialog.Trigger>
-        <Button>Téléverser un fichier audio</Button>
+        <Button onClick={() => setIsDialogOpen(true)}>
+          Téléverser un fichier audio
+        </Button>
       </Dialog.Trigger>
 
-      <Dialog.Content className="p-4 bg-white rounded-lg shadow-lg">
+      <Dialog.Content
+        className="p-4 bg-white rounded-lg shadow-lg"
+        style={{ zIndex: 1 }}
+      >
         <Dialog.Title className="text-xl font-bold">
           Envoyer un fichier
         </Dialog.Title>
@@ -61,7 +78,12 @@ const FileUploadDialog = () => {
 
         {/* Bouton pour fermer le dialogue */}
         <Dialog.Close>
-          <Button color="red" variant="solid" className="mt-4">
+          <Button
+            color="red"
+            variant="solid"
+            className="mt-4"
+            onClick={() => setIsDialogOpen(false)}
+          >
             Fermer
           </Button>
         </Dialog.Close>
