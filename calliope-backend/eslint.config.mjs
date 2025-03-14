@@ -1,6 +1,6 @@
-import globals from 'globals';
-import pluginJs from '@eslint/js';
-import pluginPrettier from 'eslint-plugin-prettier';
+import globals from "globals";
+import pluginJs from "@eslint/js";
+import pluginPrettier from "eslint-plugin-prettier";
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
@@ -12,14 +12,14 @@ export default [
         ...globals.jest,
       },
     },
-    ignores: ['coverage'],
+    ignores: ["coverage"],
     plugins: {
       prettier: pluginPrettier,
     },
     rules: {
-      'prettier/prettier': [
-        'error',
-        { singleQuote: true, trailingComma: 'all' },
+      "prettier/prettier": [
+        "error",
+        { singleQuote: true, trailingComma: "all" },
       ],
     },
   },
