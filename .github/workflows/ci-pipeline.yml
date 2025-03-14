@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main # ou la branche sur laquelle tu veux que l'action se déclenche
+      - development
   pull_request:
     branches:
       - main # ou la branche sur laquelle tu veux que l'action se déclenche
+      - development
 
 jobs:
   build:

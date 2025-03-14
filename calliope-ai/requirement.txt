@@ -2,3 +2,5 @@ flask
 pytest
 werkzeug
 pydub
+pylint
+black

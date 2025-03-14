@@ -14,14 +14,16 @@ services:
   client:
     build:
       context: ./calliope-client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "5173:5173"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Spécifiquement pour Linux
     volumes:
+      - /app/node_modules
       - ./calliope-client:/app
-       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:5000
+        - NODE_ENV=development
 
   ai:
     build:
