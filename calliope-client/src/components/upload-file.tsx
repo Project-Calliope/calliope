@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Dialog } from "@radix-ui/themes";
+import AudioService from "../services/AudioService";
 
 const FileUploadDialog = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -10,10 +11,16 @@ const FileUploadDialog = () => {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedFile) {
       console.log("Fichier sélectionné :", selectedFile.name);
+      try {
+        const response = await AudioService.upload(selectedFile);
+        console.log("Réponse de l'API :", response);
+      } catch (error) {
+        console.error("Erreur lors de l'envoi du fichier :", error);
+      }
       // Ajouter ici la logique d'upload du fichier
     }
   };
@@ -37,7 +44,7 @@ const FileUploadDialog = () => {
         <form onSubmit={handleSubmit} className="mt-4">
           <input
             type="file"
-            accept="audio/*"
+            accept="audio/mpeg, audio/wav, audio/mp3, audio/m4a, audio/x-wav"
             onChange={handleFileChange}
             className="block w-full border p-2 rounded-md"
           />
