@@ -13,9 +13,9 @@ def transcribe_audio_route():
     audio_file = request.files['file']
 
     handler = APIHandler()
-    res, transcript = handler.transcribe(audio_file)
+    success, message = handler.transcribe(audio_file)
 
-    if not res:
-        return jsonify({"error": transcript}), 400
+    if not success:
+        return jsonify({"error": message}), 415
 
-    return jsonify({"transcript": transcript}), 200
+    return jsonify({"transcript": message}), 200

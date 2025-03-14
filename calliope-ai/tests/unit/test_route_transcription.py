@@ -119,4 +119,4 @@ def test_transcribe_audio_formats(client, mock_audio_file, format):
     data = response.get_json()
 
     assert 'error' in data
-    assert data['error'] == 'Unsupported audio format'
+    assert data['error'] == "Audio file is corrupted or in an unsupported format."
