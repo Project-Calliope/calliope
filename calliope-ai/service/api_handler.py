@@ -19,8 +19,8 @@ class APIHandler:
         self.data_manager.load_audio(audio_file)
 
         if not self.data_manager.validate_data():
-            return "Audio file is corrupted or in an unsupported format."
+            return False, "Audio file is corrupted or in an unsupported format."
 
         # TODO
 
-        return "Transcription placeholder"
+        return True, "Transcription placeholder"
