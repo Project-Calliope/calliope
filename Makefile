@@ -25,3 +25,12 @@ docker-restart:
 tests:
 	docker compose run -T --rm backend npm run test
 
+lint:
+	docker compose run -T --rm backend npm run lint:fix
+	docker compose run -T --rm client npm run lint:fix
+	docker compose run -T --rm ai sh -c "black . && pylint ."
+
+
+pre-push:
+	make lint
+	make tests

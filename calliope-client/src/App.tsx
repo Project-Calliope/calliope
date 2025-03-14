@@ -14,7 +14,7 @@ function App() {
         <FileUploadDialog />
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
