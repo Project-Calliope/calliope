@@ -38,7 +38,7 @@ class DataManager:
             return True
 
         except Exception as e:
-            return False, "Audio file is corrupted or in an unsupported format."
+            return False
 
     def preprocess_audio(self):
         """

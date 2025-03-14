@@ -55,18 +55,16 @@ def test_validate_data_audio_invalid(data_manager):
     )
 
     data_manager.load_audio(mock_file)
-    result, err = data_manager.validate_data()
+    result = data_manager.validate_data()
 
     assert result is False
-    assert err == "Audio file is corrupted or in an unsupported format."
 
 @pytest.mark.parametrize('format', ['txt', 'jpg', 'mp4'])
 def test_validate_data_audio_formats(data_manager, mock_audio_file, format):
     mock_file = mock_audio_file(format)
 
     data_manager.load_audio(mock_file)
-    result, err = data_manager.validate_data()
+    result = data_manager.validate_data()
 
     assert result is False
-    assert err == "Audio file is corrupted or in an unsupported format."
 
