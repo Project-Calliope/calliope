@@ -31,13 +31,10 @@ class DataManager:
             raise ValueError("No audio file loaded")
 
         try:
-            audio = AudioSegment.from_file(self.audio.stream)
-            
-            audio.channels
-
+            AudioSegment.from_file(self.audio.stream)
             return True
 
-        except Exception as e:
+        except Exception:
             return False
 
     def preprocess_audio(self):
