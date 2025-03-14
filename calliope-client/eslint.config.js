@@ -17,7 +17,7 @@ export default tseslint.config(
     plugins: {
       "react-hooks": reactHooks,
       "react-refresh": reactRefresh,
-      prettier: pluginPrettier,
+      // prettier: pluginPrettier,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -25,10 +25,10 @@ export default tseslint.config(
         "warn",
         { allowConstantExport: true },
       ],
-      "prettier/prettier": [
-        "error",
-        { singleQuote: true, trailingComma: "all" },
-      ],
+      // "prettier/prettier": [
+      //   "error",
+      //   { singleQuote: true, trailingComma: "all" },
+      // ],
     },
   },
 );
