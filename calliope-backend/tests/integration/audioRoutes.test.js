@@ -26,7 +26,7 @@ describe("Tests d'intégration - API upload audio", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.message).toBe(
-      "Le fichier doit être un fichier audio (MP3, WAV).",
+      "Le fichier doit être un fichier audio (MP3, WAV, M4A, MPEG).",
     );
   });
 
