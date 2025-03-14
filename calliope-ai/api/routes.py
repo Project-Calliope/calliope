@@ -5,7 +5,7 @@ transcribe_audio = Blueprint('transcribe_audio', __name__)
 
 @transcribe_audio.route("/transcribe", methods=["POST"])
 def transcribe_audio_route():
-    """Route to accept audio file for transcription."""
+    """Route for transcription."""
     
     if 'file' not in request.files:
         return jsonify({"error": "Audio file is required"}), 400
