@@ -1,5 +1,4 @@
 from pydub import AudioSegment
-from pydub.exceptions import CouldntDecodeError
 
 
 class DataManager:
@@ -38,12 +37,8 @@ class DataManager:
 
             return True
 
-        except CouldntDecodeError:
-            print("Audio file is corrupted or in an unsupported format.")
-            return False
         except Exception as e:
-            print(f"Error during validation: {e}")
-            return False
+            return False, "Audio file is corrupted or in an unsupported format."
 
     def preprocess_audio(self):
         """
