@@ -31,9 +31,9 @@ lint:
 	docker compose run -T --rm ai sh -c "black . && pylint ."
 
 formatage:
-	docker compose run -T --rm ai sh -c "black ."
-	docker compose run -T --rm backend npm run format
-	docker compose run -T --rm client npm run format
+	docker compose exec -T ai black .
+	docker compose exec -T backend npm run format
+	docker compose exec -T client npm run format
 
 pre-push:
 	make lint
