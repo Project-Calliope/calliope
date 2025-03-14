@@ -16,7 +16,7 @@ module.exports = (req, res, next) => {
   console.log(req.file.mimetype);
   if (!allowedMimeTypes.includes(req.file.mimetype)) {
     return res.status(400).json({
-      message: "Le fichier doit être un fichier audio (MP3, WAV). ????",
+      message: "Le fichier doit être un fichier audio (MP3, WAV, M4A, MPEG).",
     });
   }
 

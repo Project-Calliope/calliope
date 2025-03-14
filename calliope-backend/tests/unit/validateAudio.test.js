@@ -28,7 +28,7 @@ describe("Middleware validateAudio", () => {
 
     expect(res.status).toHaveBeenCalledWith(400); // Code 400
     expect(res.json).toHaveBeenCalledWith({
-      message: "Le fichier doit être un fichier audio (MP3, WAV).",
+      message: "Le fichier doit être un fichier audio (MP3, WAV, M4A, MPEG).",
     });
   });
 
