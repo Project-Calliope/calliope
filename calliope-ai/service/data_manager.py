@@ -19,7 +19,6 @@ class DataManager:
         """
         self.audio = audio_file
 
-
     def validate_data(self):
         """
         Validate that the audio file is valid (correct format and readable).

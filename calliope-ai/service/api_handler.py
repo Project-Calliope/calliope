@@ -1,7 +1,8 @@
 from service.data_manager import DataManager
 
+
 class APIHandler:
-    
+
     def __init__(self):
         self.data_manager = DataManager()
         self.model = None

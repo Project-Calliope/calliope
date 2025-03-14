@@ -15,6 +15,7 @@ app = Flask(__name__)
 
 app.register_blueprint(transcribe_audio, url_prefix="/api")
 
+
 @app.route("/")
 def home():
     """
