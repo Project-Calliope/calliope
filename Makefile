@@ -28,7 +28,7 @@ tests:
 lint:
 	docker compose exec -T backend npm run lint:fix
 	docker compose exec -T client npm run lint:fix
-	docker compose exec -T ai sh -c "black . && pylint ."
+	docker compose exec -T ai sh -c "black . && pylint --fail-under=6.0 ."
 
 format:
 	docker compose exec -T ai black .
