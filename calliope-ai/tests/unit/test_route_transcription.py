@@ -1,20 +1,19 @@
-import pytest
-
-from werkzeug.datastructures import FileStorage
 from io import BytesIO
-from app import app
+
+import pytest
 from pydub import AudioSegment
+from fastapi.testclient import TestClient
+
+from app import app
 
 
 @pytest.fixture
 def client():
     """
-    Fixture to initialize a Flask test client.
+    Fixture to initialize a FastAPI test client.
     Used to simulate HTTP requests to the API.
     """
-    app.config["TESTING"] = True
-    with app.test_client() as client:
-        yield client
+    return TestClient(app)
 
 
 @pytest.fixture
@@ -37,20 +36,20 @@ def mock_audio_file():
 
         if format == "mp3":
             audio.export(byte_io, format="mp3")
+            mime_type = "audio/mpeg"
         elif format == "wav":
             audio.export(byte_io, format="wav")
+            mime_type = "audio/wav"
         elif format == "m4a":
             audio.export(byte_io, format="ipod")
+            mime_type = "audio/mp4"
+        else:
+            byte_io.write(b"fake data")  # Fichier corrompu/non valide
+            mime_type = "application/octet-stream"
 
         byte_io.seek(0)
 
-        mock_file = FileStorage(
-            stream=byte_io,
-            filename=f"test_audio.{format}",
-            content_type=f"audio/{format}",
-        )
-
-        return mock_file
+        return byte_io, mime_type
 
     return _create_mock_audio
 
@@ -58,24 +57,16 @@ def mock_audio_file():
 @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
 def test_transcribe_valid_audio(client, mock_audio_file, audio_format):
     """
-    Tests the `/api/transcribe` route with valid audio files in various formats.
-
-    Verifies that transcription occurs correctly for supported audio formats
-    (wav, mp3, m4a).
-
-    Parameters:
-        client: Flask test client fixture.
-        mock_audio_file: Fixture to create a mock audio file.
-        audio_format (str): The audio format being tested ('wav', 'mp3', 'm4a').
+    Test de la route `/api/transcribe` avec des fichiers audio valides.
     """
-    audio_file = mock_audio_file(audio_format)
+    audio_data, mime_type = mock_audio_file(audio_format)
+    files = {"file": (f"test.{audio_format}", audio_data, mime_type)}
 
-    response = client.post("/api/transcribe", data={"file": audio_file})
+    response = client.post("/api/transcribe", files=files)
 
     assert response.status_code == 200
 
-    json_data = response.get_json()
-
+    json_data = response.json()
     assert "transcript" in json_data
     assert isinstance(json_data["transcript"], str)
 
@@ -87,37 +78,38 @@ def test_transcribe_audio_missing_file(client):
     Verifies that the API returns a 400 error with the message 'Audio file is required'.
 
     Parameters:
-        client: Flask test client fixture.
+        client: fasapi test client fixture.
     """
     response = client.post("/api/transcribe")
 
     assert response.status_code == 400
 
-    data = response.get_json()
+    data = response.json()
 
-    assert "error" in data
-    assert data["error"] == "Audio file is required"
+    print("data content: ", data, "________________")
+
+    assert "detail" in data
+    assert data["detail"] == "Audio file is required"
 
 
-@pytest.mark.parametrize("format", ["txt", "jpg", "mp4"])
-def test_transcribe_audio_formats(client, mock_audio_file, format):
+@pytest.mark.parametrize("file_format", ["txt", "jpg", "mp4"])
+def test_transcribe_invalid_formats(client, mock_audio_file, file_format):
     """
-    Tests the `/api/transcribe` route with unsupported file formats.
+    Test de la route `/api/transcribe` avec des fichiers non-audio.
 
-    Verifies that the API returns a 415 error for unsupported audio formats.
+    Vérifie que l'API retourne une erreur 415 avec le message 'Audio file is corrupted or in an unsupported format'.
 
     Parameters:
-        client: Flask test client fixture.
-        mock_audio_file: Fixture to create a mock audio file.
-        format (str): The audio format being tested ('txt', 'jpg', 'mp4').
+        client: Fixture du client de test fastapi.
+        mock_audio_file: Fixture pour créer un fichier audio simulé.
+        file_format (str): Le format du fichier à tester.
     """
-    mock_file = mock_audio_file(format)
+    file_data, mime_type = mock_audio_file(file_format)
+    files = {"file": (f"test.{file_format}", file_data, mime_type)}
 
-    response = client.post("/api/transcribe", data={"file": mock_file})
+    response = client.post("/api/transcribe", files=files)
 
     assert response.status_code == 415
-
-    data = response.get_json()
-
-    assert "error" in data
-    assert data["error"] == "Audio file is corrupted or in an unsupported format."
+    assert response.json() == {
+        "detail": "Audio file is corrupted or in an unsupported format."
+    }

@@ -1,7 +1,17 @@
+"""
+This module contains the DataManager class, which is responsible for managing
+the audio data used in the transcription process.
+"""
+
 from pydub import AudioSegment
+from fastapi import UploadFile
 
 
 class DataManager:
+    """ "
+    Class to manage audio data for transcription.
+    """
+
     def __init__(self):
         """
         Initializes the DataManager instance.
@@ -10,7 +20,7 @@ class DataManager:
         self.audio = None
         self.segmented_audio = []
 
-    def load_audio(self, audio_file):
+    def load_audio(self, audio_file: UploadFile):
         """
         Loads the audio file into the DataManager.
 
@@ -30,7 +40,7 @@ class DataManager:
             raise ValueError("No audio file loaded")
 
         try:
-            AudioSegment.from_file(self.audio.stream)
+            AudioSegment.from_file(self.audio.file)
             return True
 
         except Exception:
@@ -38,7 +48,8 @@ class DataManager:
 
     def preprocess_audio(self):
         """
-        Placeholder for the audio preprocessing method, such as splitting the audio into smaller parts.
+        Placeholder for the audio preprocessing method, such as splitting
+        the audio into smaller parts.
         (To be implemented later.)
         """
         pass
