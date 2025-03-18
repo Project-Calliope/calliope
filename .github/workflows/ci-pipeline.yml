@@ -35,8 +35,8 @@ jobs:
 
       - name: Set environment variables for Docker
         run: |
-          echo "NODE_ENV=development" >> calliope-backend/.env
-          echo "DATABASE_URL=your_database_url" >> calliope-backend/.env
+          echo "NODE_ENV=development" >> calliope-backend/.env.prod
+          echo "DATABASE_URL=your_database_url" >> calliope-backend/.env.prod
           echo "NODE_ENV=development" > calliope-db/.env
           echo "POSTGRES_DB=db_name" >> calliope-db/.env
           echo "POSTGRES_USER=db_user" >> calliope-db/.env
