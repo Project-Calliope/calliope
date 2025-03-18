@@ -2,8 +2,8 @@ import pytest
 
 from io import BytesIO
 from pydub import AudioSegment
-from werkzeug.datastructures import FileStorage
 from service.data_manager import DataManager
+from fastapi import UploadFile
 
 
 @pytest.fixture
@@ -11,25 +11,26 @@ def mock_audio_file():
 
     def _create_mock_audio(format):
 
-        audio = AudioSegment.silent(duration=100)
+        audio = AudioSegment.silent(duration=100)  # 100ms
 
         byte_io = BytesIO()
 
-        if format == "mp3":
-            audio.export(byte_io, format="mp3")
-        elif format == "wav":
-            audio.export(byte_io, format="wav")
-        elif format == "m4a":
-            audio.export(byte_io, format="mp4")
+        format_dict = {
+            "mp3": ("mp3", "audio/mpeg"),
+            "wav": ("wav", "audio/wav"),
+            "m4a": ("ipod", "audio/mp4"),
+        }
+
+        if format in format_dict:
+            audio.export(byte_io, format=format_dict[format][0])
+            mime_type = format_dict[format][1]
+        else:
+            byte_io.write(b"fake data")
+            mime_type = "application/octet-stream"
+
         byte_io.seek(0)
 
-        mock_file = FileStorage(
-            stream=byte_io,
-            filename=f"test_audio.{format}",
-            content_type=f"audio/{format}",
-        )
-
-        return mock_file
+        return UploadFile(filename=f"test_audio.{format}", file=byte_io)
 
     return _create_mock_audio
 
@@ -42,21 +43,15 @@ def data_manager():
 @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
 def test_validate_data_valid_audio(data_manager, mock_audio_file, audio_format):
     mock_file = mock_audio_file(audio_format)
-
     data_manager.load_audio(mock_file)
-    result = data_manager.validate_data()
 
+    result = data_manager.validate_data()
     assert result is True
 
 
 def test_validate_data_audio_invalid(data_manager):
-    corrupted_data = b"corrupted data"
-
-    mock_file = FileStorage(
-        stream=BytesIO(corrupted_data),
-        filename="invalid_audio.mp3",
-        content_type="audio/mp3",
-    )
+    corrupted_data = BytesIO(b"corrupted data")
+    mock_file = UploadFile(filename="invalid_audio.mp3", file=corrupted_data)
 
     data_manager.load_audio(mock_file)
     result = data_manager.validate_data()

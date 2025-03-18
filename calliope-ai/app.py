@@ -7,24 +7,30 @@ Routes:
     / (home): Returns a welcome message.
 """
 
-from flask import Flask
+# from flask import Flask
+# from api.routes import transcribe_audio
+
+
+from fastapi import FastAPI
+import uvicorn
 from api.routes import transcribe_audio
 
+app = FastAPI()
+# app = Flask(__name__)
 
-app = Flask(__name__)
+app.include_router(transcribe_audio, prefix="/api")
+# app.register_blueprint(transcribe_audio, url_prefix="/api")
 
-app.register_blueprint(transcribe_audio, url_prefix="/api")
 
-
-@app.route("/")
-def home():
+@app.get("/")
+async def home():
     """
-    A simple Flask route that returns a welcome message.
+    A simple FastAPI route that returns a welcome message.
     Returns:
         dict: A dictionary containing a welcome message.
     """
-    return {"message": "Hello from Flask API"}
+    return {"message": "Hello from FastAPI API"}
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

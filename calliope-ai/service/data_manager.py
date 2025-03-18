@@ -1,4 +1,5 @@
 from pydub import AudioSegment
+from fastapi import UploadFile
 
 
 class DataManager:
@@ -10,7 +11,7 @@ class DataManager:
         self.audio = None
         self.segmented_audio = []
 
-    def load_audio(self, audio_file):
+    def load_audio(self, audio_file: UploadFile):
         """
         Loads the audio file into the DataManager.
 
@@ -30,7 +31,7 @@ class DataManager:
             raise ValueError("No audio file loaded")
 
         try:
-            AudioSegment.from_file(self.audio.stream)
+            AudioSegment.from_file(self.audio.file)
             return True
 
         except Exception:

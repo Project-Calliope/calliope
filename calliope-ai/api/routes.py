@@ -1,22 +1,28 @@
-from flask import Blueprint, request, jsonify
+from fastapi import APIRouter, UploadFile, File, HTTPException
 from service.api_handler import APIHandler
+from typing import Optional
 
-transcribe_audio = Blueprint("transcribe_audio", __name__)
+transcribe_audio = APIRouter()
 
 
-@transcribe_audio.route("/transcribe", methods=["POST"])
-def transcribe_audio_route():
-    """Route for transcription."""
+@transcribe_audio.post("/transcribe")
+async def transcribe_audio_route(file: Optional[UploadFile] = File(None)):
+    """
+    Route for audio transcription.
 
-    if "file" not in request.files:
-        return jsonify({"error": "Audio file is required"}), 400
+    Args:
+        file (UploadFile): The uploaded audio file.
 
-    audio_file = request.files["file"]
+    Returns:
+        dict: A JSON response with the transcript or an error message.
+    """
+    if file is None:
+        raise HTTPException(status_code=400, detail="Audio file is required")
 
     handler = APIHandler()
-    success, message = handler.transcribe(audio_file)
+    success, message = handler.transcribe(file)
 
     if not success:
-        return jsonify({"error": message}), 415
+        raise HTTPException(status_code=415, detail=message)
 
-    return jsonify({"transcript": message}), 200
+    return {"transcript": message}
