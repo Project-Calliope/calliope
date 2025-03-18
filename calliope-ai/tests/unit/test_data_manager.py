@@ -1,6 +1,7 @@
+from io import BytesIO
+
 import pytest
 
-from io import BytesIO
 from pydub import AudioSegment
 from service.data_manager import DataManager
 from fastapi import UploadFile

@@ -1,6 +1,14 @@
+"""
+This module contains the FastAPI routes for the audio transcription service.
+It provides
+- a POST route for transcribing audio files
+"""
+
+from typing import Optional
+
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from service.api_handler import APIHandler
-from typing import Optional
+
 
 transcribe_audio = APIRouter()
 
