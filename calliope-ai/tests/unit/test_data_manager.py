@@ -1,10 +1,10 @@
-from io import BytesIO
-
 import pytest
 
 from pydub import AudioSegment
-from service.data_manager import DataManager
 from fastapi import UploadFile
+
+from io import BytesIO
+from service.data_manager import DataManager
 
 
 @pytest.fixture
@@ -30,10 +30,10 @@ def mock_audio_file():
 
         if format in format_dict:
             audio.export(byte_io, format=format_dict[format][0])
-            mime_type = format_dict[format][1]
+            # mime_type = format_dict[format][1]
         else:
             byte_io.write(b"fake data")
-            mime_type = "application/octet-stream"
+            # mime_type = "application/octet-stream"
 
         byte_io.seek(0)
 
