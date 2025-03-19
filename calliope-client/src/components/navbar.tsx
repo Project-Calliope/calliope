@@ -1,4 +1,3 @@
-import { NavigationMenu } from "radix-ui";
 import "../global.css";
 
 const NavBar = () => {
