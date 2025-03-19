@@ -1,9 +1,11 @@
+import NavBar from "./components/navbar";
 import FileUploadDialog from "./components/upload-file";
 import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <>
+      <NavBar />
       <Toaster containerStyle={{ zIndex: 9999 }} />
       {/* <div className="toaster"> */}
       {/* </div> */}

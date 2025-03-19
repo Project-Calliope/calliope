@@ -1,6 +1,7 @@
-import { useState } from "react";
-import { Button, Dialog } from "@radix-ui/themes";
+import { Component, useState } from "react";
+import { Dialog } from "@radix-ui/themes";
 import AudioService from "../services/AudioService";
+import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 
 const FileUploadDialog = () => {
@@ -41,9 +42,7 @@ const FileUploadDialog = () => {
     >
       {/* Bouton pour ouvrir la modale */}
       <Dialog.Trigger>
-        <Button onClick={() => setIsDialogOpen(true)}>
-          Téléverser un fichier audio
-        </Button>
+        <Button>Envoyer un fichier</Button>
       </Dialog.Trigger>
 
       <Dialog.Content
@@ -68,7 +67,7 @@ const FileUploadDialog = () => {
           <Button
             type="submit"
             color="blue"
-            variant="solid"
+            variant="destructive"
             className="mt-4"
             disabled={!selectedFile}
           >
@@ -80,7 +79,7 @@ const FileUploadDialog = () => {
         <Dialog.Close>
           <Button
             color="red"
-            variant="solid"
+            variant="destructive"
             className="mt-4"
             onClick={() => setIsDialogOpen(false)}
           >
