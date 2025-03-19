@@ -9,19 +9,21 @@ services:
       - ./calliope-backend:/app
       - /app/node_modules
     env_file:
-      - ./calliope-backend/.env
+      - ./calliope-backend/.env.dev
 
   client:
     build:
       context: ./calliope-client
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "5173:5173"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Spécifiquement pour Linux
     volumes:
+      - /app/node_modules
       - ./calliope-client:/app
-       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:5000
+        - NODE_ENV=development
 
   ai:
     build:
@@ -33,3 +35,17 @@ services:
       - ./calliope-ai:/app
     environment:
       - PYTHONUNBUFFERED=1
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./calliope-db/.env
+    volumes:
+      - calliope-db:/var/lib/postgresql/data
+      - ./calliope-db/init-scripts:/docker-entrypoint-initdb.d
+
+volumes:
+  calliope-db:
+

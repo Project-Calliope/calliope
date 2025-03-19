@@ -1,6 +1,6 @@
-const validateAudio = require('../../middleware/validateAudio.middleware'); // Import du middleware
+const validateAudio = require("../../middleware/validateAudio.middleware"); // Import du middleware
 
-describe('Middleware validateAudio', () => {
+describe("Middleware validateAudio", () => {
   //  Mocks pour req, res et next
   const mockRequest = (file) => ({ file }); // Simule req.file
   const mockResponse = () => {
@@ -11,8 +11,8 @@ describe('Middleware validateAudio', () => {
   };
   const mockNext = jest.fn(); // Simule next()
 
-  it('Passe si le fichier est valide', () => {
-    const req = mockRequest({ mimetype: 'audio/mpeg', size: 5000000 });
+  it("Passe si le fichier est valide", () => {
+    const req = mockRequest({ mimetype: "audio/mpeg", size: 5000000 });
     const res = mockResponse();
 
     validateAudio(req, res, mockNext);
@@ -20,20 +20,20 @@ describe('Middleware validateAudio', () => {
     expect(mockNext).toHaveBeenCalled(); // next() doit être appelé
   });
 
-  it('Rejette un fichier non audio', () => {
-    const req = mockRequest({ mimetype: 'image/png', size: 5000000 });
+  it("Rejette un fichier non audio", () => {
+    const req = mockRequest({ mimetype: "image/png", size: 5000000 });
     const res = mockResponse();
 
     validateAudio(req, res, mockNext);
 
     expect(res.status).toHaveBeenCalledWith(400); // Code 400
     expect(res.json).toHaveBeenCalledWith({
-      message: 'Le fichier doit être un fichier audio (MP3, WAV).',
+      message: "Le fichier doit être un fichier audio (MP3, WAV, M4A, MPEG).",
     });
   });
 
-  it('Rejette un fichier trop volumineux', () => {
-    const req = mockRequest({ mimetype: 'audio/mpeg', size: 11 * 1024 * 1024 });
+  it("Rejette un fichier trop volumineux", () => {
+    const req = mockRequest({ mimetype: "audio/mpeg", size: 11 * 1024 * 1024 });
     const res = mockResponse();
 
     validateAudio(req, res, mockNext);
@@ -41,7 +41,7 @@ describe('Middleware validateAudio', () => {
     expect(res.status).toHaveBeenCalledWith(400);
     expect(res.json).toHaveBeenCalledWith({
       message:
-        'Le fichier est trop volumineux. La taille maximale est de 10 Mo.',
+        "Le fichier est trop volumineux. La taille maximale est de 10 Mo.",
     });
   });
 
@@ -52,6 +52,6 @@ describe('Middleware validateAudio', () => {
     validateAudio(req, res, mockNext);
 
     expect(res.status).toHaveBeenCalledWith(400);
-    expect(res.json).toHaveBeenCalledWith({ message: 'Aucun fichier reçu' });
+    expect(res.json).toHaveBeenCalledWith({ message: "Aucun fichier reçu" });
   });
 });

@@ -1,3 +1,9 @@
-flask
+pytest
+werkzeug
+pydub
 pylint
 black
+fastapi
+uvicorn
+python-multipart
+httpx

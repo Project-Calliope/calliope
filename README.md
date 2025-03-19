@@ -52,7 +52,7 @@ make tests
 #### 📌 Configuration
 
     Le frontend est accessible sur : http://localhost:5173
-    L'API backend est sur : http://localhost:3000
+    L'API backend est sur : http://localhost:5000
     Le service AI est sur : http://localhost:8000
 
 #### 🛠 Développement
