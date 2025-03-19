@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { FilePen } from "lucide-react";
+import { SquarePen } from "lucide-react";
 
 import {
   Sidebar,
@@ -13,6 +13,7 @@ import {
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { Button } from "./ui/button";
+import FileUploadDialog from "./upload-file";
 
 // This is sample data.
 const data = {
@@ -58,8 +59,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
 
       <Button variant="outline" className="mt-4 mb-2 ml-2 mr-2">
-        <FilePen /> Nouvelle note
+        <SquarePen /> Nouvelle note
       </Button>
+      <FileUploadDialog />
       <NavMain items={data.navMain} />
       <SidebarRail />
     </Sidebar>

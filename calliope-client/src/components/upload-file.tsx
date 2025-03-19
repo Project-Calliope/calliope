@@ -45,8 +45,10 @@ const FileUploadDialog = () => {
   return (
     <>
       <AlertDialog>
-        <AlertDialogTrigger>
-          <Button variant="outline">Envoyer un fichier</Button>
+        <AlertDialogTrigger className="ml-2 mr-2">
+          <Button variant="outline" className="w-full">
+            Envoyer un fichier
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogTitle>Envoyer un fichier</AlertDialogTitle>
