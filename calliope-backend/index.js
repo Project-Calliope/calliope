@@ -57,8 +57,8 @@ app.get("/test/db", async (req, res) => {
 
 app.get("/test/ai", async (req, res) => {
   try {
-    const aiAxios = require("./config/ai.config");
-    const response = await aiAxios.get("/");
+    const calliopeAiAPI = require("./config/ai.config");
+    const response = await calliopeAiAPI.get("/");
     console.log(response.data);
     res.json(response.data);
   } catch (error) {
