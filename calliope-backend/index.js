@@ -55,6 +55,22 @@ app.get("/test/db", async (req, res) => {
   }
 });
 
+app.get("/test/ai", async (req, res) => {
+  try {
+    const aiAxios = require("./config/ai.config");
+    const response = await aiAxios.get("/");
+    console.log(response.data);
+    res.json(response.data);
+  } catch (error) {
+    console.error("Erreur de connexion au serveur AI:", error);
+    res.status(500).json({
+      success: false,
+      message: "Erreur de connexion au serveur AI",
+      error: error.message,
+    });
+  }
+});
+
 const audioRoutes = require("./routes/audio.routes");
 app.use("/api/audio", audioRoutes);
 
