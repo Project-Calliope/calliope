@@ -6,6 +6,7 @@ to load and validate audio files, then performs transcription to text using a mo
 """
 
 from service.data_manager import DataManager
+from service.model_manager import ModelManager
 
 
 class APIHandler:
@@ -28,7 +29,7 @@ class APIHandler:
         although the model integration is not yet implemented.
         """
         self.data_manager = DataManager()
-        self.model = None
+        self.model_manager = ModelManager()
 
     def transcribe(self, audio_file):
         """
@@ -51,6 +52,6 @@ class APIHandler:
         if not self.data_manager.validate_data():
             return False, "Audio file is corrupted or in an unsupported format."
 
-        # TODO: Implement transcription via a model
+        self.model_manager.load_model("model")
 
-        return True, "Transcription placeholder"
+        return True, self.model_manager.predict(audio_file)
