@@ -49,7 +49,6 @@ class APIHandler:
                    - False, error message if the file is corrupted or in an unsupported format.
         """
 
-
         self.data_manager.load_audio(file)
 
         valid_audio = self.data_manager.validate_data()
@@ -58,4 +57,3 @@ class APIHandler:
             return False, "Audio file is corrupted or in an unsupported format."
 
         return True, self.model_manager.predict(self.data_manager.audio_file)
-    

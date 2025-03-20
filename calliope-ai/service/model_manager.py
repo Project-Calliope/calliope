@@ -6,7 +6,7 @@ from pydub import AudioSegment
 
 
 class Model:
-    
+
     def __init__(self):
         self.model = whisper.load_model("small")
 
@@ -23,7 +23,7 @@ class ModelManager:
         self.model = None
 
     def load_model(self):
-            self.model = Model()
+        self.model = Model()
 
     def predict(self, data):
 

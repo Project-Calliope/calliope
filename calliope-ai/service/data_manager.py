@@ -41,7 +41,7 @@ class DataManager:
 
         try:
             audio = AudioSegment.from_file(self.audio_file["filecontent"])
-            self.audio_file = tmp_file=NamedTemporaryFile(delete=False)
+            self.audio_file = tmp_file = NamedTemporaryFile(delete=False)
             tmp_file.write(audio.export(format="wav").read())
             tmp_file.close()
             return True

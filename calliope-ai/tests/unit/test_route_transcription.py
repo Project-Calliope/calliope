@@ -51,11 +51,11 @@ def mock_audio_file():
             mime_type = "application/octet-stream"
 
         byte_io.seek(0)
-        headers = {
-            "content_type": mime_type
-        }
+        headers = {"content_type": mime_type}
 
-        file = UploadFile(filename=f"test_audio.{format}", headers=headers, file=byte_io)
+        file = UploadFile(
+            filename=f"test_audio.{format}", headers=headers, file=byte_io
+        )
 
         return file
 
@@ -126,9 +126,7 @@ def test_transcribe_real_audio(client):
     """
     Teste si la transcription du fichier audio réel correspond bien au texte attendu.
     """
-    expected_transcription = (
-        "BUT, WITH FULL RAVISHMENT THE HOURS OF PRIME, SINGING, RECEIVED THEY IN THE MIDST OF LEAVES THAT EVER BORE A BURDEN TO THEIR RHYMES."
-    )
+    expected_transcription = "BUT, WITH FULL RAVISHMENT THE HOURS OF PRIME, SINGING, RECEIVED THEY IN THE MIDST OF LEAVES THAT EVER BORE A BURDEN TO THEIR RHYMES."
 
     audio_filename = "test.wav"
     audio_path = os.path.join(os.path.dirname(__file__), audio_filename)
@@ -146,7 +144,6 @@ def test_transcribe_real_audio(client):
     assert "transcript" in json_data
     assert isinstance(json_data["transcript"], str)
 
-    assert json_data["transcript"].strip().upper() == expected_transcription, (
-        f"Transcription incorrecte : {json_data['transcript']}"
-    )
-
+    assert (
+        json_data["transcript"].strip().upper() == expected_transcription
+    ), f"Transcription incorrecte : {json_data['transcript']}"

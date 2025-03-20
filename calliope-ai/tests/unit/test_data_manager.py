@@ -48,10 +48,12 @@ def mock_audio_file():
 
     return _create_mock_audio
 
+
 @pytest.fixture
 def data_manager():
     """Fixture to initialize a DataManager instance."""
     return DataManager()
+
 
 @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
 def test_load_audio(data_manager, mock_audio_file, audio_format):
