@@ -3,8 +3,8 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto;
 CREATE TABLE UTILISATEUR (
     private_user_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     public_user_id UUID DEFAULT gen_random_uuid() NOT NULL,
-    username VARCHAR NOT NULL,
-    email VARCHAR NOT NULL CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
+    username VARCHAR NOT NULL UNIQUE,
+    email VARCHAR NOT NULL UNIQUE CHECK (email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$'),
     encrypted_password VARCHAR NOT NULL
 );
 
