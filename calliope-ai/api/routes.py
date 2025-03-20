@@ -1,20 +1,20 @@
 """
 This module contains the FastAPI routes for the audio transcription service.
-It provides
-- a POST route for transcribing audio files
+
+It provides :
+- /transcribe : a POST route for transcribing audio files
 """
 
-from typing import Optional
-
 from fastapi import APIRouter, UploadFile, File, HTTPException
+
+from typing import Optional
 from service.api_handler import APIHandler
 
 
 transcribe_audio = APIRouter()
 
-
 @transcribe_audio.post("/transcribe")
-async def transcribe_audio_route(file: Optional[UploadFile] = File(None)):
+async def transcribe_audio_route(file: UploadFile = File(None)):
     """
     Route for audio transcription.
 
@@ -26,6 +26,16 @@ async def transcribe_audio_route(file: Optional[UploadFile] = File(None)):
     """
     if file is None:
         raise HTTPException(status_code=400, detail="Audio file is required")
+    
+    filename = file.filename
+    filetype = file.content_type
+    filecontent = file.file
+
+    file = {
+        "filename": filename,
+        "filetype": filetype,
+        "filecontent": filecontent
+    }
 
     handler = APIHandler()
     success, message = handler.transcribe(file)

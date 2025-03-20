@@ -4,7 +4,7 @@ the audio data used in the transcription process.
 """
 
 from pydub import AudioSegment
-from fastapi import UploadFile
+from tempfile import NamedTemporaryFile
 
 
 class DataManager:
@@ -17,17 +17,17 @@ class DataManager:
         Initializes the DataManager instance.
         It will hold the audio file and its segmented parts.
         """
-        self.audio = None
+        self.audio_file = None
         self.segmented_audio = []
 
-    def load_audio(self, audio_file: UploadFile):
+    def load_audio(self, file):
         """
         Loads the audio file into the DataManager.
 
         Parameters:
             audio_file (FileStorage): The audio file to be loaded.
         """
-        self.audio = audio_file
+        self.audio_file = file
 
     def validate_data(self):
         """
@@ -36,11 +36,14 @@ class DataManager:
         - Valid audio files (formats recognized and readable)
         - Corrupted files or unreadable files (raises CouldntDecodeError)
         """
-        if self.audio is None:
+        if self.audio_file is None:
             raise ValueError("No audio file loaded")
 
         try:
-            AudioSegment.from_file(self.audio.file)
+            audio = AudioSegment.from_file(self.audio_file["filecontent"])
+            self.audio_file = tmp_file=NamedTemporaryFile(delete=False)
+            tmp_file.write(audio.export(format="wav").read())
+            tmp_file.close()
             return True
 
         except Exception:

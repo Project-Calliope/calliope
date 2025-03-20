@@ -18,34 +18,58 @@ def mock_audio_file():
             format: audio format to create
         """
 
-        audio = AudioSegment.silent(duration=100)  # 100ms
+        audio = AudioSegment.silent(duration=100)
 
         byte_io = BytesIO()
 
         format_dict = {
-            "mp3": ("mp3", "audio/mpeg"),
+            "mp3": ("mp3", "audio/mp3"),
             "wav": ("wav", "audio/wav"),
-            "m4a": ("ipod", "audio/mp4"),
+            "m4a": ("ipod", "audio/m4a"),
         }
 
         if format in format_dict:
             audio.export(byte_io, format=format_dict[format][0])
-            # mime_type = format_dict[format][1]
+            mime_type = format_dict[format][1]
+
         else:
             byte_io.write(b"fake data")
-            # mime_type = "application/octet-stream"
+            mime_type = "application/octet-stream"
 
         byte_io.seek(0)
 
-        return UploadFile(filename=f"test_audio.{format}", file=byte_io)
+        file = {
+            "filename": f"test_audio.{format}",
+            "filetype": mime_type,
+            "filecontent": byte_io,
+        }
+
+        return file
 
     return _create_mock_audio
-
 
 @pytest.fixture
 def data_manager():
     """Fixture to initialize a DataManager instance."""
     return DataManager()
+
+@pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
+def test_load_audio(data_manager, mock_audio_file, audio_format):
+    """Test the loading of audio files in various formats.
+
+    param :
+        data_manager: DataManager instance (fixture)
+        mock_audio_file: mock_audio_file fixture
+        audio_format: audio format to test
+    """
+
+    mock_file = mock_audio_file(audio_format)
+    data_manager.load_audio(mock_file)
+
+    assert data_manager.audio_file is not None
+    assert data_manager.audio_file["filename"] == f"test_audio.{audio_format}"
+    assert data_manager.audio_file["filetype"] == f"audio/{audio_format}"
+    assert data_manager.audio_file["filecontent"] == mock_file["filecontent"]
 
 
 @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])

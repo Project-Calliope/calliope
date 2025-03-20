@@ -1,8 +1,11 @@
+import pytest
+import os
+
 from io import BytesIO
 
-import pytest
 from pydub import AudioSegment
 from fastapi.testclient import TestClient
+from fastapi import UploadFile
 
 from app import app
 
@@ -36,20 +39,25 @@ def mock_audio_file():
 
         if format == "mp3":
             audio.export(byte_io, format="mp3")
-            mime_type = "audio/mpeg"
+            mime_type = "audio/mp3"
         elif format == "wav":
             audio.export(byte_io, format="wav")
             mime_type = "audio/wav"
         elif format == "m4a":
             audio.export(byte_io, format="ipod")
-            mime_type = "audio/mp4"
+            mime_type = "audio/m4a"
         else:
-            byte_io.write(b"fake data")  # Fichier corrompu/non valide
+            byte_io.write(b"fake data")
             mime_type = "application/octet-stream"
 
         byte_io.seek(0)
+        headers = {
+            "content_type": mime_type
+        }
 
-        return byte_io, mime_type
+        file = UploadFile(filename=f"test_audio.{format}", headers=headers, file=byte_io)
+
+        return file
 
     return _create_mock_audio
 
@@ -59,8 +67,7 @@ def test_transcribe_valid_audio(client, mock_audio_file, audio_format):
     """
     Test de la route `/api/transcribe` avec des fichiers audio valides.
     """
-    audio_data, mime_type = mock_audio_file(audio_format)
-    files = {"file": (f"test.{audio_format}", audio_data, mime_type)}
+    files = {"file": mock_audio_file(audio_format)}
 
     response = client.post("/api/transcribe", files=files)
 
@@ -113,3 +120,33 @@ def test_transcribe_invalid_formats(client, mock_audio_file, file_format):
     assert response.json() == {
         "detail": "Audio file is corrupted or in an unsupported format."
     }
+
+
+def test_transcribe_real_audio(client):
+    """
+    Teste si la transcription du fichier audio réel correspond bien au texte attendu.
+    """
+    expected_transcription = (
+        "BUT, WITH FULL RAVISHMENT THE HOURS OF PRIME, SINGING, RECEIVED THEY IN THE MIDST OF LEAVES THAT EVER BORE A BURDEN TO THEIR RHYMES."
+    )
+
+    audio_filename = "test.wav"
+    audio_path = os.path.join(os.path.dirname(__file__), audio_filename)
+
+    assert os.path.exists(audio_path), f"Fichier manquant : {audio_path}"
+
+    with open(audio_path, "rb") as audio_file:
+        files = {"file": (audio_filename, audio_file, "audio/wav")}
+
+        response = client.post("/api/transcribe", files=files)
+
+    assert response.status_code == 200
+
+    json_data = response.json()
+    assert "transcript" in json_data
+    assert isinstance(json_data["transcript"], str)
+
+    assert json_data["transcript"].strip().upper() == expected_transcription, (
+        f"Transcription incorrecte : {json_data['transcript']}"
+    )
+
