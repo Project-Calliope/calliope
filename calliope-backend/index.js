@@ -74,6 +74,9 @@ app.get("/test/ai", async (req, res) => {
 const audioRoutes = require("./routes/audio.routes");
 app.use("/api/audio", audioRoutes);
 
+const authRoutes = require("./routes/auth.routes");
+app.use("/api/auth", authRoutes);
+
 app.listen(port, () => {
   console.log(`Calliope Backend listening on port ${port}`);
 });
