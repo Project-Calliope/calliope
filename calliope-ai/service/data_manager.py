@@ -43,7 +43,8 @@ class DataManager:
             AudioSegment.from_file(self.audio.file)
             return True
 
-        except Exception:
+        except Exception as e:
+            print("Error validating audio data:", e)
             return False
 
     def preprocess_audio(self):
