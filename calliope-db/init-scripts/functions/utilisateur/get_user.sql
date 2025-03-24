@@ -6,7 +6,7 @@ RETURNS TABLE (
 ) LANGUAGE plpgsql AS $$
 BEGIN
     RETURN QUERY
-    SELECT public_user_id, username, email
+    SELECT u.public_user_id, u.username, u.email
     FROM UTILISATEUR u
     WHERE u.public_user_id = p_public_user_id;
 END;
