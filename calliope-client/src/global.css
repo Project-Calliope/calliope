@@ -118,3 +118,39 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Styles pour MDXEditor */
+.prose h1 {
+  @apply text-4xl font-bold mt-6 mb-4 leading-tight;
+}
+.prose h2 {
+  @apply text-3xl font-semibold mt-5 mb-3 leading-snug;
+}
+.prose h3 {
+  @apply text-2xl font-medium mt-4 mb-2 leading-snug;
+}
+.prose h4 {
+  @apply text-xl font-medium mt-3 mb-2 leading-normal;
+}
+.prose h5 {
+  @apply text-lg font-medium mt-2 mb-1 leading-normal;
+}
+.prose h6 {
+  @apply text-base font-normal mt-2 mb-1 leading-relaxed;
+}
+.prose ul {
+  list-style-type: disc; /* ✅ Rétablit les puces */
+  padding-left: 1.5rem;
+}
+
+.prose ol {
+  list-style-type: decimal; /* ✅ Rétablit la numérotation */
+  padding-left: 1.5rem;
+}
+
+.prose blockquote {
+  border-left: 4px solid #ccc; /* ✅ Ajoute une barre sur le côté */
+  padding-left: 1rem;
+  color: #555;
+  font-style: italic;
+}
