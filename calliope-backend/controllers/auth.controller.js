@@ -35,7 +35,7 @@ exports.signin = async (req, res) => {
       { expiresIn: jwtConfig.expiresIn },
     );
     result.token = `Bearer ${token}`;
-    res.status(200).json(result);
+    return res.status(200).json(result);
   }
-  res.status(400).json(result);
+  return res.status(400).json(result);
 };

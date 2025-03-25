@@ -3,13 +3,10 @@ import UserAdapter from "@/models/UserAdapter";
 import axios from "axios";
 
 class UserService {
-  static async signin(
-    username: string,
-    password: string,
-  ): Promise<User | null> {
+  static async signin(email: string, password: string): Promise<User | null> {
     try {
       const response = await axios.post("/api/auth/signin", {
-        username,
+        email,
         password,
       });
       return UserAdapter.adapt(response.data);

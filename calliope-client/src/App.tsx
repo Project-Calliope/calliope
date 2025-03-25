@@ -1,10 +1,13 @@
+import AuthentificationLayout from "./layouts/AuthentificationLayout";
 import Page from "./Page";
 import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <>
-      <Page />
+      <AuthentificationLayout>
+        <Page />
+      </AuthentificationLayout>
 
       <Toaster containerStyle={{ zIndex: 9999 }} />
       {/* <div className="toaster"> */}
