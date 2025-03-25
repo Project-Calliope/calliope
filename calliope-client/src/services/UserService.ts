@@ -9,6 +9,7 @@ class UserService {
         email,
         password,
       });
+      localStorage.setItem("token", response.data.token);
       return UserAdapter.adapt(response.data);
     } catch (error) {
       console.error(error);
