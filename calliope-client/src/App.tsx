@@ -1,6 +1,7 @@
 import LibraryPage from "@/pages/LibraryPage";
 import { Routes, Route } from "react-router-dom";
 import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 
 function App() {
   return (
@@ -9,7 +10,7 @@ function App() {
         <Routes>
           <Route path="/library" element={<LibraryPage />} />
           <Route path="/login" element={<LoginPage />} />
-          {/*   <Route path="/register" element={<RegisterPage />} /> */}
+          <Route path="/register" element={<RegisterPage />} />
         </Routes>
       </div>
     </>
