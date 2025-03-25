@@ -86,6 +86,32 @@ class User {
       };
     }
   }
+
+  static async whoami(public_user_id) {
+    try {
+      const result = await pool.query(`SELECT * FROM get_user($1)`, [
+        public_user_id,
+      ]);
+      if (result.rows.length > 0) {
+        return {
+          success: true,
+          user: result.rows[0],
+        };
+      } else {
+        return {
+          success: false,
+          message: "User does not exist",
+        };
+      }
+    } catch (error) {
+      console.error("Error getting user information:", error);
+      return {
+        success: false,
+        message: "Error getting user information",
+        error: error.message,
+      };
+    }
+  }
 }
 
 exports.User = User;
