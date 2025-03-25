@@ -45,6 +45,8 @@ services:
     volumes:
       - calliope-db:/var/lib/postgresql/data
       - ./calliope-db/init-scripts:/docker-entrypoint-initdb.d
+      - ./calliope-db/init-scripts/schemas:/schemas
+      - ./calliope-db/init-scripts/functions:/functions
 
 volumes:
   calliope-db:
