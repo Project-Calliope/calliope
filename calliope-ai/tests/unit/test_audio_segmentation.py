@@ -4,6 +4,7 @@ from pydub import AudioSegment, generators
 from fastapi import UploadFile
 from service.data_manager import DataManager
 from service.audio_processing.silence_based_segmentation import SilenceBasedSegmentation
+from service.audio_processing.fixed_duration_segment import FixedDurationSegmentation
 from service.audio_processing.audio_processor import AudioProcessor
 
 
@@ -52,7 +53,7 @@ def data_manager():
 
 class TestAudioSegmentation:
 
-    def test_segmentation(self, data_manager, mock_audio_file):
+    def test_segmentation_silence(self, data_manager, mock_audio_file):
         """Test the segmentation method of the AudioProcessor class."""
         audio_file = mock_audio_file("wav")
         segmentation_strategy = SilenceBasedSegmentation()
@@ -66,3 +67,22 @@ class TestAudioSegmentation:
         assert all(
             isinstance(segment, AudioSegment) for segment in segments
         ), "Not all segments are AudioSegment instances."
+
+    def test_segmentation_duration(self, data_manager, mock_audio_file):
+        """Test the segmentation method of the AudioProcessor class."""
+        audio_file = mock_audio_file("wav")
+        segmentation_strategy = FixedDurationSegmentation(duration_ms=5000)
+        audio_processor = AudioProcessor(data_manager, segmentation_strategy)
+
+        data_manager.load_audio(audio_file)
+        audio_processor.preprocess_audio()
+        segments = data_manager.get_segmented_audio()
+
+        assert len(segments) > 0, "No segments were created."
+        assert all(
+            isinstance(segment, AudioSegment) for segment in segments
+        ), "Not all segments are AudioSegment instances."
+
+        # Check if the duration of each segment is correct (except the las one)
+        for segment in segments[:-1]:
+            assert len(segment) == 5000, "Segment duration is not correct."
