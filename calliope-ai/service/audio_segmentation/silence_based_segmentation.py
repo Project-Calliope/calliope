@@ -11,7 +11,6 @@ class SilenceBasedSegmentation(SegmentationStrategy):
     def segment(self, audio_file: UploadFile) -> list:
         """Segmentation du fichier audio en fonction des silences"""
         audio_segment = AudioSegment.from_file(audio_file.file)
-        print("audio.type", type(audio_segment))
         silence_thresh = -40
         min_silence_len = 500
         silence_threshold = audio_segment.dBFS - silence_thresh

@@ -12,6 +12,7 @@ class FixedDurationSegmentation(SegmentationStrategy):
         self.duration_ms = duration_ms
 
     def segment(self, audio: UploadFile) -> list:
+        print("FixedDurationSegmentation")
         audio = AudioSegment.from_file(audio.file)
         segments = []
         for i in range(0, len(audio), self.duration_ms):

@@ -59,11 +59,9 @@ class TestAudioSegmentation:
         """Test the segmentation method of the AudioProcessor class."""
         audio_file = mock_audio_file("wav")
         segmentation_strategy = SilenceBasedSegmentation()
-        audio_processor = AudioProcessor(data_manager, segmentation_strategy)
+        audio_processor = AudioProcessor(audio_file, segmentation_strategy)
 
-        data_manager.load_audio(audio_file)
-        audio_processor.preprocess_audio()
-        segments = data_manager.get_segmented_audio()
+        segments = audio_processor.preprocess_audio()
 
         assert len(segments) > 0, "No segments were created."
         assert all(
@@ -74,11 +72,9 @@ class TestAudioSegmentation:
         """Test the segmentation method of the AudioProcessor class."""
         audio_file = mock_audio_file("wav")
         segmentation_strategy = FixedDurationSegmentation(duration_ms=5000)
-        audio_processor = AudioProcessor(data_manager, segmentation_strategy)
+        audio_processor = AudioProcessor(audio_file, segmentation_strategy)
 
-        data_manager.load_audio(audio_file)
-        audio_processor.preprocess_audio()
-        segments = data_manager.get_segmented_audio()
+        segments = audio_processor.preprocess_audio()
 
         assert len(segments) > 0, "No segments were created."
         assert all(
