@@ -1,4 +1,3 @@
-import LoginPage from "@/pages/LoginPage";
 import UserService from "@/services/UserService";
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -21,6 +20,7 @@ const AuhentificationLayout = ({ children }: { children: ReactNode }) => {
           setIsConnected(false);
         }
       } catch (error) {
+        console.error(error);
         setIsLoaded(true);
         setIsConnected(false);
       }
@@ -35,7 +35,7 @@ const AuhentificationLayout = ({ children }: { children: ReactNode }) => {
         navigate("/login");
       }
     }
-  }, [isLoaded]);
+  }, [isLoaded, isConnected, navigate]);
 
   return (
     <div className="authentification-layout">

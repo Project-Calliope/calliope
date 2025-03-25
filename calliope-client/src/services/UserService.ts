@@ -50,6 +50,7 @@ class UserService {
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error) {
+      console.error(error);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       return null;
