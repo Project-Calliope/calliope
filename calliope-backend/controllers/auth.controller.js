@@ -37,4 +37,5 @@ exports.signin = async (req, res) => {
     result.token = `Bearer ${token}`;
     res.status(200).json(result);
   }
+  res.status(400).json(result);
 };
