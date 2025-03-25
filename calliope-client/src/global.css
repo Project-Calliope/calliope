@@ -154,3 +154,14 @@
   color: #555;
   font-style: italic;
 }
+
+.prose a {
+  color: #1a73e8; /* ✅ Couleur des liens (bleu classique) */
+  text-decoration: underline; /* ✅ Surlignage du lien */
+}
+
+.prose a:hover {
+  color: #0c57d1; /* ✅ Couleur des liens au survol */
+  text-decoration: underline; /* ✅ Maintenir l'underline au survol */
+  cursor: pointer;
+}
