@@ -39,5 +39,20 @@ psql -U $POSTGRES_USER -d $POSTGRES_DB -c "ALTER DEFAULT PRIVILEGES IN SCHEMA pu
 echo "Attribution des privilèges pour $POSTGRES_DEV_USER sur $POSTGRES_DB..."
 psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB TO $POSTGRES_DEV_USER;"
 
+# Exécuter le fichier schema/create-table.sql sur la base de données
+echo "Exécution du script de création des tables..."
+psql -U $POSTGRES_USER -d $POSTGRES_DB -f ./schemas/create_tables.sql
+
+# Exécuter tous les fichiers SQL dans functions/
+echo "Exécution des fonctions SQL..."
+for file in $(find ./functions/ -type f -name "*.sql"); do
+    echo "Exécution de $file..."
+    psql -U $POSTGRES_USER -d $POSTGRES_DB -f "$file"
+done
+
+
+echo "Initialisation terminée."
+
+
 echo "Base de données et utilisateurs créés avec succès."
 
