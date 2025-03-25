@@ -34,6 +34,27 @@ class UserService {
       return null;
     }
   }
+
+  static async whoami(): Promise<User | null> {
+    try {
+      console.log(
+        "localStorage.getItem('token')",
+        localStorage.getItem("token"),
+      );
+      const response = await axios.get("/api/auth/whoami", {
+        headers: {
+          authorization: localStorage.getItem("token"),
+        },
+      });
+      const user = UserAdapter.adapt(response.data);
+      localStorage.setItem("user", JSON.stringify(user));
+      return user;
+    } catch (error) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      return null;
+    }
+  }
 }
 
 export default UserService;
