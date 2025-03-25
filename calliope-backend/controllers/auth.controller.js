@@ -35,6 +35,18 @@ exports.signin = async (req, res) => {
       { expiresIn: jwtConfig.expiresIn },
     );
     result.token = `Bearer ${token}`;
-    res.status(200).json(result);
+    return res.status(200).json(result);
   }
+  return res.status(400).json(result);
+};
+
+exports.whoami = async (req, res) => {
+  const { public_user_id } = req.user;
+
+  const result = await User.whoami(public_user_id);
+  if (result.success) {
+    return res.status(200).json(result);
+  }
+  result.message = "You are not logged in";
+  return res.status(400).json(result);
 };

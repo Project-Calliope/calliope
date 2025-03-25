@@ -1,14 +1,20 @@
-import Page from "./Page";
-import { Toaster } from "react-hot-toast";
+import LibraryPage from "@/pages/LibraryPage";
+import { Routes, Route } from "react-router-dom";
+import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
     <>
-      <Page />
-
-      <Toaster containerStyle={{ zIndex: 9999 }} />
-      {/* <div className="toaster"> */}
-      {/* </div> */}
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/library" element={<LibraryPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </div>
     </>
   );
 }
