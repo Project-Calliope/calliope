@@ -1,4 +1,4 @@
-from service.audio_processing.segmentation_strategy import SegmentationStrategy
+from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
 from service.data_manager import DataManager
 from pydub import AudioSegment
 

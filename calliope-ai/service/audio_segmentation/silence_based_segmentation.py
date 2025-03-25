@@ -1,4 +1,4 @@
-from service.audio_processing.segmentation_strategy import SegmentationStrategy
+from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
 from fastapi import UploadFile
 from pydub import AudioSegment
 

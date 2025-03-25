@@ -3,9 +3,11 @@ import pytest
 from pydub import AudioSegment, generators
 from fastapi import UploadFile
 from service.data_manager import DataManager
-from service.audio_processing.silence_based_segmentation import SilenceBasedSegmentation
-from service.audio_processing.fixed_duration_segment import FixedDurationSegmentation
-from service.audio_processing.audio_processor import AudioProcessor
+from service.audio_segmentation.silence_based_segmentation import (
+    SilenceBasedSegmentation,
+)
+from service.audio_segmentation.fixed_duration_segment import FixedDurationSegmentation
+from service.audio_segmentation.audio_processor import AudioProcessor
 
 
 @pytest.fixture
