@@ -39,6 +39,33 @@ class User {
     }
   }
 
+  static async login(email, password) {
+    try {
+      const result = await pool.query(`SELECT * FROM login_user($1, $2)`, [
+        email,
+        password,
+      ]);
+      if (result.rows.length > 0) {
+        return {
+          success: true,
+          user: result.rows[0],
+        };
+      } else {
+        return {
+          success: false,
+          message: "User does not exist",
+        };
+      }
+    } catch (error) {
+      console.error("Error getting user information:", error);
+      return {
+        success: false,
+        message: "Error getting user information",
+        error: error.message,
+      };
+    }
+  }
+
   static async save(username, email, password) {
     try {
       const result = await pool.query(`SELECT * FROM create_user($1, $2, $3)`, [
