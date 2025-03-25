@@ -56,6 +56,21 @@ class UserService {
       return null;
     }
   }
+
+  static async logout(): Promise<void> {
+    try {
+      const response = await axios.post("/api/auth/logout", {
+        headers: {
+          authorization: localStorage.getItem("token"),
+        },
+      });
+      console.log("response", response);
+    } catch (error) {
+      console.error(error);
+    }
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+  }
 }
 
 export default UserService;
