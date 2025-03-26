@@ -86,8 +86,6 @@ def test_transcribe_audio_missing_file(client):
 
     data = response.json()
 
-    print("data content: ", data, "________________")
-
     assert "detail" in data
     assert data["detail"] == "Audio file is required"
 
