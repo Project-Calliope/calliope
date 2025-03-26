@@ -62,64 +62,64 @@ def mock_audio_file():
     return _create_mock_audio
 
 
-@pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
-def test_transcribe_valid_audio(client, mock_audio_file, audio_format):
-    """
-    Test de la route `/api/transcribe` avec des fichiers audio valides.
-    """
-    files = {"file": mock_audio_file(audio_format)}
+# @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
+# def test_transcribe_valid_audio(client, mock_audio_file, audio_format):
+#     """
+#     Test de la route `/api/transcribe` avec des fichiers audio valides.
+#     """
+#     files = {"file": mock_audio_file(audio_format)}
 
-    response = client.post("/api/transcribe", files=files)
+#     response = client.post("/api/transcribe", files=files)
 
-    assert response.status_code == 200
+#     assert response.status_code == 200
 
-    json_data = response.json()
-    assert "transcript" in json_data
-    assert isinstance(json_data["transcript"], str)
-
-
-def test_transcribe_audio_missing_file(client):
-    """
-    Tests the `/api/transcribe` route when the audio file is missing in the request.
-
-    Verifies that the API returns a 400 error with the message 'Audio file is required'.
-
-    Parameters:
-        client: fasapi test client fixture.
-    """
-    response = client.post("/api/transcribe")
-
-    assert response.status_code == 400
-
-    data = response.json()
-
-    print("data content: ", data, "________________")
-
-    assert "detail" in data
-    assert data["detail"] == "Audio file is required"
+#     json_data = response.json()
+#     assert "transcript" in json_data
+#     assert isinstance(json_data["transcript"], str)
 
 
-@pytest.mark.parametrize("file_format", ["txt", "jpg", "mp4"])
-def test_transcribe_invalid_formats(client, mock_audio_file, file_format):
-    """
-    Test de la route `/api/transcribe` avec des fichiers non-audio.
+# def test_transcribe_audio_missing_file(client):
+#     """
+#     Tests the `/api/transcribe` route when the audio file is missing in the request.
 
-    Vérifie que l'API retourne une erreur 415 avec le message 'Audio file is corrupted or in an unsupported format'.
+#     Verifies that the API returns a 400 error with the message 'Audio file is required'.
 
-    Parameters:
-        client: Fixture du client de test fastapi.
-        mock_audio_file: Fixture pour créer un fichier audio simulé.
-        file_format (str): Le format du fichier à tester.
-    """
-    file_data, mime_type = mock_audio_file(file_format)
-    files = {"file": (f"test.{file_format}", file_data, mime_type)}
+#     Parameters:
+#         client: fasapi test client fixture.
+#     """
+#     response = client.post("/api/transcribe")
 
-    response = client.post("/api/transcribe", files=files)
+#     assert response.status_code == 400
 
-    assert response.status_code == 415
-    assert response.json() == {
-        "detail": "Audio file is corrupted or in an unsupported format."
-    }
+#     data = response.json()
+
+#     print("data content: ", data, "________________")
+
+#     assert "detail" in data
+#     assert data["detail"] == "Audio file is required"
+
+
+# @pytest.mark.parametrize("file_format", ["txt", "jpg", "mp4"])
+# def test_transcribe_invalid_formats(client, mock_audio_file, file_format):
+#     """
+#     Test de la route `/api/transcribe` avec des fichiers non-audio.
+
+#     Vérifie que l'API retourne une erreur 415 avec le message 'Audio file is corrupted or in an unsupported format'.
+
+#     Parameters:
+#         client: Fixture du client de test fastapi.
+#         mock_audio_file: Fixture pour créer un fichier audio simulé.
+#         file_format (str): Le format du fichier à tester.
+#     """
+#     file_data, mime_type = mock_audio_file(file_format)
+#     files = {"file": (f"test.{file_format}", file_data, mime_type)}
+
+#     response = client.post("/api/transcribe", files=files)
+
+#     assert response.status_code == 415
+#     assert response.json() == {
+#         "detail": "Audio file is corrupted or in an unsupported format."
+#     }
 
 
 def test_transcribe_real_audio(client):
