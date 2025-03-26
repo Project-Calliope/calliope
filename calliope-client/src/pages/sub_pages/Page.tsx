@@ -1,4 +1,5 @@
 import { AppSidebar } from "@/components/app-sidebar";
+import TextEditor from "@/components/text-editor";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,48 +15,20 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
-import {
-  MDXEditor,
-  ChangeCodeMirrorLanguage,
-  ConditionalContents,
-  InsertCodeBlock,
-  InsertSandpack,
-  SandpackConfig,
-  ShowSandpackInfo,
-  codeBlockPlugin,
-  codeMirrorPlugin,
-  sandpackPlugin,
-  toolbarPlugin,
-} from "@mdxeditor/editor";
-import "@mdxeditor/editor/style.css";
-
-const defaultSnippetContent = `
-export default function App() {
-return (
-<div className="App">
-<h1>Hello CodeSandbox</h1>
-<h2>Start editing to see some magic happen!</h2>
-</div>
-);
-}
-`.trim();
-
-const simpleSandpackConfig: SandpackConfig = {
-  defaultPreset: "react",
-  presets: [
-    {
-      label: "React",
-      name: "react",
-      meta: "live react",
-      sandpackTemplate: "react",
-      sandpackTheme: "light",
-      snippetFileName: "/App.js",
-      snippetLanguage: "jsx",
-      initialSnippetContent: defaultSnippetContent,
-    },
-  ],
-};
 export default function Page() {
+  const markdown = `# Markdown Text
+  ## Subtitle
+  ### Subsubtitle
+
+  - List item 1
+  - List item 2
+
+  **Bold text**
+  *Italic text*
+  [Link text](https://example.com)
+
+  `;
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -79,40 +52,8 @@ export default function Page() {
             </Breadcrumb>
           </div>
         </header>
-        <MDXEditor
-          markdown="# hello world"
-          plugins={[
-            codeBlockPlugin({ defaultCodeBlockLanguage: "js" }),
-            sandpackPlugin({ sandpackConfig: simpleSandpackConfig }),
-            codeMirrorPlugin({
-              codeBlockLanguages: { js: "JavaScript", css: "CSS" },
-            }),
-            toolbarPlugin({
-              toolbarContents: () => (
-                <ConditionalContents
-                  options={[
-                    {
-                      when: (editor) => editor?.editorType === "codeblock",
-                      contents: () => <ChangeCodeMirrorLanguage />,
-                    },
-                    {
-                      when: (editor) => editor?.editorType === "sandpack",
-                      contents: () => <ShowSandpackInfo />,
-                    },
-                    {
-                      fallback: () => (
-                        <>
-                          <InsertCodeBlock />
-                          <InsertSandpack />
-                        </>
-                      ),
-                    },
-                  ]}
-                />
-              ),
-            }),
-          ]}
-        />
+
+        <TextEditor md_text={markdown} />
       </SidebarInset>
     </SidebarProvider>
   );

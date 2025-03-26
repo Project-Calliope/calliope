@@ -14,34 +14,23 @@ import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { Button } from "./ui/button";
 import FileUploadDialog from "./upload-file";
+import NavItem from "@/models/NavItem";
 
-// This is sample data.
-const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
-
-  navMain: [
-    {
-      title: "Mon répertoire",
-      url: "#",
-      items: [
-        {
-          title: "Dossier 1",
-          url: "#",
-          isActive: false,
-        },
-        {
-          title: "Dossier 2",
-          url: "#",
-        },
-      ],
-      isActive: true,
-    },
-  ],
-};
+// Exemple
+const navMain = new NavItem("Root", "dossier", "#", true, [
+  new NavItem("Folder 1", "dossier", "#", false, [
+    new NavItem("Note 1", "note", "#"),
+    new NavItem("Note 2", "note", "#"),
+  ]),
+  new NavItem("Folder 2", "dossier", "#", false, [
+    new NavItem("Folder 3", "dossier", "#", false, [
+      new NavItem("Folder 4", "dossier", "#", false, [
+        new NavItem("Note 3", "note", "#"),
+        new NavItem("Note 4", "note", "#"),
+      ]),
+    ]),
+  ]),
+]);
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -51,7 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <NavUser user={data.user} />
+                <NavUser />
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -62,7 +51,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SquarePen /> Nouvelle note
       </Button>
       <FileUploadDialog />
-      <NavMain items={data.navMain} />
+      <NavMain navMain={navMain} />
       <SidebarRail />
     </Sidebar>
   );
