@@ -1,6 +1,13 @@
 "use client";
 
-import { ChevronRight, Folder, File } from "lucide-react";
+import {
+  ChevronRight,
+  Folder,
+  FolderPlus,
+  NotebookText,
+  Plus,
+  SquarePen,
+} from "lucide-react";
 import NavItem from "@/models/NavItem";
 import {
   Collapsible,
@@ -11,12 +18,19 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
+  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export function NavMain({ navMain }: { navMain: NavItem }) {
   return (
@@ -62,6 +76,23 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
                   isOpen ? "rotate-90" : ""
                 }`} // Applique l'animation de rotation
               />
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuAction className="hover:bg-gray-200">
+                    <Plus />
+                  </SidebarMenuAction>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent side="right" align="start">
+                  <DropdownMenuItem>
+                    <FolderPlus />
+                    <span>Nouveau dossier</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <SquarePen />
+                    <span>Nouvelle note</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuButton>
           </CollapsibleTrigger>
           <CollapsibleContent className="w-full">
@@ -87,7 +118,7 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
             className="block flex items-center gap-2 w-full"
             style={{ paddingLeft }}
           >
-            <File />
+            <NotebookText />
             <span>{item.title}</span>
           </a>
         </SidebarMenuSubButton>
