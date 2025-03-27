@@ -37,7 +37,13 @@ def mock_audio_file():
 
         byte_io.seek(0)
 
-        return UploadFile(filename=f"test_audio.{format}", file=byte_io)
+        file = {
+            "filename": f"test_audio.{format}",
+            "filetype": mime_type,
+            "filecontent": byte_io,
+        }
+
+        return file
 
     return _create_mock_audio
 
@@ -59,9 +65,9 @@ class TestPreprocessAudio:
         """
         preprocess = PreprocessAudio()
         mock_file = mock_audio_file("mp3")
-        data_manager.load_audio(mock_file)
+        data_manager.load_and_validate_audio(mock_file)
         duration = 10
 
-        result = preprocess.segmentation(data_manager.audio, duration)
+        result = preprocess.segmentation(data_manager.audio_file, duration)
 
         assert True

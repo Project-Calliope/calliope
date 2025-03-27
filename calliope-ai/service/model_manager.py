@@ -2,9 +2,6 @@ import whisper
 
 import os
 
-from pydub import AudioSegment
-
-
 class Model:
 
     def __init__(self):
@@ -12,8 +9,8 @@ class Model:
 
     def predict(self, input_data):
 
-        tr = self.model.transcribe(input_data.name)["text"]
-        os.unlink(input_data.name)
+        tr = self.model.transcribe(input_data)["text"]
+        os.unlink(input_data)
         return tr
 
 

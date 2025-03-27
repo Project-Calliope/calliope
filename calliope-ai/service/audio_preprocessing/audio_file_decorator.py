@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 from pydub import AudioSegment
 
-from fastapi import UploadFile
 from service.audio_preprocessing.audio_file import AudioFile
 
 

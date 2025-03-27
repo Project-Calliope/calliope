@@ -66,12 +66,11 @@ def test_load_audio(data_manager, mock_audio_file, audio_format):
     """
 
     mock_file = mock_audio_file(audio_format)
-    data_manager.load_audio(mock_file)
+    data_manager.load_and_validate_audio(mock_file)
 
-    assert data_manager.audio is not None
-    assert data_manager.audio["filename"] == f"test_audio.{audio_format}"
-    assert data_manager.audio["filetype"] == f"audio/{audio_format}"
-    assert data_manager.audio["filecontent"] == mock_file["filecontent"]
+    assert data_manager.audio_name == f"test_audio.{audio_format}"
+    assert data_manager.audio_type == f"audio/{audio_format}"
+    assert data_manager.audio_file is not None
 
 
 @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])
@@ -85,9 +84,8 @@ def test_validate_data_valid_audio(data_manager, mock_audio_file, audio_format):
     """
 
     mock_file = mock_audio_file(audio_format)
-    data_manager.load_audio(mock_file)
+    result = data_manager.load_and_validate_audio(mock_file)
 
-    result = data_manager.validate_data()
     assert result is True
 
 
@@ -99,10 +97,9 @@ def test_validate_data_audio_invalid(data_manager):
     """
 
     corrupted_data = BytesIO(b"corrupted data")
-    mock_file = UploadFile(filename="invalid_audio.mp3", file=corrupted_data)
+    mock_file = {"filename": "invalid_audio.mp3", "filetype": "audio/mp3", "filecontent": corrupted_data}
 
-    data_manager.load_audio(mock_file)
-    result = data_manager.validate_data()
+    result = data_manager.load_and_validate_audio(mock_file)
 
     assert result is False
 
@@ -112,8 +109,7 @@ def test_validate_data_audio_formats(data_manager, mock_audio_file, format):
     """Test the validation of unsupported audio formats."""
     mock_file = mock_audio_file(format)
 
-    data_manager.load_audio(mock_file)
-    result = data_manager.validate_data()
+    result = data_manager.load_and_validate_audio(mock_file)
 
     assert result is False
 
@@ -121,7 +117,7 @@ def test_validate_data_audio_formats(data_manager, mock_audio_file, format):
 def test_preprocess_audio_segments(data_manager, mock_audio_file):
     """Test the preprocessing of audio segments."""
     audio_file = mock_audio_file("wav")
-    data_manager.load_audio(audio_file)
+    data_manager.load_and_validate_audio(audio_file)
     data_manager.preprocess_audio_segments()
 
     segments = data_manager.get_segmented_audio()
@@ -134,7 +130,7 @@ def test_preprocess_audio(data_manager, mock_audio_file):
     """Test the preprocessing of multiple audio segments."""
     audio_file = mock_audio_file("wav", duration=30000)
 
-    data_manager.load_audio(audio_file)
+    data_manager.load_and_validate_audio(audio_file)
     data_manager.preprocess_audio_segments()
 
     segments = data_manager.get_segmented_audio()
@@ -146,7 +142,7 @@ def test_preprocess_audio(data_manager, mock_audio_file):
 def test_preprocess_audio_segments_multiple(data_manager, mock_audio_file):
     audio_file = mock_audio_file("wav", duration=30000)
 
-    data_manager.load_audio(audio_file)
+    data_manager.load_and_validate_audio(audio_file)
 
     data_manager.segment_audio(duration=10000)
 

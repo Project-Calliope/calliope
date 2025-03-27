@@ -1,5 +1,3 @@
-import pytest
-
 from service.api_handler import APIHandler
 
 

@@ -1,11 +1,11 @@
-from io import BytesIO
 import pytest
+
+from io import BytesIO
+
 from pydub import AudioSegment, generators
-from fastapi import UploadFile
+
 from service.data_manager import DataManager
-from service.audio_segmentation.silence_based_segmentation import (
-    SilenceBasedSegmentation,
-)
+from service.audio_segmentation.silence_based_segmentation import SilenceBasedSegmentation
 from service.audio_segmentation.fixed_duration_segment import FixedDurationSegmentation
 from service.audio_segmentation.audio_processor import AudioProcessor
 
@@ -42,7 +42,10 @@ def mock_audio_file():
             mime_type = "application/octet-stream"
 
         byte_io.seek(0)
-        return UploadFile(filename=f"test_audio.{format}", file=byte_io)
+        
+        file = {"filename": f"mockfile.wav", "filetype": mime_type, "filecontent": byte_io}
+
+        return file
 
     return _create_mock_audio
 
@@ -58,8 +61,11 @@ class TestAudioSegmentation:
     def test_segmentation_silence(self, data_manager, mock_audio_file):
         """Test the segmentation method of the AudioProcessor class."""
         audio_file = mock_audio_file("wav")
+        data_manager.load_and_validate_audio(audio_file)
+        
+        audio_file = mock_audio_file("wav")
         segmentation_strategy = SilenceBasedSegmentation()
-        audio_processor = AudioProcessor(audio_file, segmentation_strategy)
+        audio_processor = AudioProcessor(data_manager.audio_file, segmentation_strategy)
 
         segments = audio_processor.preprocess_audio()
 
@@ -68,19 +74,21 @@ class TestAudioSegmentation:
             isinstance(segment, AudioSegment) for segment in segments
         ), "Not all segments are AudioSegment instances."
 
-    # def test_segmentation_duration(self, data_manager, mock_audio_file):
-    #     """Test the segmentation method of the AudioProcessor class."""
-    #     audio_file = mock_audio_file("wav")
-    #     segmentation_strategy = FixedDurationSegmentation(duration_ms=5000)
-    #     audio_processor = AudioProcessor(audio_file, segmentation_strategy)
+    def test_segmentation_duration(self, data_manager, mock_audio_file):
+        """Test the segmentation method of the AudioProcessor class."""
+        audio_file = mock_audio_file("wav")
+        data_manager.load_and_validate_audio(audio_file)
 
-    #     segments = audio_processor.preprocess_audio()
+        segmentation_strategy = FixedDurationSegmentation(duration_ms=5000)
+        audio_processor = AudioProcessor(data_manager.audio_file, segmentation_strategy)
 
-    #     assert len(segments) > 0, "No segments were created."
-    #     assert all(
-    #         isinstance(segment, AudioSegment) for segment in segments
-    #     ), "Not all segments are AudioSegment instances."
+        segments = audio_processor.preprocess_audio()
 
-    #     # Check if the duration of each segment is correct (except the las one)
-    #     for segment in segments[:-1]:
-    #         assert len(segment) == 5000, "Segment duration is not correct."
+        assert len(segments) > 0, "No segments were created."
+        assert all(
+            isinstance(segment, AudioSegment) for segment in segments
+        ), "Not all segments are AudioSegment instances."
+
+        # Check if the duration of each segment is correct (except the las one)
+        for segment in segments[:-1]:
+            assert len(segment) == 5000, "Segment duration is not correct."

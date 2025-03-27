@@ -1,6 +1,4 @@
 from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
-from pydub import AudioSegment
-
 
 class AudioProcessor:
     """

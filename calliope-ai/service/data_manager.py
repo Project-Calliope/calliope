@@ -8,15 +8,13 @@ from tempfile import NamedTemporaryFile
 
 from service.audio_preprocessing.basic_audio_file import BasicAudioFile
 from service.audio_preprocessing.resampling_decorator import ResamplingDecorator
-from service.audio_preprocessing.mono_conversion_decorator import (
-    MonoConversionDecorator,
-)
+from service.audio_preprocessing.mono_conversion_decorator import MonoConversionDecorator
 from service.audio_segmentation.fixed_duration_segment import FixedDurationSegmentation
 from service.audio_segmentation.audio_processor import AudioProcessor
 
 
 class DataManager:
-    """ "
+    """
     Class to manage audio data for transcription.
     """
 
@@ -25,18 +23,34 @@ class DataManager:
         Initializes the DataManager instance.
         It will hold the audio file and its segmented parts.
         """
-        self.audio = None
+        self.audio_name = None
+        self.audio_type = None
+        self.audio_file = None
         self.segmented_audio = []
 
-    # setter
+    @property
+    def audio_name(self):
+        return self._audio_name
+
+    @audio_name.setter
+    def audio_name(self, audio_name):
+        self._audio_name = audio_name
 
     @property
-    def audio(self):
-        return self._audio
+    def audio_type(self):
+        return self._audio_type
 
-    @audio.setter
-    def audio(self, audio_file):
-        self._audio = audio_file
+    @audio_type.setter
+    def audio_type(self, audio_type):
+        self._audio_type = audio_type
+
+    @property
+    def audio_file(self):
+        return self._audio_file
+
+    @audio_file.setter
+    def audio_file(self, audio_file):
+        self._audio_file = audio_file
 
     @property
     def segmented_audio(self):
@@ -46,30 +60,30 @@ class DataManager:
     def segmented_audio(self, segmented_audio):
         self._segmented_audio = segmented_audio
 
-    def load_audio(self, audio_file):
+    def load_and_validate_audio(self, file):
         """
         Loads the audio file into the DataManager.
 
         Parameters:
             audio_file (FileStorage): The audio file to be loaded.
         """
-        self.audio = audio_file
 
-    def validate_data(self):
-        """
-        Validate that the audio file is valid (correct format and readable).
-        This method differentiates between:
-        - Valid audio files (formats recognized and readable)
-        - Corrupted files or unreadable files (raises CouldntDecodeError)
-        """
-        if self.audio is None:
+        if file["filecontent"] is None:
             raise ValueError("No audio file loaded")
 
         try:
-            audio = AudioSegment.from_file(self.audio["filecontent"])
-            self.audio = tmp_file = NamedTemporaryFile(delete=False)
+            self.audio_name = file["filename"]
+            self.audio_type = file["filetype"]
+
+            audio = AudioSegment.from_file(file["filecontent"])
+            
+            tmp_file = NamedTemporaryFile(delete=False)
             tmp_file.write(audio.export(format="wav").read())
+
+            self.audio_file = tmp_file.name
+
             tmp_file.close()
+            
             return True
 
         except Exception as e:
@@ -83,7 +97,7 @@ class DataManager:
         (To be implemented later.)
         """
         if self.segmented_audio == []:
-            self.segmented_audio = [AudioSegment.from_file(self.audio["filecontent"])]
+            self.segmented_audio = [AudioSegment.from_file(self.audio_file)]
         else:
             l = []
             for x in self.segmented_audio:
@@ -112,7 +126,7 @@ class DataManager:
         """
 
         segmentation_strategy = FixedDurationSegmentation(duration_ms=duration)
-        audio_processor = AudioProcessor(self.audio, segmentation_strategy)
+        audio_processor = AudioProcessor(self.audio_file, segmentation_strategy)
 
         print("_______________________________")
         print("Segmenting audio...")

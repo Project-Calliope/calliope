@@ -7,7 +7,6 @@ It provides :
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
 
-from typing import Optional
 from service.api_handler import APIHandler
 
 

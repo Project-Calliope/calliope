@@ -7,20 +7,13 @@ Routes:
     / (home): Returns a welcome message.
 """
 
-# from flask import Flask
-# from api.routes import transcribe_audio
-
-
 from fastapi import FastAPI
 import uvicorn
 from api.routes import transcribe_audio
 
 app = FastAPI()
-# app = Flask(__name__)
 
 app.include_router(transcribe_audio, prefix="/api")
-# app.register_blueprint(transcribe_audio, url_prefix="/api")
-
 
 @app.get("/")
 async def home():

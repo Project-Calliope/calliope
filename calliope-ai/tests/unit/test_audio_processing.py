@@ -1,14 +1,14 @@
-from io import BytesIO
 import pytest
+
+from io import BytesIO
+
 from pydub import AudioSegment, generators
-from fastapi import UploadFile
+
 from service.data_manager import DataManager
 from service.audio_preprocessing.audio_file import AudioFile
 from service.audio_preprocessing.audio_file_decorator import AudioFileDecorator
 from service.audio_preprocessing.basic_audio_file import BasicAudioFile
-from service.audio_preprocessing.mono_conversion_decorator import (
-    MonoConversionDecorator,
-)
+from service.audio_preprocessing.mono_conversion_decorator import MonoConversionDecorator
 from service.audio_preprocessing.resampling_decorator import ResamplingDecorator
 
 
@@ -24,6 +24,7 @@ def mock_audio_file():
             .to_audio_segment(duration=5000, volume=-20)
             .fade_out(100)
         )
+
         silence = AudioSegment.silent(duration=5000)
 
         audio = sound + silence + sound + silence + sound
@@ -44,7 +45,10 @@ def mock_audio_file():
             mime_type = "application/octet-stream"
 
         byte_io.seek(0)
-        return UploadFile(filename=f"test_audio.{format}", file=byte_io)
+        
+        file = {"filename": f"mockfile.wav", "filetype": mime_type, "filecontent": byte_io}
+
+        return file
 
     return _create_mock_audio
 
@@ -55,14 +59,14 @@ def data_manager():
     return DataManager()
 
 
-class TestAudioSegmentation:
+class TestAudioProcessing:
 
     def test_preprocessing(self, mock_audio_file, data_manager):
         """Test the preprocessing method of the AudioProcessor class."""
         audio_file = mock_audio_file("wav")
-        data_manager.load_audio(audio_file)
+        data_manager.load_and_validate_audio(audio_file)
 
-        audio_segment = AudioSegment.from_file(audio_file.file)
+        audio_segment = AudioSegment.from_file(data_manager.audio_file)
 
         audio = BasicAudioFile(audio_segment)
         mono_audio = MonoConversionDecorator(audio)

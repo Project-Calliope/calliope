@@ -8,9 +8,9 @@ class SilenceBasedSegmentation(SegmentationStrategy):
     - Implémente la stratégie de segmentation basée sur les moments de silence"
     """
 
-    def segment(self, audio_file: UploadFile) -> list:
+    def segment(self, audio_file) -> list:
         """Segmentation du fichier audio en fonction des silences"""
-        audio_segment = AudioSegment.from_file(audio_file.file)
+        audio_segment = AudioSegment.from_file(audio_file)
         silence_thresh = -40
         min_silence_len = 500
         silence_threshold = audio_segment.dBFS - silence_thresh

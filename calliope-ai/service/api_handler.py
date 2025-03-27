@@ -7,8 +7,6 @@ to load and validate audio files, then performs transcription to text using a Mo
 
 from service.data_manager import DataManager
 from service.model_manager import ModelManager
-from pydub import AudioSegment
-
 
 class APIHandler:
     """
@@ -49,11 +47,9 @@ class APIHandler:
                    - False, error message if the file is corrupted or in an unsupported format.
         """
 
-        self.data_manager.load_audio(file)
+        loading_and_validation_success = self.data_manager.load_and_validate_audio(file)
 
-        valid_audio = self.data_manager.validate_data()
-
-        if not valid_audio:
+        if not loading_and_validation_success:
             return False, "Audio file is corrupted or in an unsupported format."
 
-        return True, self.model_manager.predict(self.data_manager.audio)
+        return True, self.model_manager.predict(self.data_manager.audio_file)
