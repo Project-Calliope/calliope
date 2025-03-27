@@ -5,9 +5,9 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-COPY requirement.txt .
-RUN pip install --no-cache-dir -r requirement.txt
 COPY . .
+RUN pip install --no-cache-dir -r requirement.txt
+RUN python3 setup.py
 
 EXPOSE 8000
 CMD ["python", "app.py"]
