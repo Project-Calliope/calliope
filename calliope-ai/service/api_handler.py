@@ -56,4 +56,4 @@ class APIHandler:
         if not valid_audio:
             return False, "Audio file is corrupted or in an unsupported format."
 
-        return True, self.model_manager.predict(self.data_manager.audio_file)
+        return True, self.model_manager.predict(self.data_manager.audio)

@@ -68,10 +68,10 @@ def test_load_audio(data_manager, mock_audio_file, audio_format):
     mock_file = mock_audio_file(audio_format)
     data_manager.load_audio(mock_file)
 
-    assert data_manager.audio_file is not None
-    assert data_manager.audio_file["filename"] == f"test_audio.{audio_format}"
-    assert data_manager.audio_file["filetype"] == f"audio/{audio_format}"
-    assert data_manager.audio_file["filecontent"] == mock_file["filecontent"]
+    assert data_manager.audio is not None
+    assert data_manager.audio["filename"] == f"test_audio.{audio_format}"
+    assert data_manager.audio["filetype"] == f"audio/{audio_format}"
+    assert data_manager.audio["filecontent"] == mock_file["filecontent"]
 
 
 @pytest.mark.parametrize("audio_format", ["wav", "mp3", "m4a"])

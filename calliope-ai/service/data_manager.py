@@ -25,7 +25,7 @@ class DataManager:
         Initializes the DataManager instance.
         It will hold the audio file and its segmented parts.
         """
-        self.audio_file = None
+        self.audio = None
         self.segmented_audio = []
 
     # setter
@@ -35,7 +35,7 @@ class DataManager:
         return self._audio
 
     @audio.setter
-    def audio(self, audio_file: UploadFile):
+    def audio(self, audio_file):
         self._audio = audio_file
 
     @property
@@ -46,14 +46,14 @@ class DataManager:
     def segmented_audio(self, segmented_audio):
         self._segmented_audio = segmented_audio
 
-    def load_audio(self, audio_file: UploadFile):
+    def load_audio(self, audio_file):
         """
         Loads the audio file into the DataManager.
 
         Parameters:
             audio_file (FileStorage): The audio file to be loaded.
         """
-        self.audio_file = file
+        self.audio = audio_file
 
     def validate_data(self):
         """
@@ -62,12 +62,12 @@ class DataManager:
         - Valid audio files (formats recognized and readable)
         - Corrupted files or unreadable files (raises CouldntDecodeError)
         """
-        if self.audio_file is None:
+        if self.audio is None:
             raise ValueError("No audio file loaded")
 
         try:
-            audio = AudioSegment.from_file(self.audio_file["filecontent"])
-            self.audio_file = tmp_file = NamedTemporaryFile(delete=False)
+            audio = AudioSegment.from_file(self.audio["filecontent"])
+            self.audio = tmp_file = NamedTemporaryFile(delete=False)
             tmp_file.write(audio.export(format="wav").read())
             tmp_file.close()
             return True
@@ -83,7 +83,7 @@ class DataManager:
         (To be implemented later.)
         """
         if self.segmented_audio == []:
-            self.segmented_audio = [AudioSegment.from_file(self.audio.file)]
+            self.segmented_audio = [AudioSegment.from_file(self.audio["filecontent"])]
         else:
             l = []
             for x in self.segmented_audio:
