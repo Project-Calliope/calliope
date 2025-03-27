@@ -1,3 +1,16 @@
+"""
+This module contains the `AudioFile` abstract base class, which defines the interface for audio
+file processing.
+
+The `AudioFile` class ensures that all derived classes implement the `process` method, which is
+responsible for processing and returning an audio segment. This class is intended to be used as a
+base for applying the decorator pattern and creating various audio file transformations.
+
+Classes:
+    - AudioFile: An abstract base class for audio file processing, requiring the implementation of
+    the `process` method.
+"""
+
 from abc import ABC, abstractmethod
 from pydub import AudioSegment
 
@@ -18,4 +31,3 @@ class AudioFile(ABC):
         Returns:
             AudioSegment: The processed audio segment.
         """
-        pass

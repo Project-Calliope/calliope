@@ -1,3 +1,14 @@
+"""
+This module defines the `AudioProcessor` class responsible for processing audio data
+using a specified segmentation strategy.
+
+The class applies different segmentation strategies to divide the audio file into manageable
+segments for further processing or analysis.
+
+Classes:
+    AudioProcessor: Processes the provided audio file using a selected segmentation strategy.
+"""
+
 from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
 
 
@@ -21,8 +32,6 @@ class AudioProcessor:
             audio: The audio data to be processed.
             segmentation_strategy (SegmentationStrategy): The segmentation strategy to apply.
         """
-        from service.data_manager import DataManager
-
         self.audio = audio
         self.segmentation_strategy = segmentation_strategy
 

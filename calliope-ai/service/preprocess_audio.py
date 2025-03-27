@@ -1,5 +1,3 @@
-from pydub import AudioSegment
-
 """
 This module contains the function to preprocess the audio file before transcription.
 """
@@ -17,7 +15,6 @@ class PreprocessAudio:
         """
         Initializes the PreprocessAudio instance.
         """
-        pass
 
     def segmentation(self, audio_file, duration):
         """
@@ -30,7 +27,6 @@ class PreprocessAudio:
         Returns:
             list: A list of audio segments as AudioSegment objects.
         """
-        pass
 
     def denoising(self, audio_file, denoising_method):
         """
@@ -44,7 +40,6 @@ class PreprocessAudio:
         Returns:
             AudioSegment: The denoised audio as an AudioSegment object.
         """
-        pass
 
     def remove_silence(self, audio_file, sensitivity):
         """
@@ -58,7 +53,6 @@ class PreprocessAudio:
         Returns:
             AudioSegment: The audio file with silence removed.
         """
-        pass
 
     def resampling(self, audio_file, frequency):
         """
@@ -71,4 +65,3 @@ class PreprocessAudio:
         Returns:
             AudioSegment: The resampled audio file.
         """
-        pass

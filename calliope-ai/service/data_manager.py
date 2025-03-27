@@ -3,8 +3,10 @@ This module contains the DataManager class, which is responsible for managing
 the audio data used in the transcription process.
 """
 
-from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
+
+from pydub import AudioSegment
+from pydub.exceptions import CouldntDecodeError
 
 from service.audio_preprocessing.basic_audio_file import BasicAudioFile
 from service.audio_preprocessing.resampling_decorator import ResamplingDecorator
@@ -30,38 +32,6 @@ class DataManager:
         self.audio_file = None
         self.segmented_audio = []
 
-    @property
-    def audio_name(self):
-        return self._audio_name
-
-    @audio_name.setter
-    def audio_name(self, audio_name):
-        self._audio_name = audio_name
-
-    @property
-    def audio_type(self):
-        return self._audio_type
-
-    @audio_type.setter
-    def audio_type(self, audio_type):
-        self._audio_type = audio_type
-
-    @property
-    def audio_file(self):
-        return self._audio_file
-
-    @audio_file.setter
-    def audio_file(self, audio_file):
-        self._audio_file = audio_file
-
-    @property
-    def segmented_audio(self):
-        return self._segmented_audio
-
-    @segmented_audio.setter
-    def segmented_audio(self, segmented_audio):
-        self._segmented_audio = segmented_audio
-
     def load_and_validate_audio(self, file):
         """
         Loads the audio file into the DataManager.
@@ -71,7 +41,7 @@ class DataManager:
 
         Returns:
             bool: True if the audio file is successfully loaded and validated,
-                  False otherwise.
+                False otherwise.
         """
 
         if file["filecontent"] is None:
@@ -83,17 +53,14 @@ class DataManager:
 
             audio = AudioSegment.from_file(file["filecontent"])
 
-            tmp_file = NamedTemporaryFile(delete=False)
-            tmp_file.write(audio.export(format="wav").read())
-
-            self.audio_file = tmp_file.name
-
-            tmp_file.close()
+            with NamedTemporaryFile(delete=False) as tmp_file:
+                tmp_file.write(audio.export(format="wav").read())
+                self.audio_file = tmp_file.name
 
             return True
 
-        except Exception as e:
-            print("Error validating audio data:", e)
+        except CouldntDecodeError as e:
+            print(f"Error occurred while loading the audio: {e}")
             return False
 
     def preprocess_audio_segments(self):
@@ -114,15 +81,6 @@ class DataManager:
                 preprocessed_segment = audio_file.process()
                 l.append(preprocessed_segment)
             self.segmented_audio = l
-
-    def get_segmented_audio(self):
-        """
-        Returns the segmented audio parts after preprocessing.
-
-        Returns:
-            list: A list of the segmented audio files.
-        """
-        return self.segmented_audio
 
     def segment_audio(self, duration=100):
         """

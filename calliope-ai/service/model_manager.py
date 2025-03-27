@@ -1,5 +1,26 @@
-import whisper
+"""
+This module contains classes to handle audio transcription using the Whisper model.
+
+The `Model` class is responsible for loading the Whisper model and performing audio transcription.
+It uses the Whisper model to transcribe audio files into text and manages temporary file removal
+after transcription.
+
+The `ModelManager` class manages the `Model` instance, providing an interface for loading the model
+and making predictions. The model is loaded only when needed, and it allows for the transcription
+of audio files through the `predict` method.
+
+Usage:
+    - Load the model using `ModelManager.load_model()`.
+    - Use `ModelManager.predict(data)` to transcribe an audio file, where `data` is the file path to
+    the audio.
+
+Dependencies:
+    - whisper (for transcription)
+    - os (for file management)
+"""
+
 import os
+import whisper
 
 
 class Model:
@@ -33,6 +54,10 @@ class Model:
 class ModelManager:
     """
     Manages the model and handles the prediction process.
+
+    This class provides an interface for loading and using the Whisper model
+    for audio transcription. The model is loaded only when required, and
+    predictions can be made on audio files through the `predict` method.
     """
 
     def __init__(self):

@@ -1,5 +1,16 @@
-from service.audio_preprocessing.audio_file_decorator import AudioFileDecorator
+"""
+This module contains the `ResamplingDecorator` class, which is responsible for resampling audio
+files to a 16kHz sampling rate.
+
+The resampling process is commonly used in speech recognition systems like WHISPER and DeepSpeech,
+which require a specific sampling rate for accurate transcription.
+
+Classes:
+    - ResamplingDecorator: A decorator class that resamples audio files to 16kHz.
+"""
+
 from pydub import AudioSegment
+from service.audio_preprocessing.audio_file_decorator import AudioFileDecorator
 
 
 class ResamplingDecorator(AudioFileDecorator):

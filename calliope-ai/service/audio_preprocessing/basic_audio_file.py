@@ -1,3 +1,15 @@
+"""
+This module contains the `BasicAudioFile` class, which represents a basic audio file
+that undergoes no modification. It simply returns the provided audio segment as is.
+
+The class implements the `AudioFile` interface and serves as a base for more complex
+audio file transformations or decorators.
+
+Classes:
+    - BasicAudioFile: A class that processes and returns the raw audio segment without
+    modification.
+"""
+
 from pydub import AudioSegment
 from service.audio_preprocessing.audio_file_decorator import AudioFile
 

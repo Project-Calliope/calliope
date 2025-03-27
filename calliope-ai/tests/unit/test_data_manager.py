@@ -19,7 +19,7 @@ def mock_audio_file():
         Returns:
             dict: A dictionary containing the mock audio file's filename, filetype, and file content.
         """
-        audio = AudioSegment.silent(duration)  # Default to 100ms
+        audio = AudioSegment.silent(duration)
 
         byte_io = BytesIO()
 
@@ -152,7 +152,7 @@ def test_preprocess_audio_segments(data_manager, mock_audio_file):
     data_manager.load_and_validate_audio(audio_file)
     data_manager.preprocess_audio_segments()
 
-    segments = data_manager.get_segmented_audio()
+    segments = data_manager.segmented_audio
 
     assert len(segments) == 1
     assert isinstance(segments[0], AudioSegment)
@@ -173,7 +173,7 @@ def test_preprocess_audio(data_manager, mock_audio_file):
     data_manager.load_and_validate_audio(audio_file)
     data_manager.preprocess_audio_segments()
 
-    segments = data_manager.get_segmented_audio()
+    segments = data_manager.segmented_audio
 
     assert len(segments) == 1
     assert isinstance(segments[0], AudioSegment)
@@ -195,7 +195,7 @@ def test_preprocess_audio_segments_multiple(data_manager, mock_audio_file):
 
     data_manager.segment_audio(duration=10000)
 
-    segments = data_manager.get_segmented_audio()
+    segments = data_manager.segmented_audio
 
     assert len(segments) == 3
     assert isinstance(segments[0], AudioSegment)

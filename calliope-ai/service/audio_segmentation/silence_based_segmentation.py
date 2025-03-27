@@ -1,5 +1,14 @@
-from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
+"""
+This module contains the `SilenceBasedSegmentation` class, which implements a segmentation strategy
+based on periods of silence. The audio is divided into segments based on non-silent sections,
+with segments formed around periods of silence.
+
+Classes:
+    - SilenceBasedSegmentation: A class that segments audio based on silence.
+"""
+
 from pydub import AudioSegment
+from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
 
 
 class SilenceBasedSegmentation(SegmentationStrategy):
@@ -22,7 +31,7 @@ class SilenceBasedSegmentation(SegmentationStrategy):
         based on the periods of silence.
 
         Args:
-            audio_file (str): The path to the audio file to be segmented.
+            audio (str): The path to the audio file to be segmented.
 
         Returns:
             list: A list of AudioSegment objects representing the non-silent segments.
