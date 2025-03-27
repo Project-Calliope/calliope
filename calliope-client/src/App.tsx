@@ -1,16 +1,19 @@
-import FileUploadDialog from "./components/upload-file";
-import { Toaster } from "react-hot-toast";
+import LibraryPage from "@/pages/LibraryPage";
+import { Routes, Route } from "react-router-dom";
+import LoginPage from "@/pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import LandingPage from "./pages/LandingPage";
 
 function App() {
   return (
     <>
-      <Toaster containerStyle={{ zIndex: 9999 }} />
-      {/* <div className="toaster"> */}
-      {/* </div> */}
-      <div className="flex flex-col items-center justify-center min-h-screen py-2">
-        <h1 className="text-xl font-bold">Hello world!</h1>
-        <p className="mt-3 text-lg">This is a Calliope app.</p>
-        <FileUploadDialog />
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/library" element={<LibraryPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
       </div>
     </>
   );

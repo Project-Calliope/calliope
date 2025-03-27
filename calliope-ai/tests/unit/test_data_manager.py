@@ -11,14 +11,14 @@ from service.data_manager import DataManager
 def mock_audio_file():
     """Fixture to create a mock audio file in various formats (mp3, wav, m4a)."""
 
-    def _create_mock_audio(format):
+    def _create_mock_audio(format, duration=100):
         """Create a mock audio file in the specified format.
 
         param :
             format: audio format to create
         """
 
-        audio = AudioSegment.silent(duration=100)
+        audio = AudioSegment.silent(duration)  # 100ms
 
         byte_io = BytesIO()
 
@@ -116,3 +116,44 @@ def test_validate_data_audio_formats(data_manager, mock_audio_file, format):
     result = data_manager.validate_data()
 
     assert result is False
+
+
+def test_preprocess_audio_segments(data_manager, mock_audio_file):
+    """Test the preprocessing of audio segments."""
+    audio_file = mock_audio_file("wav")
+    data_manager.load_audio(audio_file)
+    data_manager.preprocess_audio_segments()
+
+    segments = data_manager.get_segmented_audio()
+
+    assert len(segments) == 1
+    assert isinstance(segments[0], AudioSegment)
+
+
+def test_preprocess_audio(data_manager, mock_audio_file):
+    """Test the preprocessing of multiple audio segments."""
+    audio_file = mock_audio_file("wav", duration=30000)
+
+    data_manager.load_audio(audio_file)
+    data_manager.preprocess_audio_segments()
+
+    segments = data_manager.get_segmented_audio()
+
+    assert len(segments) == 1
+    assert isinstance(segments[0], AudioSegment)
+
+
+def test_preprocess_audio_segments_multiple(data_manager, mock_audio_file):
+    audio_file = mock_audio_file("wav", duration=30000)
+
+    data_manager.load_audio(audio_file)
+
+    data_manager.segment_audio(duration=10000)
+
+    segments = data_manager.get_segmented_audio()
+    print("but pb just here")
+
+    assert len(segments) == 3
+    assert isinstance(segments[0], AudioSegment)
+    assert isinstance(segments[1], AudioSegment)
+    assert isinstance(segments[2], AudioSegment)
