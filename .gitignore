@@ -1,5 +1,6 @@
 .vscode/*
 
+.venv/
 
 .env
 .env.dev

@@ -24,6 +24,9 @@ jobs:
           - 8000:8000
 
     steps:
+      - name: Delete unnecessary tools folder
+        run: rm -rf /opt/hostedtoolcache
+    
       - name: Checkout repository
         uses: actions/checkout@v2
 
