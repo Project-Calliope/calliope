@@ -8,7 +8,9 @@ from service.data_manager import DataManager
 from service.audio_preprocessing.audio_file import AudioFile
 from service.audio_preprocessing.audio_file_decorator import AudioFileDecorator
 from service.audio_preprocessing.basic_audio_file import BasicAudioFile
-from service.audio_preprocessing.mono_conversion_decorator import MonoConversionDecorator
+from service.audio_preprocessing.mono_conversion_decorator import (
+    MonoConversionDecorator,
+)
 from service.audio_preprocessing.resampling_decorator import ResamplingDecorator
 
 
@@ -45,8 +47,12 @@ def mock_audio_file():
             mime_type = "application/octet-stream"
 
         byte_io.seek(0)
-        
-        file = {"filename": f"mockfile.wav", "filetype": mime_type, "filecontent": byte_io}
+
+        file = {
+            "filename": f"mockfile.wav",
+            "filetype": mime_type,
+            "filecontent": byte_io,
+        }
 
         return file
 

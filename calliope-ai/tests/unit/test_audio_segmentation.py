@@ -5,7 +5,9 @@ from io import BytesIO
 from pydub import AudioSegment, generators
 
 from service.data_manager import DataManager
-from service.audio_segmentation.silence_based_segmentation import SilenceBasedSegmentation
+from service.audio_segmentation.silence_based_segmentation import (
+    SilenceBasedSegmentation,
+)
 from service.audio_segmentation.fixed_duration_segment import FixedDurationSegmentation
 from service.audio_segmentation.audio_processor import AudioProcessor
 
@@ -42,8 +44,12 @@ def mock_audio_file():
             mime_type = "application/octet-stream"
 
         byte_io.seek(0)
-        
-        file = {"filename": f"mockfile.wav", "filetype": mime_type, "filecontent": byte_io}
+
+        file = {
+            "filename": f"mockfile.wav",
+            "filetype": mime_type,
+            "filecontent": byte_io,
+        }
 
         return file
 
@@ -62,7 +68,7 @@ class TestAudioSegmentation:
         """Test the segmentation method of the AudioProcessor class."""
         audio_file = mock_audio_file("wav")
         data_manager.load_and_validate_audio(audio_file)
-        
+
         audio_file = mock_audio_file("wav")
         segmentation_strategy = SilenceBasedSegmentation()
         audio_processor = AudioProcessor(data_manager.audio_file, segmentation_strategy)

@@ -15,6 +15,7 @@ app = FastAPI()
 
 app.include_router(transcribe_audio, prefix="/api")
 
+
 @app.get("/")
 async def home():
     """

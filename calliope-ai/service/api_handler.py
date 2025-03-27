@@ -8,6 +8,7 @@ to load and validate audio files, then performs transcription to text using a Mo
 from service.data_manager import DataManager
 from service.model_manager import ModelManager
 
+
 class APIHandler:
     """
     Class that handles audio transcription requests.

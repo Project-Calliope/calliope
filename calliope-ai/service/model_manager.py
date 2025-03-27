@@ -2,6 +2,7 @@ import whisper
 
 import os
 
+
 class Model:
 
     def __init__(self):

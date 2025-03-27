@@ -97,7 +97,11 @@ def test_validate_data_audio_invalid(data_manager):
     """
 
     corrupted_data = BytesIO(b"corrupted data")
-    mock_file = {"filename": "invalid_audio.mp3", "filetype": "audio/mp3", "filecontent": corrupted_data}
+    mock_file = {
+        "filename": "invalid_audio.mp3",
+        "filetype": "audio/mp3",
+        "filecontent": corrupted_data,
+    }
 
     result = data_manager.load_and_validate_audio(mock_file)
 

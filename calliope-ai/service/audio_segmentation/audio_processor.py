@@ -1,5 +1,6 @@
 from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
 
+
 class AudioProcessor:
     """
     Class to process audio data using a segmentation strategy.

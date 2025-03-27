@@ -8,7 +8,9 @@ from tempfile import NamedTemporaryFile
 
 from service.audio_preprocessing.basic_audio_file import BasicAudioFile
 from service.audio_preprocessing.resampling_decorator import ResamplingDecorator
-from service.audio_preprocessing.mono_conversion_decorator import MonoConversionDecorator
+from service.audio_preprocessing.mono_conversion_decorator import (
+    MonoConversionDecorator,
+)
 from service.audio_segmentation.fixed_duration_segment import FixedDurationSegmentation
 from service.audio_segmentation.audio_processor import AudioProcessor
 
@@ -76,14 +78,14 @@ class DataManager:
             self.audio_type = file["filetype"]
 
             audio = AudioSegment.from_file(file["filecontent"])
-            
+
             tmp_file = NamedTemporaryFile(delete=False)
             tmp_file.write(audio.export(format="wav").read())
 
             self.audio_file = tmp_file.name
 
             tmp_file.close()
-            
+
             return True
 
         except Exception as e:
