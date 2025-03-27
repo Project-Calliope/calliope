@@ -25,7 +25,7 @@ class APIHandler:
         """
         Initializes the APIHandler with a DataManager for handling audio files.
 
-        This method also creates a `model` attribute that can be used for transcription,
+        This method also creates a `model_manager` attribute that can be used for transcription,
         although the model integration is not yet implemented.
         """
         self.data_manager = DataManager()
@@ -38,8 +38,8 @@ class APIHandler:
 
         This method loads the audio file, validates its compliance, and performs the transcription.
 
-        Parameters:
-            audio_file (Uploadfile): The audio file to be transcribed.
+        Args:
+            file (UploadFile): The audio file to be transcribed.
 
         Returns:
             tuple: A tuple containing a boolean indicating whether the transcription succeeded,
@@ -47,7 +47,6 @@ class APIHandler:
                    - True, "Transcription" if the transcription succeeds.
                    - False, error message if the file is corrupted or in an unsupported format.
         """
-
         loading_and_validation_success = self.data_manager.load_and_validate_audio(file)
 
         if not loading_and_validation_success:

@@ -1,8 +1,6 @@
 import pytest
-
 from pydub import AudioSegment
 from fastapi import UploadFile
-
 from io import BytesIO
 from service.data_manager import DataManager
 
@@ -14,11 +12,14 @@ def mock_audio_file():
     def _create_mock_audio(format, duration=100):
         """Create a mock audio file in the specified format.
 
-        param :
-            format: audio format to create
-        """
+        Args:
+            format (str): The audio format to create (e.g., 'mp3', 'wav', 'm4a').
+            duration (int, optional): The duration of the silent audio in milliseconds (default is 100ms).
 
-        audio = AudioSegment.silent(duration)  # 100ms
+        Returns:
+            dict: A dictionary containing the mock audio file's filename, filetype, and file content.
+        """
+        audio = AudioSegment.silent(duration)  # Default to 100ms
 
         byte_io = BytesIO()
 
@@ -51,7 +52,11 @@ def mock_audio_file():
 
 @pytest.fixture
 def data_manager():
-    """Fixture to initialize a DataManager instance."""
+    """Fixture to initialize a DataManager instance.
+
+    Returns:
+        DataManager: A DataManager instance used to manage audio data.
+    """
     return DataManager()
 
 
@@ -59,12 +64,14 @@ def data_manager():
 def test_load_audio(data_manager, mock_audio_file, audio_format):
     """Test the loading of audio files in various formats.
 
-    param :
-        data_manager: DataManager instance (fixture)
-        mock_audio_file: mock_audio_file fixture
-        audio_format: audio format to test
-    """
+    Args:
+        data_manager (DataManager): The DataManager instance used to load and validate the audio.
+        mock_audio_file (function): Fixture function to create mock audio files.
+        audio_format (str): The audio format to test (e.g., 'wav', 'mp3', 'm4a').
 
+    Asserts:
+        The test asserts that the DataManager correctly loads and validates the audio file and its metadata.
+    """
     mock_file = mock_audio_file(audio_format)
     data_manager.load_and_validate_audio(mock_file)
 
@@ -77,12 +84,14 @@ def test_load_audio(data_manager, mock_audio_file, audio_format):
 def test_validate_data_valid_audio(data_manager, mock_audio_file, audio_format):
     """Test the validation of valid audio files.
 
-    param :
-        data_manager: DataManager instance (fixture)
-        mock_audio_file: mock_audio_file fixture
-        audio_format: audio format to test
-    """
+    Args:
+        data_manager (DataManager): The DataManager instance.
+        mock_audio_file (function): Fixture function to create mock audio files.
+        audio_format (str): The audio format to test.
 
+    Asserts:
+        The test asserts that the audio file is valid and passes the validation.
+    """
     mock_file = mock_audio_file(audio_format)
     result = data_manager.load_and_validate_audio(mock_file)
 
@@ -92,10 +101,12 @@ def test_validate_data_valid_audio(data_manager, mock_audio_file, audio_format):
 def test_validate_data_audio_invalid(data_manager):
     """Test the validation of corrupted audio files.
 
-    param :
-        data_manager: DataManager instance (fixture)
-    """
+    Args:
+        data_manager (DataManager): The DataManager instance.
 
+    Asserts:
+        The test asserts that the corrupted audio file fails the validation and returns False.
+    """
     corrupted_data = BytesIO(b"corrupted data")
     mock_file = {
         "filename": "invalid_audio.mp3",
@@ -110,7 +121,16 @@ def test_validate_data_audio_invalid(data_manager):
 
 @pytest.mark.parametrize("format", ["txt", "jpg", "mp4"])
 def test_validate_data_audio_formats(data_manager, mock_audio_file, format):
-    """Test the validation of unsupported audio formats."""
+    """Test the validation of unsupported audio formats.
+
+    Args:
+        data_manager (DataManager): The DataManager instance.
+        mock_audio_file (function): Fixture function to create mock audio files.
+        format (str): The unsupported format to test.
+
+    Asserts:
+        The test asserts that unsupported formats are rejected, and validation returns False.
+    """
     mock_file = mock_audio_file(format)
 
     result = data_manager.load_and_validate_audio(mock_file)
@@ -119,7 +139,15 @@ def test_validate_data_audio_formats(data_manager, mock_audio_file, format):
 
 
 def test_preprocess_audio_segments(data_manager, mock_audio_file):
-    """Test the preprocessing of audio segments."""
+    """Test the preprocessing of audio segments.
+
+    Args:
+        data_manager (DataManager): The DataManager instance.
+        mock_audio_file (function): Fixture function to create mock audio files.
+
+    Asserts:
+        The test asserts that the audio file is successfully processed and the segmented audio is returned.
+    """
     audio_file = mock_audio_file("wav")
     data_manager.load_and_validate_audio(audio_file)
     data_manager.preprocess_audio_segments()
@@ -131,7 +159,15 @@ def test_preprocess_audio_segments(data_manager, mock_audio_file):
 
 
 def test_preprocess_audio(data_manager, mock_audio_file):
-    """Test the preprocessing of multiple audio segments."""
+    """Test the preprocessing of multiple audio segments.
+
+    Args:
+        data_manager (DataManager): The DataManager instance.
+        mock_audio_file (function): Fixture function to create mock audio files.
+
+    Asserts:
+        The test asserts that the audio file is successfully processed and the segmented audio is returned.
+    """
     audio_file = mock_audio_file("wav", duration=30000)
 
     data_manager.load_and_validate_audio(audio_file)
@@ -144,6 +180,15 @@ def test_preprocess_audio(data_manager, mock_audio_file):
 
 
 def test_preprocess_audio_segments_multiple(data_manager, mock_audio_file):
+    """Test the preprocessing of multiple audio segments based on a duration split.
+
+    Args:
+        data_manager (DataManager): The DataManager instance.
+        mock_audio_file (function): Fixture function to create mock audio files.
+
+    Asserts:
+        The test asserts that the audio file is successfully split into multiple segments based on the duration.
+    """
     audio_file = mock_audio_file("wav", duration=30000)
 
     data_manager.load_and_validate_audio(audio_file)
@@ -151,7 +196,6 @@ def test_preprocess_audio_segments_multiple(data_manager, mock_audio_file):
     data_manager.segment_audio(duration=10000)
 
     segments = data_manager.get_segmented_audio()
-    print("but pb just here")
 
     assert len(segments) == 3
     assert isinstance(segments[0], AudioSegment)

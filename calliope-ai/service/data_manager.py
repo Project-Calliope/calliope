@@ -66,8 +66,12 @@ class DataManager:
         """
         Loads the audio file into the DataManager.
 
-        Parameters:
-            audio_file (FileStorage): The audio file to be loaded.
+        Args:
+            file : The audio file to be loaded.
+
+        Returns:
+            bool: True if the audio file is successfully loaded and validated,
+                  False otherwise.
         """
 
         if file["filecontent"] is None:
@@ -94,9 +98,10 @@ class DataManager:
 
     def preprocess_audio_segments(self):
         """
-        Placeholder for the audio preprocessing method, such as splitting
-        the audio into smaller parts.
-        (To be implemented later.)
+        Preprocess the audio segments, such as resampling and mono conversion.
+
+        If the audio has not been segmented yet, it will process the full audio file.
+        Otherwise, it will preprocess each segment.
         """
         if self.segmented_audio == []:
             self.segmented_audio = [AudioSegment.from_file(self.audio_file)]
@@ -123,10 +128,9 @@ class DataManager:
         """
         Segments the audio into smaller parts of the specified duration.
 
-        Parameters:
-            duration (int): The duration of each segment in seconds.
+        Args:
+            duration (int): The duration of each segment in milliseconds.
         """
-
         segmentation_strategy = FixedDurationSegmentation(duration_ms=duration)
         audio_processor = AudioProcessor(self.audio_file, segmentation_strategy)
 

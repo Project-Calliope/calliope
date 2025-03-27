@@ -14,7 +14,12 @@ from app import app
 def client():
     """
     Fixture to initialize a FastAPI test client.
-    Used to simulate HTTP requests to the API.
+
+    This fixture creates and returns a TestClient instance that simulates HTTP requests to the FastAPI application.
+    It is useful for testing routes and interacting with the app without starting an actual server.
+
+    Returns:
+        TestClient: A FastAPI test client instance.
     """
     return TestClient(app)
 
@@ -25,16 +30,23 @@ def mock_audio_file():
     Fixture to create a mock audio file in various formats (mp3, wav, m4a).
     The file is generated from a 100ms silent audio.
 
-    Parameters:
+    Args:
         format (str): The audio file format ('mp3', 'wav', 'm4a').
 
     Returns:
-        mock_file (werkzeug.datastructures.FileStorage): The mock audio file as a FileStorage object.
+        UploadFile: The mock audio file represented as an UploadFile object.
     """
 
     def _create_mock_audio(format):
+        """Create a mock audio file in the specified format.
 
-        audio = AudioSegment.silent(duration=100)
+        Args:
+            format (str): The audio format to create ('mp3', 'wav', 'm4a').
+
+        Returns:
+            UploadFile: The mock audio file as an UploadFile object.
+        """
+        audio = AudioSegment.silent(duration=100)  # Generate 100ms of silence
         byte_io = BytesIO()
 
         if format == "mp3":
@@ -84,8 +96,8 @@ def mock_audio_file():
 
 #     Verifies that the API returns a 400 error with the message 'Audio file is required'.
 
-#     Parameters:
-#         client: fasapi test client fixture.
+#     Args:
+#         client: FastAPI test client fixture.
 #     """
 #     response = client.post("/api/transcribe")
 
@@ -106,8 +118,8 @@ def mock_audio_file():
 
 #     Vérifie que l'API retourne une erreur 415 avec le message 'Audio file is corrupted or in an unsupported format'.
 
-#     Parameters:
-#         client: Fixture du client de test fastapi.
+#     Args:
+#         client: Fixture du client de test FastAPI.
 #         mock_audio_file: Fixture pour créer un fichier audio simulé.
 #         file_format (str): Le format du fichier à tester.
 #     """
@@ -124,7 +136,18 @@ def mock_audio_file():
 
 def test_transcribe_real_audio(client):
     """
-    Teste si la transcription du fichier audio réel correspond bien au texte attendu.
+    Test the transcription of a real audio file.
+
+    This test ensures that the transcription of a real audio file (wav format) is processed correctly.
+    It compares the API's transcription result with an expected transcription string.
+
+    Args:
+        client: FastAPI test client fixture to make HTTP requests.
+
+    Asserts:
+        - The status code of the response is 200.
+        - The response contains a 'transcript' key with a string value.
+        - The transcription matches the expected transcription.
     """
     expected_transcription = "BUT, WITH FULL RAVISHMENT THE HOURS OF PRIME, SINGING, RECEIVED THEY IN THE MIDST OF LEAVES THAT EVER BORE A BURDEN TO THEIR RHYMES."
 

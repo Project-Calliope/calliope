@@ -1,10 +1,20 @@
 """
 app.py
-This module contains the Flask application for the Calliope AI project.
-It defines a simple route that returns a welcome message.
+
+This module initializes and runs the FastAPI application for the Calliope AI project.
+It sets up the main API routes and includes the transcription-related endpoints.
 
 Routes:
-    / (home): Returns a welcome message.
+    / (GET): Returns a welcome message.
+    /api (prefix): Includes routes from the transcribe_audio router.
+
+Usage:
+    Run this script to start the FastAPI server.
+
+Dependencies:
+    - FastAPI
+    - Uvicorn
+    - API routes from the `api.routes.transcribe_audio` module
 """
 
 from fastapi import FastAPI
@@ -13,13 +23,15 @@ from api.routes import transcribe_audio
 
 app = FastAPI()
 
+# Include the transcription API routes under the /api prefix
 app.include_router(transcribe_audio, prefix="/api")
 
 
 @app.get("/")
 async def home():
     """
-    A simple FastAPI route that returns a welcome message.
+    Home route that returns a welcome message.
+
     Returns:
         dict: A dictionary containing a welcome message.
     """
@@ -27,4 +39,9 @@ async def home():
 
 
 if __name__ == "__main__":
+    """
+    Entry point for running the FastAPI application.
+
+    The application is served using Uvicorn on host 0.0.0.0 and port 8000.
+    """
     uvicorn.run(app, host="0.0.0.0", port=8000)

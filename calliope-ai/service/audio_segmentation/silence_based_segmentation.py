@@ -1,15 +1,32 @@
 from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
-from fastapi import UploadFile
 from pydub import AudioSegment
 
 
 class SilenceBasedSegmentation(SegmentationStrategy):
-    """Classe pour la segmentation basée sur les silences :
-    - Implémente la stratégie de segmentation basée sur les moments de silence"
+    """
+    Class for segmenting audio based on silence.
+
+    This class implements a segmentation strategy that divides the audio into segments
+    based on periods of silence. It identifies non-silent sections and splits the audio
+    accordingly.
+
+    Methods:
+        segment(audio_file): Segments the provided audio file based on silences.
     """
 
     def segment(self, audio_file) -> list:
-        """Segmentation du fichier audio en fonction des silences"""
+        """
+        Segments the audio file based on silences.
+
+        This method identifies non-silent sections in the audio and creates segments
+        based on the periods of silence.
+
+        Args:
+            audio_file (str): The path to the audio file to be segmented.
+
+        Returns:
+            list: A list of AudioSegment objects representing the non-silent segments.
+        """
         audio_segment = AudioSegment.from_file(audio_file)
         silence_thresh = -40
         min_silence_len = 500
@@ -23,7 +40,6 @@ class SilenceBasedSegmentation(SegmentationStrategy):
             if segment.dBFS >= silence_threshold:
                 if i + min_silence_len >= len(audio_segment):
                     non_silent_sections.append(audio_segment[current_start:])
-
                 elif audio_segment[i + min_silence_len].dBFS < silence_threshold:
                     non_silent_sections.append(
                         audio_segment[current_start : i + min_silence_len]
