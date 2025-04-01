@@ -9,6 +9,7 @@ type ApiResponse = {
   arborescence: {
     child_ressource_id: string;
     child_ressource_name: string;
+    child_ressource_nature: "dossier" | "note";
     parent_ressource_id: string;
     parent_ressource_name: string;
   }[];
@@ -28,13 +29,17 @@ class NavItemAdapter {
 
     // Création des objets NavItem pour chaque entrée de l'arborescence
     response.arborescence.forEach(
-      ({ child_ressource_id, child_ressource_name }) => {
+      ({
+        child_ressource_id,
+        child_ressource_name,
+        child_ressource_nature,
+      }) => {
         if (!map.has(child_ressource_id)) {
           map.set(
             child_ressource_id,
             new NavItem(
               child_ressource_name,
-              "dossier",
+              child_ressource_nature,
               `/dossier/${child_ressource_id}`,
             ),
           );
