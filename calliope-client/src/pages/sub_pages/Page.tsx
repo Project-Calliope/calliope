@@ -73,7 +73,7 @@ export default function Page() {
 
   return (
     <SidebarProvider>
-      <AppSidebar library={library} />
+      <AppSidebar library={library} editorRef={editorRef} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">

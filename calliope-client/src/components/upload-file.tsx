@@ -12,8 +12,13 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
-const FileUploadDialog = () => {
+const FileUploadDialog = ({
+  editorRef,
+}: {
+  editorRef: React.RefObject<MDXEditorMethods | null>;
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,6 +35,9 @@ const FileUploadDialog = () => {
         const response = await AudioService.upload(selectedFile);
         console.log("Réponse de l'API :", response);
         toast.success("Fichier envoyé avec succès !");
+        if (editorRef.current) {
+          editorRef.current.setMarkdown(response.response.transcript);
+        }
       } catch (error) {
         if (error instanceof Error) {
           toast.error("Erreur lors de l'envoi du fichier : " + error.message);
