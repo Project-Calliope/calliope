@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import LibraryManager from "@/models/LibraryManager";
+import RessourceService from "@/services/RessourceService";
 
 const FileUploadDialog = ({
   fatherRessourceId,
@@ -48,6 +49,8 @@ const FileUploadDialog = ({
             if (editorInstance) {
               editorInstance.setMarkdown(response.response.transcript);
             }
+
+            await updateNavMain();
           } catch (error) {
             if (error instanceof Error) {
               console.error("Erreur lors de l'envoi du fichier :", error);
@@ -69,6 +72,19 @@ const FileUploadDialog = ({
         },
       );
     }
+  };
+
+  const updateNavMain = async () => {
+    try {
+      const response = await RessourceService.getArborescence();
+      if (response) {
+        LibraryManager.getInstance().updateLibrary((lib) => {
+          lib.navMain = response;
+        });
+      }
+      if (response) {
+      }
+    } catch (error) {}
   };
 
   return (
