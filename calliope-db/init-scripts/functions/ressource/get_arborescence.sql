@@ -1,10 +1,12 @@
+DROP FUNCTION get_arborescence(p_public_user_id UUID);
+
 CREATE OR REPLACE FUNCTION get_arborescence(p_public_user_id UUID)
 RETURNS TABLE (
     child_ressource_id UUID,
-    child_ressource_name VARCHAR,
+    child_ressource_name TEXT,
     child_ressource_nature VARCHAR,
     parent_ressource_id UUID,
-    parent_ressource_name VARCHAR
+    parent_ressource_name TEXT
 ) AS $$
 BEGIN
     RETURN QUERY

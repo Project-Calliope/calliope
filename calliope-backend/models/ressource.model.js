@@ -77,6 +77,32 @@ class Ressource {
       };
     }
   }
+
+  static async get_note(public_user_id, public_ressource_id) {
+    try {
+      const result = await pool.query(`SELECT * FROM get_note($1, $2)`, [
+        public_user_id,
+        public_ressource_id,
+      ]);
+      if (result.rows.length > 0) {
+        return {
+          success: true,
+          note: result.rows[0],
+        };
+      } else {
+        return {
+          success: false,
+          message: "La note n'a pas pu être chargé",
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: "La note n'a pas pu être chargé",
+        error: error.message,
+      };
+    }
+  }
 }
 
 exports.Ressource = Ressource;

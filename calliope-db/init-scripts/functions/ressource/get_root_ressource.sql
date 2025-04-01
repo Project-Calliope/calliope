@@ -3,7 +3,7 @@ DROP FUNCTION IF EXISTS get_root_ressource(UUID);
 CREATE OR REPLACE FUNCTION get_root_ressource(p_public_user_id UUID)
 RETURNS TABLE (
     public_root_ressource UUID,
-    root_name VARCHAR
+    root_name TEXT
 ) LANGUAGE plpgsql AS $$
 BEGIN
     RETURN QUERY

@@ -13,7 +13,7 @@ CREATE TABLE RESSOURCE
     private_ressource_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     public_ressource_id  UUID NOT NULL DEFAULT gen_random_uuid(),
     ressource_nature VARCHAR NOT NULL CHECK (ressource_nature IN ('note', 'dossier' )),
-    ressource_name VARCHAR(25) NOT NULL,
+    ressource_name TEXT NOT NULL,
     private_user_id UUID NOT NULL,
     FOREIGN KEY (private_user_id) REFERENCES UTILISATEUR(private_user_id) ON DELETE CASCADE
 );
@@ -36,7 +36,7 @@ CREATE TABLE CHILD_RESSOURCE
 CREATE TABLE CONTENT
 (
     private_ressource_id UUID PRIMARY KEY NOT NULL,
-    content VARCHAR,
+    content TEXT,
     FOREIGN KEY (private_ressource_id) REFERENCES RESSOURCE(private_ressource_id)
 );
 

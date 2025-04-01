@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  AudioLinesIcon,
-  ChevronRight,
-  Folder,
-  FolderPlus,
-  NotebookText,
-  Plus,
-  SquarePen,
-} from "lucide-react";
+import { ChevronRight, Folder, NotebookText } from "lucide-react";
 import NavItem from "@/models/NavItem";
 import {
   Collapsible,
@@ -17,23 +9,15 @@ import {
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import FileUploadDialog from "./upload-file";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+import RessourceService from "@/services/RessourceService";
+import NavItemsActions from "./nav-items-actions";
 
 export function NavMain({
   navMain,
@@ -43,8 +27,17 @@ export function NavMain({
   editorRef: React.RefObject<MDXEditorMethods | null>;
 }) {
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Répertoire</SidebarGroupLabel>
+    <SidebarGroup className="w-full">
+      <SidebarMenuItem className="w-full group">
+        <SidebarMenuButton className="hover:bg-transparent border-b border-gray-300 rounded-none">
+          <div className="w-full flex items-center justify-between gap-2">
+            <div className="flex items-center">
+              <span className="font-bold">Répertoire</span>
+            </div>
+            <NavItemsActions />
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
       <SidebarMenu className="w-full">
         {navMain.items.map((item) => (
           <NavItemComponent
@@ -75,6 +68,21 @@ function NavItemComponent({
   const handleToggle = () => setIsOpen(!isOpen);
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
+
+  const setCurrentMarkdown = async (public_ressource_id: string) => {
+    try {
+      if (editorRef.current) {
+        console.log(public_ressource_id);
+        const response = await RessourceService.getNote(public_ressource_id);
+        console.log(response);
+        if (response && response.note_content) {
+          editorRef.current.setMarkdown(String(response.note_content));
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const closeUploadDialog = async () => {
     setOpenUploadDialog(false);
@@ -113,27 +121,9 @@ function NavItemComponent({
                     isOpen ? "rotate-90" : ""
                   }`} // Applique l'animation de rotation
                 />
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <SidebarMenuAction className="hover:bg-gray-200">
-                      <Plus />
-                    </SidebarMenuAction>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent side="right" align="start">
-                    <DropdownMenuItem>
-                      <FolderPlus />
-                      <span>Nouveau dossier</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                      <SquarePen />
-                      <span>Nouvelle note</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => setOpenUploadDialog(true)}>
-                      <AudioLinesIcon />
-                      <span>Créer une note à partir d'un audio</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <NavItemsActions
+                  onUploadDialogOpen={() => setOpenUploadDialog(true)}
+                />
               </SidebarMenuButton>
             </CollapsibleTrigger>
             <CollapsibleContent className="w-full">
@@ -154,18 +144,20 @@ function NavItemComponent({
     );
   } else {
     return (
-      <SidebarMenuSubItem className="w-full">
-        <SidebarMenuSubButton asChild className="w-full">
-          <a
-            href={item.url}
-            className="block flex items-center gap-2 w-full"
-            style={{ paddingLeft }}
-          >
-            <NotebookText />
+      <SidebarMenuItem className="w-full group">
+        <SidebarMenuButton
+          asChild
+          className="w-full flex items-center justify-start ml-1"
+          onClick={() => {
+            setCurrentMarkdown(item.url);
+          }}
+        >
+          <div className="flex items-center gap-2" style={{ paddingLeft }}>
+            <NotebookText className="h-4 l-4" />
             <span>{item.title}</span>
-          </a>
-        </SidebarMenuSubButton>
-      </SidebarMenuSubItem>
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     );
   }
 }

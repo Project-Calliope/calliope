@@ -10,4 +10,6 @@ router.get(
   RessourceController.getArborescence,
 );
 
+router.get("/note", JWTController.verifyToken, RessourceController.getNote);
+
 module.exports = router;

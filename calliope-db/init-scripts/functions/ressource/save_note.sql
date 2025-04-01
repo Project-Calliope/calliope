@@ -1,8 +1,8 @@
 CREATE OR REPLACE FUNCTION create_note(
     p_public_user_id UUID,
     p_public_father_ressource_id UUID,
-    p_ressource_name VARCHAR,
-    p_content VARCHAR
+    p_ressource_name TEXT,
+    p_content TEXT
 ) RETURNS UUID AS $$
 DECLARE
     v_private_user_id UUID;
