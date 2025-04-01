@@ -6,6 +6,7 @@ const multer = require("multer");
 const {
   multerErrorHandler,
 } = require("../middleware/multerErrorHandler.middleware");
+const CalliopeAIMiddleware = require("../middleware/calliopeAIMiddleware");
 
 const storage = multer.memoryStorage(); // Utilisation de la mémoire pour éviter le stockage disque
 const upload = multer({
@@ -19,6 +20,7 @@ router.post(
   upload,
   multerErrorHandler,
   validateAudio,
+  CalliopeAIMiddleware.transcribe,
   audioController.uploadAudio,
 );
 

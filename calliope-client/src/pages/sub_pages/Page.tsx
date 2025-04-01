@@ -1,4 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
+
+import { Button } from "@/components/ui/button";
 import TextEditor from "@/components/text-editor";
 import {
   Breadcrumb,
@@ -15,6 +17,13 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar";
 
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 export default function Page() {
   const markdown = `# Markdown Text
   ## Subtitle
@@ -29,12 +38,16 @@ export default function Page() {
 
   `;
 
+  const displayAlert = () => {
+    console.log("Gabin");
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b">
-          <div className="flex items-center gap-2 px-3">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b px-3">
+          <div className="flex items-center gap-2">
             <SidebarTrigger />
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
@@ -51,8 +64,28 @@ export default function Page() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
+          <AlertDialog>
+            <AlertDialogTrigger className="ml-2 mr-2">
+              <Button variant="outline" className="w-full">
+                Afficher le Transcript orginal
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogTitle>Transcript orginal</AlertDialogTitle>
+              <textarea
+                disabled
+                className="block w-full border p-2 rounded-md"
+                rows={10}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
+                enim ad minim veniam, quis nostrud exercitation ullamco laboris
+                nisi ut aliquip ex ea commodo consequat.
+              </textarea>
+              <Button onClick={displayAlert}>Générer un résumé</Button>
+            </AlertDialogContent>
+          </AlertDialog>
         </header>
-
         <TextEditor md_text={markdown} />
       </SidebarInset>
     </SidebarProvider>
