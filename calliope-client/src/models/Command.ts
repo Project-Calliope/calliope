@@ -53,3 +53,37 @@ export class UploadRessourceCommand implements Command {
     }
   }
 }
+
+export class LoadNoteCommand implements Command {
+  private _public_note_id: string;
+
+  constructor(public_note_id: string) {
+    this._public_note_id = public_note_id;
+  }
+
+  async execute(): Promise<void> {
+    try {
+      const response = await RessourceService.getNote(this._public_note_id);
+      const noteContent = response?.note_content;
+      const noteTitle = response?.note_title;
+
+      const editorInstance = LibraryManager.getInstance().editorRef?.current;
+
+      if (noteContent && editorInstance) {
+        editorInstance.setMarkdown(String(noteContent));
+      }
+
+      if (noteTitle) {
+        LibraryManager.getInstance().updateLibrary((lib) => {
+          lib.currentTitle = noteTitle; // Mettre à jour le titre
+        });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}

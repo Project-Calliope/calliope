@@ -15,9 +15,9 @@ import {
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import FileUploadDialog from "./upload-file";
-import RessourceService from "@/services/RessourceService";
 import NavItemsActions from "./nav-items-actions";
-import LibraryManager from "@/models/LibraryManager";
+import { LoadNoteCommand } from "@/models/Command";
+import toast from "react-hot-toast";
 
 export function NavMain({ navMain }: { navMain: NavItem }) {
   return (
@@ -50,22 +50,13 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
 
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
-  const setCurrentMarkdown = async (public_ressource_id: string) => {
+  const displayNote = async (public_ressource_id: string) => {
     try {
-      const response = await RessourceService.getNote(public_ressource_id);
-      const noteContent = response?.note_content;
-      const editorInstance = LibraryManager.getInstance().editorRef?.current;
-      if (noteContent && editorInstance) {
-        editorInstance.setMarkdown(String(noteContent));
-      }
-      const noteTitle = response?.note_title;
-      if (noteTitle) {
-        LibraryManager.getInstance().updateLibrary((lib) => {
-          lib.currentTitle = noteTitle; // Mettre à jour le titre
-        });
-      }
+      await new LoadNoteCommand(public_ressource_id).execute();
+      toast.success("Note chargée avec succès");
     } catch (error) {
       console.error(error);
+      toast.error("Erreur lors du chargement de la note");
     }
   };
 
@@ -132,7 +123,7 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
           asChild
           className="w-full flex items-center justify-start ml-1"
           onClick={() => {
-            setCurrentMarkdown(item.url);
+            displayNote(item.url);
           }}
         >
           <div className="flex items-center gap-2" style={{ paddingLeft }}>
