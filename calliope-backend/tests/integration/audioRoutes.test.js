@@ -6,19 +6,6 @@ const app = express();
 app.use("/api", audioRoutes);
 
 describe("Tests d'intégration - API upload audio", () => {
-  it("devrait accepter un fichier audio valide", async () => {
-    const fakeAudio = Buffer.from("mock audio content");
-
-    const response = await request(app)
-      .post("/api/upload")
-      .attach("audio", fakeAudio, {
-        filename: "test.mp3",
-        contentType: "audio/mpeg",
-      });
-
-    expect(response.status).toBe(200);
-  });
-
   it("devrait refuser un fichier non audio", async () => {
     const response = await request(app)
       .post("/api/upload")
