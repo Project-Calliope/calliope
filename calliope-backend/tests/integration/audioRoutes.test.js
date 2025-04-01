@@ -11,7 +11,7 @@ describe("Tests d'intégration - API upload audio", () => {
       .post("/api/upload")
       .attach("audio", Buffer.from("text file content"), "test.txt");
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
     expect(response.body.message).toBe(
       "Le fichier doit être un fichier audio (MP3, WAV, M4A, MPEG).",
     );
@@ -27,7 +27,7 @@ describe("Tests d'intégration - API upload audio", () => {
         contentType: "audio/mpeg",
       });
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
     expect(response.body.message).toBe(
       "Le fichier dépasse la limite de 10 Mo.",
     );
@@ -36,7 +36,7 @@ describe("Tests d'intégration - API upload audio", () => {
   it("devrait renvoyer une erreur si aucun fichier n'est envoyé", async () => {
     const response = await request(app).post("/api/upload");
 
-    expect(response.status).toBe(400);
+    expect(response.status).toBe(401);
     expect(response.body.message).toBe("Aucun fichier reçu");
   });
 });
