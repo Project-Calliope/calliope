@@ -33,9 +33,13 @@ export default function Page() {
   // Permet de forcer un re-render quand la library change
   const [, forceUpdate] = useState(0);
 
+  const [currentTitle, setCurrentTitle] = useState("");
+
   useEffect(() => {
     const unsubscribe = libraryManager.subscribe(() => {
+      const library = LibraryManager.getInstance().library;
       forceUpdate((prev) => prev + 1);
+      setCurrentTitle(library.currentTitle);
     });
 
     libraryManager.library.currentTitle = "Default Title";
@@ -83,9 +87,7 @@ export default function Page() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage>
-                    {libraryManager.library.currentTitle}
-                  </BreadcrumbPage>
+                  <BreadcrumbPage>{currentTitle}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

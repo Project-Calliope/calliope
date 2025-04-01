@@ -58,6 +58,12 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
       if (noteContent && editorInstance) {
         editorInstance.setMarkdown(String(noteContent));
       }
+      const noteTitle = response?.note_title;
+      if (noteTitle) {
+        LibraryManager.getInstance().updateLibrary((lib) => {
+          lib.currentTitle = noteTitle; // Mettre à jour le titre
+        });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -108,7 +114,7 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
               <div className="w-full">
                 {item.items?.map((subItem) => (
                   <NavItemComponent
-                    key={subItem.title}
+                    key={`${subItem.title}-${Math.random()}`}
                     item={subItem}
                     level={level + 1}
                   />
