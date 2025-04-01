@@ -1,6 +1,7 @@
 const express = require("express");
 const audioController = require("../controllers/audio.controller");
 const validateAudio = require("../middleware/validateAudio.middleware");
+const jwtMiddleware = require("../middleware/jwtMiddleware");
 const router = express.Router();
 const multer = require("multer");
 const {
@@ -17,6 +18,7 @@ const upload = multer({
 // Appliquer Multer avant la validation
 router.post(
   "/upload",
+  jwtMiddleware.verifyToken,
   upload,
   multerErrorHandler,
   validateAudio,

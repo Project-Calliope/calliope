@@ -92,6 +92,7 @@ function NavItemComponent({
           {openUploadDialog && (
             <FileUploadDialog
               editorRef={editorRef}
+              fatherRessourceId={item.url}
               isOpen={openUploadDialog}
               onClose={closeUploadDialog}
             />

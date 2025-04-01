@@ -14,10 +14,12 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 
 const FileUploadDialog = ({
   editorRef,
+  fatherRessourceId,
   isOpen,
   onClose,
 }: {
   editorRef: React.RefObject<MDXEditorMethods | null>;
+  fatherRessourceId: string;
   isOpen: boolean;
   onClose: () => void;
 }) => {
@@ -37,7 +39,10 @@ const FileUploadDialog = ({
       await toast.promise(
         (async () => {
           try {
-            const response = await AudioService.upload(selectedFile);
+            const response = await AudioService.upload(
+              selectedFile,
+              fatherRessourceId,
+            );
             console.log("Réponse de l'API :", response);
             if (editorRef.current) {
               editorRef.current.setMarkdown(response.response.transcript);

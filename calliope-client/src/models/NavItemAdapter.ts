@@ -23,7 +23,7 @@ class NavItemAdapter {
     const root = new NavItem(
       response.root.root_name,
       "dossier",
-      `/dossier/${response.root.public_root_ressource}`,
+      `${response.root.public_root_ressource}`,
     );
     map.set(response.root.public_root_ressource, root);
 
@@ -40,7 +40,7 @@ class NavItemAdapter {
             new NavItem(
               child_ressource_name,
               child_ressource_nature,
-              `/dossier/${child_ressource_id}`,
+              `${child_ressource_id}`,
             ),
           );
         }
