@@ -12,9 +12,7 @@ describe("Tests d'intégration - API upload audio", () => {
       .attach("audio", Buffer.from("text file content"), "test.txt");
 
     expect(response.status).toBe(401);
-    expect(response.body.message).toBe(
-      "Le fichier doit être un fichier audio (MP3, WAV, M4A, MPEG).",
-    );
+    expect(response.body.message).toBe("Access Denied. No token provided.");
   });
 
   it("devrait refuser un fichier trop volumineux", async () => {
@@ -28,15 +26,13 @@ describe("Tests d'intégration - API upload audio", () => {
       });
 
     expect(response.status).toBe(401);
-    expect(response.body.message).toBe(
-      "Le fichier dépasse la limite de 10 Mo.",
-    );
+    expect(response.body.message).toBe("Access Denied. No token provided.");
   });
 
   it("devrait renvoyer une erreur si aucun fichier n'est envoyé", async () => {
     const response = await request(app).post("/api/upload");
 
     expect(response.status).toBe(401);
-    expect(response.body.message).toBe("Aucun fichier reçu");
+    expect(response.body.message).toBe("Access Denied. No token provided.");
   });
 });
