@@ -24,6 +24,7 @@ import Library from "@/models/Library";
 import Note from "@/models/Note";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import NavItem from "@/models/NavItem";
+import RessourceService from "@/services/RessourceService";
 
 export default function Page() {
   const markdown = `# Markdown Text
@@ -69,7 +70,26 @@ export default function Page() {
     if (editorRef.current) {
       editorRef.current.setMarkdown(library.currentNote.content);
     }
+
+    getArborescence();
   }, [editorRef.current]);
+
+  const getArborescence = async () => {
+    try {
+      const result = await RessourceService.getArborescence();
+      if (result) {
+        setLibrary((prev) => {
+          const newLibrary = new Library();
+          newLibrary.currentTitle = prev.currentTitle;
+          newLibrary.currentNote = prev.currentNote;
+          newLibrary.navMain = result;
+          return newLibrary;
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <SidebarProvider>
