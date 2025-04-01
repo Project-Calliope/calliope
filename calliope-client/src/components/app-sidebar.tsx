@@ -14,25 +14,14 @@ import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { Button } from "./ui/button";
 import FileUploadDialog from "./upload-file";
-import NavItem from "@/models/NavItem";
+import Library from "@/models/Library";
 
 // Exemple
-const navMain = new NavItem("Root", "dossier", "#", true, [
-  new NavItem("Folder 1", "dossier", "#", false, [
-    new NavItem("Note 1", "note", "#"),
-    new NavItem("Note 2", "note", "#"),
-  ]),
-  new NavItem("Folder 2", "dossier", "#", false, [
-    new NavItem("Folder 3", "dossier", "#", false, [
-      new NavItem("Folder 4", "dossier", "#", false, [
-        new NavItem("Note 3", "note", "#"),
-        new NavItem("Note 4", "note", "#"),
-      ]),
-    ]),
-  ]),
-]);
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  library,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & { library: Library }) {
   return (
     <Sidebar {...props}>
       <SidebarHeader>
@@ -51,7 +40,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SquarePen /> Nouvelle note
       </Button>
       <FileUploadDialog />
-      <NavMain navMain={navMain} />
+      <NavMain navMain={library.navMain} />
       <SidebarRail />
     </Sidebar>
   );

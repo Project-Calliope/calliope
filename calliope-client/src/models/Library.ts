@@ -3,9 +3,7 @@ import Note from "./Note";
 import Transcript from "./Transcript";
 
 class Library {
-  private static instance: Library;
-
-  private _currentNote: Note = new Note();
+  private _currentNote: Note = new Note("Default content");
 
   private _navMain: NavItem = new NavItem("Main", "dossier", "/main");
 
@@ -13,14 +11,7 @@ class Library {
 
   private _currentTitle: string = "Default title";
 
-  private constructor() {}
-
-  public static getInstance(): Library {
-    if (!Library.instance) {
-      Library.instance = new Library();
-    }
-    return Library.instance;
-  }
+  constructor() {}
 
   public get currentNote(): Note {
     return this._currentNote;

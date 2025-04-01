@@ -1,3 +1,4 @@
+import Library from "@/models/Library";
 import {
   toolbarPlugin,
   KitchenSinkToolbar,
@@ -19,9 +20,11 @@ import {
   markdownShortcutPlugin,
   SandpackConfig,
   MDXEditor,
+  MDXEditorMethods,
 } from "@mdxeditor/editor";
 
 import "@mdxeditor/editor/style.css";
+import { forwardRef } from "react";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -77,16 +80,21 @@ const allPlugins = (diffMarkdown: string) => [
   markdownShortcutPlugin(),
 ];
 
-// 🛠️ TextEditor maintenant reçoit `setMdText` pour modifier `markdown`
-const TextEditor = ({ md_text }: { md_text: string }) => {
-  return (
-    <MDXEditor
-      markdown={md_text}
-      className="full-demo-mdxeditor"
-      contentEditableClassName="prose max-w-full font-sans"
-      plugins={allPlugins(md_text)}
-    />
-  );
-};
+// Utiliser forwardRef pour transmettre ref à MDXEditor
+const TextEditor = forwardRef<MDXEditorMethods, { library: Library }>(
+  ({ library }, ref) => {
+    return (
+      <MDXEditor
+        ref={ref}
+        markdown={library.currentNote.content}
+        className="full-demo-mdxeditor"
+        contentEditableClassName="prose max-w-full font-sans"
+        plugins={allPlugins(library.currentNote.content)}
+      />
+    );
+  },
+);
+
+TextEditor.displayName = "TextEditor"; // Nécessaire pour forwardRef
 
 export default TextEditor;

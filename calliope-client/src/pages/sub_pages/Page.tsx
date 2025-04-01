@@ -1,28 +1,29 @@
-import { AppSidebar } from "@/components/app-sidebar";
-
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import TextEditor from "@/components/text-editor";
 import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
   SidebarProvider,
   SidebarTrigger,
+  SidebarInset,
 } from "@/components/ui/sidebar";
-
 import {
   AlertDialog,
+  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { AppSidebar } from "@/components/app-sidebar";
+import TextEditor from "@/components/text-editor";
+import { Separator } from "@/components/ui/separator";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbPage,
+} from "@/components/ui/breadcrumb";
+import Library from "@/models/Library";
+import Note from "@/models/Note";
+import { MDXEditorMethods } from "@mdxeditor/editor";
+import NavItem from "@/models/NavItem";
 
 export default function Page() {
   const markdown = `# Markdown Text
@@ -35,16 +36,44 @@ export default function Page() {
   **Bold text**
   *Italic text*
   [Link text](https://example.com)
-
   `;
 
-  const displayAlert = () => {
-    console.log("Gabin");
-  };
+  const navMain = new NavItem("Root", "dossier", "#", true, [
+    new NavItem("Folder 1", "dossier", "#", false, [
+      new NavItem("Note 1", "note", "#"),
+      new NavItem("Note 2", "note", "#"),
+    ]),
+    new NavItem("Folder 2", "dossier", "#", false, [
+      new NavItem("Folder 3", "dossier", "#", false, [
+        new NavItem("Folder 4", "dossier", "#", false, [
+          new NavItem("Note 3", "note", "#"),
+          new NavItem("Note 4", "note", "#"),
+        ]),
+      ]),
+    ]),
+  ]);
+
+  const [library, setLibrary] = useState(new Library());
+
+  const editorRef = useRef<MDXEditorMethods>(null);
+
+  useEffect(() => {
+    setLibrary(() => {
+      const newLibrary = new Library();
+      newLibrary.currentTitle = "Test";
+      newLibrary.currentNote = new Note(markdown);
+      newLibrary.navMain = navMain;
+      return newLibrary;
+    });
+
+    if (editorRef.current) {
+      editorRef.current.setMarkdown(library.currentNote.content);
+    }
+  }, [editorRef.current]);
 
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar library={library} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">
@@ -52,14 +81,8 @@ export default function Page() {
             <Separator orientation="vertical" className="mr-2 h-4" />
             <Breadcrumb>
               <BreadcrumbList>
-                <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Building Your Application
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Data Fetching</BreadcrumbPage>
+                  <BreadcrumbPage>{library.currentTitle}</BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -82,11 +105,11 @@ export default function Page() {
                 enim ad minim veniam, quis nostrud exercitation ullamco laboris
                 nisi ut aliquip ex ea commodo consequat.
               </textarea>
-              <Button onClick={displayAlert}>Générer un résumé</Button>
+              <Button>Générer un résumé</Button>
             </AlertDialogContent>
           </AlertDialog>
         </header>
-        <TextEditor md_text={markdown} />
+        <TextEditor library={library} ref={editorRef} />
       </SidebarInset>
     </SidebarProvider>
   );
