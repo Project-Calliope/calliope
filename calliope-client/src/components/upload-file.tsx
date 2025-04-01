@@ -1,5 +1,4 @@
 import { useState } from "react";
-import AudioService from "../services/AudioService";
 import { Button } from "@/components/ui/button";
 import toast from "react-hot-toast";
 import {
@@ -11,8 +10,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import LibraryManager from "@/models/LibraryManager";
-import { UpdateNavMainCommand } from "@/models/Command";
+import { UpdateNavMainCommand, UploadRessourceCommand } from "@/models/Command";
 
 const FileUploadDialog = ({
   fatherRessourceId,
@@ -38,32 +36,11 @@ const FileUploadDialog = ({
       console.log("Fichier sélectionné :", selectedFile.name);
       await toast.promise(
         (async () => {
-          try {
-            const response = await AudioService.upload(
-              selectedFile,
-              fatherRessourceId,
-            );
-            const editorInstance =
-              LibraryManager.getInstance().editorRef?.current;
-
-            if (editorInstance) {
-              editorInstance.setMarkdown(response.response.transcript);
-            }
-
-            await new UpdateNavMainCommand().execute();
-          } catch (error) {
-            if (error instanceof Error) {
-              console.error("Erreur lors de l'envoi du fichier :", error);
-              throw new Error(
-                "Erreur lors de l'envoi du fichier : " + error.message,
-              );
-            } else {
-              console.error("Erreur lors de l'envoi du fichier :", error);
-              throw new Error(
-                "Une erreur inconnue est survenue lors de l'envoi du fichier",
-              );
-            }
-          }
+          await new UploadRessourceCommand(
+            selectedFile,
+            fatherRessourceId,
+          ).execute();
+          await new UpdateNavMainCommand().execute();
         })(),
         {
           loading: "Transcription du fichier audio en cours...",
