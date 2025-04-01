@@ -20,7 +20,6 @@ import {
   BreadcrumbItem,
   BreadcrumbPage,
 } from "@/components/ui/breadcrumb";
-import Library from "@/models/Library";
 import Note from "@/models/Note";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import NavItem from "@/models/NavItem";
@@ -28,63 +27,44 @@ import RessourceService from "@/services/RessourceService";
 import LibraryManager from "@/models/LibraryManager";
 
 export default function Page() {
-  const markdown = `# Markdown Text
-  ## Subtitle
-  ### Subsubtitle
-
-  - List item 1
-  - List item 2
-
-  **Bold text**
-  *Italic text*
-  [Link text](https://example.com)
-  `;
-
-  const navMain = new NavItem("Root", "dossier", "#", true, [
-    new NavItem("Folder 1", "dossier", "#", false, [
-      new NavItem("Note 1", "note", "#"),
-      new NavItem("Note 2", "note", "#"),
-    ]),
-    new NavItem("Folder 2", "dossier", "#", false, [
-      new NavItem("Folder 3", "dossier", "#", false, [
-        new NavItem("Folder 4", "dossier", "#", false, [
-          new NavItem("Note 3", "note", "#"),
-          new NavItem("Note 4", "note", "#"),
-        ]),
-      ]),
-    ]),
-  ]);
-
-  const [library, setLibrary] = useState(new Library());
-
+  const libraryManager = LibraryManager.getInstance();
   const editorRef = useRef<MDXEditorMethods>(null);
+
+  // Permet de forcer un re-render quand la library change
+  const [, forceUpdate] = useState(0);
+
   useEffect(() => {
-    setLibrary(() => {
-      const newLibrary = new Library();
-      newLibrary.currentTitle = "Test";
-      newLibrary.currentNote = new Note(markdown);
-      newLibrary.navMain = navMain;
-      return newLibrary;
+    const unsubscribe = libraryManager.subscribe(() => {
+      forceUpdate((prev) => prev + 1);
     });
 
-    const currentEditorRef = LibraryManager.getInstance().editorRef;
-    if (currentEditorRef && currentEditorRef.current && library.currentNote) {
-      currentEditorRef.current.setMarkdown(library.currentNote.content);
+    libraryManager.library.currentTitle = "Default Title";
+    libraryManager.library.currentNote = new Note("# Markdown Example");
+    libraryManager.library.navMain = new NavItem(
+      "Root",
+      "dossier",
+      "#",
+      true,
+      [],
+    );
+
+    if (editorRef.current && libraryManager.library.currentNote) {
+      editorRef.current.setMarkdown(libraryManager.library.currentNote.content);
     }
 
     getArborescence();
+
+    return () => {
+      unsubscribe(); // Se désinscrire pour éviter les fuites mémoire
+    };
   }, [editorRef]);
 
   const getArborescence = async () => {
     try {
       const result = await RessourceService.getArborescence();
       if (result) {
-        setLibrary((prev) => {
-          const newLibrary = new Library();
-          newLibrary.currentTitle = prev.currentTitle;
-          newLibrary.currentNote = prev.currentNote;
-          newLibrary.navMain = result;
-          return newLibrary;
+        libraryManager.updateLibrary((lib) => {
+          lib.navMain = result;
         });
       }
     } catch (error) {
@@ -94,7 +74,7 @@ export default function Page() {
 
   return (
     <SidebarProvider>
-      <AppSidebar library={library} />
+      <AppSidebar library={libraryManager.library} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">
@@ -103,7 +83,9 @@ export default function Page() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{library.currentTitle}</BreadcrumbPage>
+                  <BreadcrumbPage>
+                    {libraryManager.library.currentTitle}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -111,26 +93,23 @@ export default function Page() {
           <AlertDialog>
             <AlertDialogTrigger className="ml-2 mr-2">
               <Button variant="outline" className="w-full">
-                Afficher le Transcript orginal
+                Afficher le Transcript original
               </Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
-              <AlertDialogTitle>Transcript orginal</AlertDialogTitle>
+              <AlertDialogTitle>Transcript original</AlertDialogTitle>
               <textarea
                 disabled
                 className="block w-full border p-2 rounded-md"
                 rows={10}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-                enim ad minim veniam, quis nostrud exercitation ullamco laboris
-                nisi ut aliquip ex ea commodo consequat.
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
               </textarea>
               <Button>Générer un résumé</Button>
             </AlertDialogContent>
           </AlertDialog>
         </header>
-        <TextEditor library={library} ref={editorRef} />
+        <TextEditor library={libraryManager.library} ref={editorRef} />
       </SidebarInset>
     </SidebarProvider>
   );
