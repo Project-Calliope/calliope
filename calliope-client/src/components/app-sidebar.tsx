@@ -13,7 +13,6 @@ import {
 import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { Button } from "./ui/button";
-import FileUploadDialog from "./upload-file";
 import Library from "@/models/Library";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 
@@ -44,8 +43,8 @@ export function AppSidebar({
       <Button variant="outline" className="mt-4 mb-2 ml-2 mr-2">
         <SquarePen /> Nouvelle note
       </Button>
-      <FileUploadDialog editorRef={editorRef} />
-      <NavMain navMain={library.navMain} />
+      {/* <FileUploadDialog editorRef={editorRef} /> */}
+      <NavMain navMain={library.navMain} editorRef={editorRef} />
       <SidebarRail />
     </Sidebar>
   );

@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AudioLinesIcon,
   ChevronRight,
   Folder,
   FolderPlus,
@@ -31,14 +32,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import FileUploadDialog from "./upload-file";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
-export function NavMain({ navMain }: { navMain: NavItem }) {
+export function NavMain({
+  navMain,
+  editorRef,
+}: {
+  navMain: NavItem;
+  editorRef: React.RefObject<MDXEditorMethods | null>;
+}) {
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Répertoire</SidebarGroupLabel>
       <SidebarMenu className="w-full">
         {navMain.items.map((item) => (
-          <NavItemComponent key={item.title} item={item} level={0} />
+          <NavItemComponent
+            key={item.title}
+            item={item}
+            level={0}
+            editorRef={editorRef}
+          />
         ))}
       </SidebarMenu>
     </SidebarGroup>
@@ -46,11 +60,25 @@ export function NavMain({ navMain }: { navMain: NavItem }) {
 }
 
 // Composant récursif pour afficher les dossiers et les notes
-function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
+function NavItemComponent({
+  item,
+  level,
+  editorRef,
+}: {
+  item: NavItem;
+  level: number;
+  editorRef: React.RefObject<MDXEditorMethods | null>;
+}) {
   const [isOpen, setIsOpen] = useState(item.isActive); // Gérer l'ouverture de chaque dossier
   const paddingLeft = `${level * 16}px`; // Indentation pour les éléments imbriqués
 
   const handleToggle = () => setIsOpen(!isOpen);
+
+  const [openUploadDialog, setOpenUploadDialog] = useState(false);
+
+  const closeUploadDialog = async () => {
+    setOpenUploadDialog(false);
+  };
 
   if (item.nature === "dossier") {
     return (
@@ -60,53 +88,67 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
         onOpenChange={handleToggle}
         className="w-full"
       >
-        <SidebarMenuItem className="w-full group">
-          <CollapsibleTrigger asChild>
-            <SidebarMenuButton
-              tooltip={item.title}
-              className="w-full flex items-center justify-between"
-              style={{ paddingLeft }}
-            >
-              <div className="flex items-center gap-2">
-                <Folder className="h-4 l-4" />
-                <span>{item.title}</span>
-              </div>
-              <ChevronRight
-                className={`ml-auto transition-transform duration-200 ${
-                  isOpen ? "rotate-90" : ""
-                }`} // Applique l'animation de rotation
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction className="hover:bg-gray-200">
-                    <Plus />
-                  </SidebarMenuAction>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="right" align="start">
-                  <DropdownMenuItem>
-                    <FolderPlus />
-                    <span>Nouveau dossier</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <SquarePen />
-                    <span>Nouvelle note</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuButton>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="w-full">
-            <div className="w-full">
-              {item.items?.map((subItem) => (
-                <NavItemComponent
-                  key={subItem.title}
-                  item={subItem}
-                  level={level + 1}
+        <div>
+          {openUploadDialog && (
+            <FileUploadDialog
+              editorRef={editorRef}
+              isOpen={openUploadDialog}
+              onClose={closeUploadDialog}
+            />
+          )}
+          <SidebarMenuItem className="w-full group">
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton
+                tooltip={item.title}
+                className="w-full flex items-center justify-between"
+                style={{ paddingLeft }}
+              >
+                <div className="flex items-center gap-2">
+                  <Folder className="h-4 l-4" />
+                  <span>{item.title}</span>
+                </div>
+                <ChevronRight
+                  className={`ml-auto transition-transform duration-200 ${
+                    isOpen ? "rotate-90" : ""
+                  }`} // Applique l'animation de rotation
                 />
-              ))}
-            </div>
-          </CollapsibleContent>
-        </SidebarMenuItem>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <SidebarMenuAction className="hover:bg-gray-200">
+                      <Plus />
+                    </SidebarMenuAction>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent side="right" align="start">
+                    <DropdownMenuItem>
+                      <FolderPlus />
+                      <span>Nouveau dossier</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem>
+                      <SquarePen />
+                      <span>Nouvelle note</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setOpenUploadDialog(true)}>
+                      <AudioLinesIcon />
+                      <span>Créer une note à partir d'un audio</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="w-full">
+              <div className="w-full">
+                {item.items?.map((subItem) => (
+                  <NavItemComponent
+                    key={subItem.title}
+                    item={subItem}
+                    level={level + 1}
+                    editorRef={editorRef}
+                  />
+                ))}
+              </div>
+            </CollapsibleContent>
+          </SidebarMenuItem>
+        </div>
       </Collapsible>
     );
   } else {
