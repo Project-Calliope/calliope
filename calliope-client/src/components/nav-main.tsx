@@ -15,17 +15,11 @@ import {
 } from "@/components/ui/sidebar";
 import { useState } from "react";
 import FileUploadDialog from "./upload-file";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 import RessourceService from "@/services/RessourceService";
 import NavItemsActions from "./nav-items-actions";
+import LibraryManager from "@/models/LibraryManager";
 
-export function NavMain({
-  navMain,
-  editorRef,
-}: {
-  navMain: NavItem;
-  editorRef: React.RefObject<MDXEditorMethods | null>;
-}) {
+export function NavMain({ navMain }: { navMain: NavItem }) {
   return (
     <SidebarGroup className="w-full">
       <SidebarMenuItem className="w-full group">
@@ -40,12 +34,7 @@ export function NavMain({
       </SidebarMenuItem>
       <SidebarMenu className="w-full">
         {navMain.items.map((item) => (
-          <NavItemComponent
-            key={item.title}
-            item={item}
-            level={0}
-            editorRef={editorRef}
-          />
+          <NavItemComponent key={item.title} item={item} level={0} />
         ))}
       </SidebarMenu>
     </SidebarGroup>
@@ -53,15 +42,7 @@ export function NavMain({
 }
 
 // Composant récursif pour afficher les dossiers et les notes
-function NavItemComponent({
-  item,
-  level,
-  editorRef,
-}: {
-  item: NavItem;
-  level: number;
-  editorRef: React.RefObject<MDXEditorMethods | null>;
-}) {
+function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
   const [isOpen, setIsOpen] = useState(item.isActive); // Gérer l'ouverture de chaque dossier
   const paddingLeft = `${level * 16}px`; // Indentation pour les éléments imbriqués
 
@@ -71,16 +52,14 @@ function NavItemComponent({
 
   const setCurrentMarkdown = async (public_ressource_id: string) => {
     try {
-      if (editorRef.current) {
-        console.log(public_ressource_id);
-        const response = await RessourceService.getNote(public_ressource_id);
-        console.log(response);
-        if (response && response.note_content) {
-          editorRef.current.setMarkdown(String(response.note_content));
-        }
+      const response = await RessourceService.getNote(public_ressource_id);
+      const noteContent = response?.note_content;
+      const editorInstance = LibraryManager.getInstance().editorRef?.current;
+      if (noteContent && editorInstance) {
+        editorInstance.setMarkdown(String(noteContent));
       }
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -99,7 +78,6 @@ function NavItemComponent({
         <div>
           {openUploadDialog && (
             <FileUploadDialog
-              editorRef={editorRef}
               fatherRessourceId={item.url}
               isOpen={openUploadDialog}
               onClose={closeUploadDialog}
@@ -133,7 +111,6 @@ function NavItemComponent({
                     key={subItem.title}
                     item={subItem}
                     level={level + 1}
-                    editorRef={editorRef}
                   />
                 ))}
               </div>

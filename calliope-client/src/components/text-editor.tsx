@@ -1,4 +1,5 @@
 import Library from "@/models/Library";
+import LibraryManager from "@/models/LibraryManager";
 import {
   toolbarPlugin,
   KitchenSinkToolbar,
@@ -24,7 +25,7 @@ import {
 } from "@mdxeditor/editor";
 
 import "@mdxeditor/editor/style.css";
-import { forwardRef } from "react";
+import React, { forwardRef, useEffect } from "react";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -60,7 +61,6 @@ const allPlugins = (diffMarkdown: string) => [
   headingsPlugin(),
   linkPlugin(),
   linkDialogPlugin(),
-
   imagePlugin({ imageUploadHandler: async () => "/sample-image.png" }),
   tablePlugin(),
   thematicBreakPlugin(),
@@ -80,9 +80,18 @@ const allPlugins = (diffMarkdown: string) => [
   markdownShortcutPlugin(),
 ];
 
-// Utiliser forwardRef pour transmettre ref à MDXEditor
+// Use forwardRef to pass the ref to MDXEditor
 const TextEditor = forwardRef<MDXEditorMethods, { library: Library }>(
   ({ library }, ref) => {
+    // Effect to set the editorRef in LibraryManager
+    useEffect(() => {
+      if (ref && typeof ref !== "function" && ref.current) {
+        LibraryManager.getInstance().editorRef =
+          ref as React.RefObject<MDXEditorMethods>;
+        console.log(LibraryManager.getInstance().editorRef);
+      }
+    }, [ref]);
+
     return (
       <MDXEditor
         ref={ref}
@@ -95,6 +104,6 @@ const TextEditor = forwardRef<MDXEditorMethods, { library: Library }>(
   },
 );
 
-TextEditor.displayName = "TextEditor"; // Nécessaire pour forwardRef
+TextEditor.displayName = "TextEditor"; // Necessary for forwardRef
 
 export default TextEditor;

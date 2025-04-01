@@ -25,6 +25,7 @@ import Note from "@/models/Note";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import NavItem from "@/models/NavItem";
 import RessourceService from "@/services/RessourceService";
+import LibraryManager from "@/models/LibraryManager";
 
 export default function Page() {
   const markdown = `# Markdown Text
@@ -57,7 +58,6 @@ export default function Page() {
   const [library, setLibrary] = useState(new Library());
 
   const editorRef = useRef<MDXEditorMethods>(null);
-
   useEffect(() => {
     setLibrary(() => {
       const newLibrary = new Library();
@@ -67,12 +67,13 @@ export default function Page() {
       return newLibrary;
     });
 
-    if (editorRef.current) {
-      editorRef.current.setMarkdown(library.currentNote.content);
+    const currentEditorRef = LibraryManager.getInstance().editorRef;
+    if (currentEditorRef && currentEditorRef.current && library.currentNote) {
+      currentEditorRef.current.setMarkdown(library.currentNote.content);
     }
 
     getArborescence();
-  }, [editorRef.current]);
+  }, [editorRef]);
 
   const getArborescence = async () => {
     try {
@@ -93,7 +94,7 @@ export default function Page() {
 
   return (
     <SidebarProvider>
-      <AppSidebar library={library} editorRef={editorRef} />
+      <AppSidebar library={library} />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-3">
           <div className="flex items-center gap-2">

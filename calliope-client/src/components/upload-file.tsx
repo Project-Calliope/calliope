@@ -10,15 +10,14 @@ import {
   AlertDialogFooter,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { MDXEditorMethods } from "@mdxeditor/editor";
+
+import LibraryManager from "@/models/LibraryManager";
 
 const FileUploadDialog = ({
-  editorRef,
   fatherRessourceId,
   isOpen,
   onClose,
 }: {
-  editorRef: React.RefObject<MDXEditorMethods | null>;
   fatherRessourceId: string;
   isOpen: boolean;
   onClose: () => void;
@@ -43,9 +42,11 @@ const FileUploadDialog = ({
               selectedFile,
               fatherRessourceId,
             );
-            console.log("Réponse de l'API :", response);
-            if (editorRef.current) {
-              editorRef.current.setMarkdown(response.response.transcript);
+            const editorInstance =
+              LibraryManager.getInstance().editorRef?.current;
+
+            if (editorInstance) {
+              editorInstance.setMarkdown(response.response.transcript);
             }
           } catch (error) {
             if (error instanceof Error) {

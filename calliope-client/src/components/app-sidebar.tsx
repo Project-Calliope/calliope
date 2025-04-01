@@ -14,17 +14,14 @@ import { NavUser } from "./nav-user";
 import { NavMain } from "./nav-main";
 import { Button } from "./ui/button";
 import Library from "@/models/Library";
-import { MDXEditorMethods } from "@mdxeditor/editor";
 
 // Exemple
 
 export function AppSidebar({
   library,
-  editorRef,
   ...props
 }: React.ComponentProps<typeof Sidebar> & {
   library: Library;
-  editorRef: React.RefObject<MDXEditorMethods | null>;
 }) {
   return (
     <Sidebar {...props}>
@@ -43,8 +40,7 @@ export function AppSidebar({
       <Button variant="outline" className="mt-4 mb-2 ml-2 mr-2">
         <SquarePen /> Nouvelle note
       </Button>
-      {/* <FileUploadDialog editorRef={editorRef} /> */}
-      <NavMain navMain={library.navMain} editorRef={editorRef} />
+      <NavMain navMain={library.navMain} />
       <SidebarRail />
     </Sidebar>
   );
