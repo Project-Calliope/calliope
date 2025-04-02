@@ -87,3 +87,29 @@ export class LoadNoteCommand implements AsyncCommand {
     }
   }
 }
+
+export class CreateFolderCommand implements AsyncCommand {
+  private _public_father_id: string;
+  private _ressource_name: string;
+
+  constructor(public_father_id: string, ressource_name: string) {
+    this._public_father_id = public_father_id;
+    this._ressource_name = ressource_name;
+  }
+
+  async execute(): Promise<void> {
+    try {
+      const result = await RessourceService.createFolder(
+        this._public_father_id,
+        this._ressource_name,
+      );
+      console.log(result);
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}

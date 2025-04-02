@@ -110,11 +110,10 @@ class Ressource {
     folder_name,
   ) {
     try {
-      const result = await pool.query(`create_note($1, $2, $3)`, [
-        public_user_id,
-        public_father_ressource_id,
-        folder_name,
-      ]);
+      const result = await pool.query(
+        `SELECT * FROM create_folder($1, $2, $3)`,
+        [public_user_id, public_father_ressource_id, folder_name],
+      );
       if (result.rows.length > 0) {
         return {
           success: true,

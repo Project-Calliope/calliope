@@ -12,4 +12,10 @@ router.get(
 
 router.get("/note", JWTController.verifyToken, RessourceController.getNote);
 
+router.post(
+  "/folder",
+  JWTController.verifyToken,
+  RessourceController.createFolder,
+);
+
 module.exports = router;

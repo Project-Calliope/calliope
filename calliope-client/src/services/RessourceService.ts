@@ -12,8 +12,11 @@ export default class RessourceService {
       });
       return NavItemAdapter.convertToNavItems(response.data);
     } catch (error) {
-      console.log(error);
-      return null;
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
     }
   }
 
@@ -35,8 +38,34 @@ export default class RessourceService {
         note_content: response.data.note.note_content,
       };
     } catch (error) {
-      console.log(error);
-      return null;
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+  static async createFolder(public_father_id: string, ressource_name: string) {
+    try {
+      const response = await axios.post(
+        "api/ressource/folder",
+        {
+          public_father_id: public_father_id,
+          ressource_name: ressource_name,
+        },
+        {
+          headers: {
+            authorization: localStorage.getItem("token"),
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
     }
   }
 }

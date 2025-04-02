@@ -47,6 +47,31 @@ exports.getNote = async (req, res) => {
   }
 };
 
-// exports.createFolder = async (req, res) => {
-//   const { public_user_id } = req.user;
-// };
+exports.createFolder = async (req, res) => {
+  const { public_user_id } = req.user;
+
+  if (!req.body.ressource_name) {
+    return res.status(400).json({
+      success: false,
+      message: "Nom de la ressource obligatoire",
+    });
+  }
+
+  if (!req.body.public_father_id) {
+    return res.status(400).json({
+      success: false,
+      message: "Identifiant de la ressource parente obligatoire",
+    });
+  }
+
+  const result = await Ressource.create_folder(
+    public_user_id,
+    req.body.public_father_id,
+    req.body.ressource_name,
+  );
+  if (result.success) {
+    return res.status(201).json(result);
+  } else {
+    return res.status(400).json(result);
+  }
+};
