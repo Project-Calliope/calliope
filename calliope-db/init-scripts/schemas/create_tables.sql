@@ -44,9 +44,9 @@ CREATE TABLE TRANSCRIPT
 (
     private_transcript_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     public_transcript_id UUID DEFAULT gen_random_uuid(),
-    audioName VARCHAR NOT NULL,
+    audioName TEXT NOT NULL,
     audioSize REAL NOT NULL,
-    content VARCHAR NOT NULL
+    content TEXT NOT NULL
 );
 
 CREATE TABLE IS_TRANSCRIPT_OF

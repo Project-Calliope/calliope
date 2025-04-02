@@ -22,11 +22,13 @@ exports.uploadAudio = async (req, res) => {
         req.file.originalname,
         req.file.transcript,
       );
-      const create_result = await Ressource.create_note(
+      const create_result = await Ressource.create_note_with_transcript(
         req.user.public_user_id,
         req.body.ressource_father_id,
         req.file.originalname,
         req.file.transcript,
+        req.file.originalname,
+        req.file.size,
       );
 
       if (create_result.success) {

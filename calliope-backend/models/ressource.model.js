@@ -47,16 +47,25 @@ class Ressource {
     }
   }
 
-  static async create_note(
+  static async create_note_with_transcript(
     public_user_id,
     public_father_ressource_id,
     ressource_name,
     content,
+    audioname,
+    audiosize,
   ) {
     try {
       const result = await pool.query(
-        `SELECT * FROM create_note($1, $2, $3, $4)`,
-        [public_user_id, public_father_ressource_id, ressource_name, content],
+        `SELECT * FROM create_note_with_transcript($1, $2, $3, $4, $5, $6)`,
+        [
+          public_user_id,
+          public_father_ressource_id,
+          ressource_name,
+          content,
+          audioname,
+          audiosize,
+        ],
       );
       if (result.rows.length > 0) {
         return {
