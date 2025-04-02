@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import toast from "react-hot-toast";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/alert-dialog";
 
 import { UpdateNavMainCommand, UploadRessourceCommand } from "@/models/Command";
+import { ToastPromiseCommandDecorator } from "@/models/CommandDecorator";
 
 const FileUploadDialog = ({
   fatherRessourceId,
@@ -32,22 +32,28 @@ const FileUploadDialog = ({
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedFile) {
-      onClose(); // Close the dialog after successful upload
-      console.log("Fichier sélectionné :", selectedFile.name);
-      await toast.promise(
-        (async () => {
-          await new UploadRessourceCommand(
-            selectedFile,
-            fatherRessourceId,
-          ).execute();
-          await new UpdateNavMainCommand().execute();
-        })(),
-        {
-          loading: "Transcription du fichier audio en cours...",
-          success: "Transcription réalisée avec succès !",
-          error: (err) => err.message || "Échec de la transcription",
-        },
+      onClose();
+      const uploadCommand = new UploadRessourceCommand(
+        selectedFile,
+        fatherRessourceId,
       );
+      const decoratedCommand = new ToastPromiseCommandDecorator(
+        uploadCommand,
+        "Transcription du fichier audio en cours...",
+        "Transcription réalisée avec succès !",
+        "Échec de la transcription",
+      );
+
+      try {
+        await decoratedCommand.execute();
+        await new UpdateNavMainCommand().execute();
+      } catch (error) {
+        if (error instanceof Error) {
+          console.log(error.message);
+        } else {
+          console.log("An unknown error occurred");
+        }
+      }
     }
   };
 
