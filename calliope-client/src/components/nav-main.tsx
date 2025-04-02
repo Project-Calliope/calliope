@@ -13,22 +13,47 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
+import { JSX, useState } from "react";
 import FileUploadDialog from "./upload-file";
 import NavItemsActions from "./nav-items-actions";
 import { LoadNoteCommand } from "@/models/AsyncCommand";
 import { ToastSuccessErrorCommandDecorator } from "@/models/AsyncCommandDecorator";
+import CreateFolderDialog from "./create-folder";
+import CreateNoteDialog from "./create-note";
+
+const getDialogComponent = (
+  type: string | null,
+  props: { fatherRessourceId: string; isOpen: boolean; onClose: () => void },
+) => {
+  const dialogMap: Record<string, JSX.Element> = {
+    audio: <FileUploadDialog {...props} />,
+    folder: <CreateFolderDialog {...props} />,
+    note: <CreateNoteDialog {...props} />,
+  };
+
+  return type ? dialogMap[type] || null : null;
+};
 
 export function NavMain({ navMain }: { navMain: NavItem }) {
+  const [openDialog, setOpenDialog] = useState<string | null>(null);
+
+  const handleDialogOpen = (type: string) => setOpenDialog(type);
+  const handleDialogClose = () => setOpenDialog(null);
+
   return (
     <SidebarGroup className="w-full">
+      {getDialogComponent(openDialog, {
+        fatherRessourceId: navMain.url,
+        isOpen: true,
+        onClose: handleDialogClose,
+      })}
       <SidebarMenuItem className="w-full group">
         <SidebarMenuButton className="hover:bg-transparent border-b border-gray-300 rounded-none">
           <div className="w-full flex items-center justify-between gap-2">
             <div className="flex items-center">
               <span className="font-bold">Répertoire</span>
             </div>
-            <NavItemsActions />
+            <NavItemsActions onDialogOpen={handleDialogOpen} />
           </div>
         </SidebarMenuButton>
       </SidebarMenuItem>
@@ -48,8 +73,6 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
 
   const handleToggle = () => setIsOpen(!isOpen);
 
-  const [openUploadDialog, setOpenUploadDialog] = useState(false);
-
   const displayNote = async (public_ressource_id: string) => {
     const command = new LoadNoteCommand(public_ressource_id);
     const decoratedCommand = new ToastSuccessErrorCommandDecorator(
@@ -60,9 +83,10 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
     decoratedCommand.execute();
   };
 
-  const closeUploadDialog = async () => {
-    setOpenUploadDialog(false);
-  };
+  const [openDialog, setOpenDialog] = useState<string | null>(null);
+
+  const handleDialogOpen = (type: string) => setOpenDialog(type);
+  const handleDialogClose = () => setOpenDialog(null);
 
   if (item.nature === "dossier") {
     return (
@@ -73,13 +97,11 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
         className="w-full"
       >
         <div>
-          {openUploadDialog && (
-            <FileUploadDialog
-              fatherRessourceId={item.url}
-              isOpen={openUploadDialog}
-              onClose={closeUploadDialog}
-            />
-          )}
+          {getDialogComponent(openDialog, {
+            fatherRessourceId: item.url,
+            isOpen: true,
+            onClose: handleDialogClose,
+          })}
           <SidebarMenuItem className="w-full group">
             <CollapsibleTrigger asChild>
               <SidebarMenuButton
@@ -96,9 +118,7 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
                     isOpen ? "rotate-90" : ""
                   }`} // Applique l'animation de rotation
                 />
-                <NavItemsActions
-                  onUploadDialogOpen={() => setOpenUploadDialog(true)}
-                />
+                <NavItemsActions onDialogOpen={handleDialogOpen} />
               </SidebarMenuButton>
             </CollapsibleTrigger>
             <CollapsibleContent className="w-full">

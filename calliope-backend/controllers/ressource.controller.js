@@ -46,3 +46,7 @@ exports.getNote = async (req, res) => {
     return res.status(400).json(result);
   }
 };
+
+// exports.createFolder = async (req, res) => {
+//   const { public_user_id } = req.user;
+// };

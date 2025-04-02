@@ -103,6 +103,37 @@ class Ressource {
       };
     }
   }
+
+  static async create_folder(
+    public_user_id,
+    public_father_ressource_id,
+    folder_name,
+  ) {
+    try {
+      const result = await pool.query(`create_note($1, $2, $3)`, [
+        public_user_id,
+        public_father_ressource_id,
+        folder_name,
+      ]);
+      if (result.rows.length > 0) {
+        return {
+          success: true,
+          public_ressource_id: result.rows[0],
+        };
+      } else {
+        return {
+          success: false,
+          message: "Le dossier n'a pas pu être créé",
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: "le dossier n'a pas pu être créé",
+        error: error.message,
+      };
+    }
+  }
 }
 
 exports.Ressource = Ressource;

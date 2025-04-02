@@ -8,10 +8,28 @@ import {
 import { SidebarMenuAction } from "./ui/sidebar";
 
 interface NavItemsActionsProps {
-  onUploadDialogOpen?: () => void;
+  onDialogOpen: (type: string) => void;
 }
 
-const NavItemsActions = ({ onUploadDialogOpen }: NavItemsActionsProps) => {
+const NavItemsActions = ({ onDialogOpen }: NavItemsActionsProps) => {
+  const actions = [
+    {
+      label: "Nouveau dossier",
+      icon: <FolderPlus />,
+      onClick: () => onDialogOpen("folder"),
+    },
+    {
+      label: "Nouvelle note",
+      icon: <SquarePen />,
+      onClick: () => onDialogOpen("note"),
+    },
+    {
+      label: "Créer une note à partir d'un audio",
+      icon: <AudioLinesIcon />,
+      onClick: () => onDialogOpen("audio"),
+    },
+  ];
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -20,18 +38,12 @@ const NavItemsActions = ({ onUploadDialogOpen }: NavItemsActionsProps) => {
         </SidebarMenuAction>
       </DropdownMenuTrigger>
       <DropdownMenuContent side="right" align="start">
-        <DropdownMenuItem>
-          <FolderPlus />
-          <span>Nouveau dossier</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <SquarePen />
-          <span>Nouvelle note</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={onUploadDialogOpen}>
-          <AudioLinesIcon />
-          <span>Créer une note à partir d'un audio</span>
-        </DropdownMenuItem>
+        {actions.map((action, index) => (
+          <DropdownMenuItem key={index} onClick={action.onClick}>
+            {action.icon}
+            <span>{action.label}</span>
+          </DropdownMenuItem>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );
