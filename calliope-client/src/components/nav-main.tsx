@@ -16,8 +16,8 @@ import {
 import { useState } from "react";
 import FileUploadDialog from "./upload-file";
 import NavItemsActions from "./nav-items-actions";
-import { LoadNoteCommand } from "@/models/Command";
-import { ToastSuccessErrorCommandDecorator } from "@/models/CommandDecorator";
+import { LoadNoteCommand } from "@/models/AsyncCommand";
+import { ToastSuccessErrorCommandDecorator } from "@/models/AsyncCommandDecorator";
 
 export function NavMain({ navMain }: { navMain: NavItem }) {
   return (

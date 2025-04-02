@@ -9,8 +9,11 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-import { UpdateNavMainCommand, UploadRessourceCommand } from "@/models/Command";
-import { ToastPromiseCommandDecorator } from "@/models/CommandDecorator";
+import {
+  UpdateNavMainCommand,
+  UploadRessourceCommand,
+} from "@/models/AsyncCommand";
+import { ToastPromiseCommandDecorator } from "@/models/AsyncCommandDecorator";
 
 const FileUploadDialog = ({
   fatherRessourceId,

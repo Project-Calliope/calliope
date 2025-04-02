@@ -1,12 +1,16 @@
 import toast from "react-hot-toast";
-import { Command } from "./Command";
+import { AsyncCommand } from "./AsyncCommand";
 
-export class ToastSuccessErrorCommandDecorator implements Command {
-  private _command: Command;
+export class ToastSuccessErrorCommandDecorator implements AsyncCommand {
+  private _command: AsyncCommand;
   private _successMessage: string;
   private _errorMessage: string;
 
-  constructor(command: Command, successMessage: string, errorMessage: string) {
+  constructor(
+    command: AsyncCommand,
+    successMessage: string,
+    errorMessage: string,
+  ) {
     this._command = command;
     this._successMessage = successMessage;
     this._errorMessage = errorMessage;
@@ -23,14 +27,14 @@ export class ToastSuccessErrorCommandDecorator implements Command {
   }
 }
 
-export class ToastPromiseCommandDecorator implements Command {
-  private _command: Command;
+export class ToastPromiseCommandDecorator implements AsyncCommand {
+  private _command: AsyncCommand;
   private _loadingMessage: string;
   private _successMessage: string;
   private _errorMessage: string;
 
   constructor(
-    command: Command,
+    command: AsyncCommand,
     loadingMessage: string,
     successMessage: string,
     errorMessage: string,

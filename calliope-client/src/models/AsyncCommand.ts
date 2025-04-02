@@ -2,11 +2,11 @@ import RessourceService from "@/services/RessourceService";
 import LibraryManager from "./LibraryManager";
 import AudioService from "@/services/AudioService";
 
-export interface Command {
-  execute(): void;
+export interface AsyncCommand {
+  execute(): Promise<void>;
 }
 
-export class UpdateNavMainCommand implements Command {
+export class UpdateNavMainCommand implements AsyncCommand {
   constructor() {}
 
   async execute(): Promise<void> {
@@ -23,7 +23,7 @@ export class UpdateNavMainCommand implements Command {
   }
 }
 
-export class UploadRessourceCommand implements Command {
+export class UploadRessourceCommand implements AsyncCommand {
   private _file: File;
   private _father_ressource_id: string;
   constructor(file: File, father_ressource_id: string) {
@@ -54,7 +54,7 @@ export class UploadRessourceCommand implements Command {
   }
 }
 
-export class LoadNoteCommand implements Command {
+export class LoadNoteCommand implements AsyncCommand {
   private _public_note_id: string;
 
   constructor(public_note_id: string) {
