@@ -18,6 +18,7 @@ import FileUploadDialog from "./upload-file";
 import NavItemsActions from "./nav-items-actions";
 import { LoadNoteCommand } from "@/models/Command";
 import toast from "react-hot-toast";
+import { ToastSuccessErrorCommandDecorator } from "@/models/CommandDecorator";
 
 export function NavMain({ navMain }: { navMain: NavItem }) {
   return (
@@ -51,13 +52,13 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
   const [openUploadDialog, setOpenUploadDialog] = useState(false);
 
   const displayNote = async (public_ressource_id: string) => {
-    try {
-      await new LoadNoteCommand(public_ressource_id).execute();
-      toast.success("Note chargée avec succès");
-    } catch (error) {
-      console.error(error);
-      toast.error("Erreur lors du chargement de la note");
-    }
+    const command = new LoadNoteCommand(public_ressource_id);
+    const decoratedCommand = new ToastSuccessErrorCommandDecorator(
+      command,
+      "Note chargée avec succès",
+      "Erreur lors du chargement de la note",
+    );
+    decoratedCommand.execute();
   };
 
   const closeUploadDialog = async () => {

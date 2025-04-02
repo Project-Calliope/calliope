@@ -2,7 +2,7 @@ import RessourceService from "@/services/RessourceService";
 import LibraryManager from "./LibraryManager";
 import AudioService from "@/services/AudioService";
 
-interface Command {
+export interface Command {
   execute(): void;
 }
 
