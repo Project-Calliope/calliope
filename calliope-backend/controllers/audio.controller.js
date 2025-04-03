@@ -32,16 +32,7 @@ exports.uploadAudio = async (req, res) => {
       );
 
       if (create_result.success) {
-        return res.status(200).json({
-          success: true,
-          response: {
-            title: req.file.originalname,
-            size: req.file.size,
-            mimetype: req.file.mimetype,
-            encoding: req.file.encoding,
-            transcript: req.file.transcript,
-          },
-        });
+        return res.status(200).json(create_result);
       } else {
         return res.status(500).json({
           success: false,

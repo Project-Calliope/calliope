@@ -37,12 +37,13 @@ export class UploadRessourceCommand implements AsyncCommand {
         this._file,
         this._father_ressource_id,
       );
-      const editorInstance = LibraryManager.getInstance().editorRef?.current;
-      if (editorInstance) {
-        editorInstance.setMarkdown(response.response.transcript);
-        LibraryManager.getInstance().updateLibrary((lib) => {
-          lib.currentTitle = response.response.title;
-        });
+      console.log(response);
+      if (response.public_ressource_id) {
+        await new LoadNoteCommand(response.public_ressource_id).execute();
+      }
+
+      if (!response.success) {
+        throw new Error(response.data.message);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -67,15 +68,11 @@ export class LoadNoteCommand implements AsyncCommand {
       const noteContent = response?.note_content;
       const noteTitle = response?.note_title;
 
-      const editorInstance = LibraryManager.getInstance().editorRef?.current;
-
-      if (noteContent && editorInstance) {
-        editorInstance.setMarkdown(String(noteContent));
-      }
-
-      if (noteTitle) {
+      if (noteContent && noteTitle) {
         LibraryManager.getInstance().updateLibrary((lib) => {
-          lib.currentTitle = noteTitle; // Mettre à jour le titre
+          lib.currentNote.content = noteContent;
+          lib.currentNote.title = noteTitle;
+          lib.currentNote.public_ressource_id = this._public_note_id;
         });
       }
     } catch (error) {

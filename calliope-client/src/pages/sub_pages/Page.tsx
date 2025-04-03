@@ -33,17 +33,22 @@ export default function Page() {
   // Permet de forcer un re-render quand la library change
   const [, forceUpdate] = useState(0);
 
-  const [currentTitle, setCurrentTitle] = useState("");
-
   useEffect(() => {
     const unsubscribe = libraryManager.subscribe(() => {
       const library = LibraryManager.getInstance().library;
       forceUpdate((prev) => prev + 1);
-      setCurrentTitle(library.currentTitle);
+      const editorInstance = LibraryManager.getInstance().editorRef?.current;
+      if (editorInstance) {
+        editorInstance.setMarkdown(String(library.currentNote.content));
+      }
     });
 
     libraryManager.library.currentTitle = "Default Title";
-    libraryManager.library.currentNote = new Note("# Markdown Example");
+    libraryManager.library.currentNote = new Note(
+      "# Markdown Example",
+      "Default Title",
+      "",
+    );
     libraryManager.library.navMain = new NavItem(
       "Root",
       "dossier",
@@ -87,7 +92,9 @@ export default function Page() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
-                  <BreadcrumbPage>{currentTitle}</BreadcrumbPage>
+                  <BreadcrumbPage>
+                    {libraryManager.library.currentNote.title}
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>

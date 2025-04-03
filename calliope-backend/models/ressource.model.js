@@ -70,7 +70,7 @@ class Ressource {
       if (result.rows.length > 0) {
         return {
           success: true,
-          public_ressource_id: result.rows[0],
+          public_ressource_id: result.rows[0].create_note_with_transcript,
         };
       } else {
         return {
