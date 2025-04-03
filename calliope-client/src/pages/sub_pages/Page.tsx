@@ -1,16 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   SidebarProvider,
   SidebarTrigger,
   SidebarInset,
 } from "@/components/ui/sidebar";
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { AppSidebar } from "@/components/app-sidebar";
 import TextEditor from "@/components/text-editor";
 import { Separator } from "@/components/ui/separator";
@@ -25,6 +18,7 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import NavItem from "@/models/NavItem";
 import RessourceService from "@/services/RessourceService";
 import LibraryManager from "@/models/LibraryManager";
+import TranscriptDialog from "@/components/transcript-dialog";
 
 export default function Page() {
   const libraryManager = LibraryManager.getInstance();
@@ -99,26 +93,7 @@ export default function Page() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          {libraryManager.library.currentTranscript && (
-            <AlertDialog>
-              <AlertDialogTrigger className="ml-2 mr-2">
-                <Button variant="outline" className="w-full">
-                  Original
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogTitle>Transcript original</AlertDialogTitle>
-                <textarea
-                  disabled
-                  className="block w-full border p-2 rounded-md"
-                  rows={10}
-                >
-                  {libraryManager.library.currentTranscript.content}
-                </textarea>
-                <Button>Générer un résumé</Button>
-              </AlertDialogContent>
-            </AlertDialog>
-          )}
+          <TranscriptDialog library={libraryManager.library} />
         </header>
         <TextEditor library={libraryManager.library} ref={editorRef} />
       </SidebarInset>
