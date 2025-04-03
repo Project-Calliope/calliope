@@ -1,5 +1,6 @@
 import AuthentificationLayout from "@/layouts/AuthentificationLayout";
 import Page from "@/pages/sub_pages/Page";
+import { Toaster } from "react-hot-toast";
 
 const LibraryPage = () => {
   return (
@@ -7,6 +8,7 @@ const LibraryPage = () => {
       <AuthentificationLayout>
         <Page />
       </AuthentificationLayout>
+      <Toaster position="bottom-right" />
     </>
   );
 };

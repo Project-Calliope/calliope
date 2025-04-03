@@ -77,6 +77,12 @@ app.use("/api/audio", audioRoutes);
 const authRoutes = require("./routes/auth.routes");
 app.use("/api/auth", authRoutes);
 
+const ressourceRoutes = require("./routes/ressource.routes");
+app.use("/api/ressource", ressourceRoutes);
+
+const transcriptRoutes = require("./routes/transcript.routes");
+app.use("/api/transcript", transcriptRoutes);
+
 app.listen(port, () => {
   console.log(`Calliope Backend listening on port ${port}`);
 });

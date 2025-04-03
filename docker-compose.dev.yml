@@ -33,6 +33,7 @@ services:
       - "8000:8000"
     volumes:
       - ./calliope-ai:/app
+      - calliope-ai-requirements:/root/.cache/pip
     environment:
       - PYTHONUNBUFFERED=1
 
@@ -50,4 +51,5 @@ services:
 
 volumes:
   calliope-db:
+  calliope-ai-requirements:
 
