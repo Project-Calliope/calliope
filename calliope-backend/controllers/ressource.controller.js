@@ -74,3 +74,32 @@ exports.createFolder = async (req, res) => {
     return res.status(400).json(result);
   }
 };
+
+exports.updateNote = async (req, res) => {
+  const { public_user_id } = req.user;
+
+  if (!req.body.ressource_id) {
+    return res.status(400).json({
+      success: false,
+      message: "L'identifiant de la ressource à mettre à jour est obligatoire",
+    });
+  }
+
+  if (!req.body.content) {
+    return res.status(400).json({
+      success: false,
+      message: "Le nouveau contenu est obligatoire",
+    });
+  }
+
+  const result = await Ressource.update_note(
+    public_user_id,
+    req.body.ressource_id,
+    req.body.content,
+  );
+  if (result.success) {
+    return res.status(204).json(result);
+  } else {
+    return res.status(400).json(result);
+  }
+};

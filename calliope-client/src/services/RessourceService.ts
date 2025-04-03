@@ -68,4 +68,27 @@ export default class RessourceService {
       }
     }
   }
+
+  static async updateNote(ressource_id: string, content: string) {
+    try {
+      await axios.put(
+        "api/ressource/note",
+        {
+          ressource_id: ressource_id,
+          content: content,
+        },
+        {
+          headers: {
+            authorization: localStorage.getItem("token"),
+          },
+        },
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
 }

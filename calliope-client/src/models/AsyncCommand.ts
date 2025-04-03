@@ -148,3 +148,26 @@ export class LoadTranscriptCommand implements AsyncCommand {
     }
   }
 }
+
+export class UpdateNoteCommand implements AsyncCommand {
+  constructor() {}
+
+  async execute(): Promise<void> {
+    try {
+      const library = LibraryManager.getInstance().library;
+      const editorInstance = LibraryManager.getInstance().editorRef?.current;
+      if (editorInstance) {
+        await RessourceService.updateNote(
+          library.currentNote.public_ressource_id,
+          editorInstance.getMarkdown(),
+        );
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}

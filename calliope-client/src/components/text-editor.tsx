@@ -1,3 +1,5 @@
+import { UpdateNoteCommand } from "@/models/AsyncCommand";
+import { ToastPromiseCommandDecorator } from "@/models/AsyncCommandDecorator";
 import Library from "@/models/Library";
 import LibraryManager from "@/models/LibraryManager";
 import {
@@ -25,7 +27,13 @@ import {
 } from "@mdxeditor/editor";
 
 import "@mdxeditor/editor/style.css";
-import React, { forwardRef, useEffect } from "react";
+import React, {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 const defaultSnippetContent = `
 export default function App() {
@@ -83,6 +91,28 @@ const allPlugins = (diffMarkdown: string) => [
 // Use forwardRef to pass the ref to MDXEditor
 const TextEditor = forwardRef<MDXEditorMethods, { library: Library }>(
   ({ library }, ref) => {
+    const [markdown, setMarkdown] = useState(library.currentNote.content);
+
+    const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleMarkdownChange = useCallback((newMarkdown: string) => {
+      setMarkdown(newMarkdown);
+
+      if (saveTimeoutRef.current) {
+        clearTimeout(saveTimeoutRef.current);
+      }
+
+      saveTimeoutRef.current = setTimeout(() => {
+        const updateCommand = new UpdateNoteCommand();
+        const decoratedCommand = new ToastPromiseCommandDecorator(
+          updateCommand,
+          "Sauvegarde...",
+          "Sauvegardée !",
+          "Échec de la sauvegarde",
+        );
+        decoratedCommand.execute();
+      }, 2000);
+    }, []);
     // Effect to set the editorRef in LibraryManager
     useEffect(() => {
       if (ref && typeof ref !== "function" && ref.current) {
@@ -95,7 +125,8 @@ const TextEditor = forwardRef<MDXEditorMethods, { library: Library }>(
     return (
       <MDXEditor
         ref={ref}
-        markdown={library.currentNote.content}
+        markdown={markdown}
+        onChange={handleMarkdownChange}
         className="full-demo-mdxeditor"
         contentEditableClassName="prose max-w-full font-sans"
         plugins={allPlugins(library.currentNote.content)}

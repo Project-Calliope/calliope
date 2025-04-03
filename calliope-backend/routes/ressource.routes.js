@@ -18,4 +18,6 @@ router.post(
   RessourceController.createFolder,
 );
 
+router.put("/note", JWTController.verifyToken, RessourceController.updateNote);
+
 module.exports = router;

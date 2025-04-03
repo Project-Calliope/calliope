@@ -142,6 +142,30 @@ class Ressource {
       };
     }
   }
+
+  static async update_note(
+    public_user_id,
+    public_ressource_id,
+    updated_content,
+  ) {
+    try {
+      await pool.query(`SELECT * FROM update_note($1, $2, $3)`, [
+        public_user_id,
+        public_ressource_id,
+        updated_content,
+      ]);
+      return {
+        success: true,
+        message: "Note mise à jour",
+      };
+    } catch (error) {
+      return {
+        success: false,
+        message: "La note n'a pas pu être sauvegardée",
+        error: error.message,
+      };
+    }
+  }
 }
 
 exports.Ressource = Ressource;
