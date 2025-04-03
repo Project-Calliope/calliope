@@ -3,11 +3,11 @@ import Note from "./Note";
 import Transcript from "./Transcript";
 
 class Library {
-  private _currentNote: Note = new Note("Default content");
+  private _currentNote: Note = new Note("Default content", "Default title", "");
 
   private _navMain: NavItem = new NavItem("Main", "dossier", "/main");
 
-  private _currentTranscript: Transcript | undefined;
+  private _currentTranscript: Transcript | null = null;
 
   private _currentTitle: string = "Default title";
 
@@ -29,11 +29,11 @@ class Library {
     this._navMain = navMain;
   }
 
-  public get currentTranscript(): Transcript | undefined {
+  public get currentTranscript(): Transcript | null {
     return this._currentTranscript;
   }
 
-  public set currentTranscript(transcript: Transcript) {
+  public set currentTranscript(transcript: Transcript | null) {
     this._currentTranscript = transcript;
   }
 

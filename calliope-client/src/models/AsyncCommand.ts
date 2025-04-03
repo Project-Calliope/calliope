@@ -1,6 +1,8 @@
 import RessourceService from "@/services/RessourceService";
 import LibraryManager from "./LibraryManager";
 import AudioService from "@/services/AudioService";
+import TranscriptService from "@/services/TranscriptService";
+import Transcript from "./Transcript";
 
 export interface AsyncCommand {
   execute(): Promise<void>;
@@ -75,6 +77,8 @@ export class LoadNoteCommand implements AsyncCommand {
           lib.currentNote.public_ressource_id = this._public_note_id;
         });
       }
+
+      await new LoadTranscriptCommand(this._public_note_id).execute();
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -96,11 +100,45 @@ export class CreateFolderCommand implements AsyncCommand {
 
   async execute(): Promise<void> {
     try {
-      const result = await RessourceService.createFolder(
+      await RessourceService.createFolder(
         this._public_father_id,
         this._ressource_name,
       );
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}
+
+export class LoadTranscriptCommand implements AsyncCommand {
+  private _public_ressource_id: string;
+
+  constructor(public_ressource_id: string) {
+    this._public_ressource_id = public_ressource_id;
+  }
+
+  async execute(): Promise<void> {
+    try {
+      const result = await TranscriptService.getTranscript(
+        this._public_ressource_id,
+      );
       console.log(result);
+      LibraryManager.getInstance().updateLibrary((lib) => {
+        lib.currentTranscript = result.result
+          ? new Transcript(
+              result.result.transcript_content,
+              result.result.transcript_audioname,
+              result.result.transcript_audiosize,
+              result.result.public_id,
+            )
+          : null; // Mettre null au lieu de undefined
+      });
+
+      console.log(LibraryManager.getInstance().library.currentTranscript);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);

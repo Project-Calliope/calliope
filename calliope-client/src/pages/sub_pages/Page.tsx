@@ -99,24 +99,26 @@ export default function Page() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <AlertDialog>
-            <AlertDialogTrigger className="ml-2 mr-2">
-              <Button variant="outline" className="w-full">
-                Afficher le Transcript original
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogTitle>Transcript original</AlertDialogTitle>
-              <textarea
-                disabled
-                className="block w-full border p-2 rounded-md"
-                rows={10}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </textarea>
-              <Button>Générer un résumé</Button>
-            </AlertDialogContent>
-          </AlertDialog>
+          {libraryManager.library.currentTranscript && (
+            <AlertDialog>
+              <AlertDialogTrigger className="ml-2 mr-2">
+                <Button variant="outline" className="w-full">
+                  Original
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogTitle>Transcript original</AlertDialogTitle>
+                <textarea
+                  disabled
+                  className="block w-full border p-2 rounded-md"
+                  rows={10}
+                >
+                  {libraryManager.library.currentTranscript.content}
+                </textarea>
+                <Button>Générer un résumé</Button>
+              </AlertDialogContent>
+            </AlertDialog>
+          )}
         </header>
         <TextEditor library={libraryManager.library} ref={editorRef} />
       </SidebarInset>

@@ -42,7 +42,6 @@ exports.getNote = async (req, res) => {
       note: result.note,
     });
   } else {
-    console.log("hellllllp");
     return res.status(400).json(result);
   }
 };
