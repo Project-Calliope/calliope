@@ -1,8 +1,7 @@
 CREATE OR REPLACE FUNCTION create_note(
     p_public_user_id UUID,
     p_public_father_ressource_id UUID,
-    p_ressource_name TEXT,
-    p_content TEXT
+    p_ressource_name TEXT
 ) RETURNS UUID AS $$
 DECLARE
     v_private_user_id UUID;
@@ -38,7 +37,7 @@ BEGIN
 
     -- Insérer le contenu de la ressource dans la table CONTENT
     INSERT INTO CONTENT (private_ressource_id, content)
-    VALUES (v_private_ressource_id, p_content);
+    VALUES (v_private_ressource_id, '');
 
     -- Ajouter le lien avec la ressource parente dans CHILD_RESSOURCE
     INSERT INTO CHILD_RESSOURCE (private_child_ressource_id, private_father_ressource_id)

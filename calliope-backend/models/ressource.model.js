@@ -87,6 +87,37 @@ class Ressource {
     }
   }
 
+  static async create_note(
+    public_user_id,
+    public_father_ressource_id,
+    ressource_name,
+  ) {
+    try {
+      const result = await pool.query(`SELECT * FROM create_note($1, $2, $3)`, [
+        public_user_id,
+        public_father_ressource_id,
+        ressource_name,
+      ]);
+      if (result.rows.length > 0) {
+        return {
+          success: true,
+          public_ressource_id: result.rows[0].create_note,
+        };
+      } else {
+        return {
+          success: false,
+          message: "Issue while creating ressource",
+        };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        message: "Issue while creating ressource",
+        error: error.message,
+      };
+    }
+  }
+
   static async get_note(public_user_id, public_ressource_id) {
     try {
       const result = await pool.query(`SELECT * FROM get_note($1, $2)`, [

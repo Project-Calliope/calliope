@@ -70,7 +70,7 @@ export class LoadNoteCommand implements AsyncCommand {
       const noteContent = response?.note_content;
       const noteTitle = response?.note_title;
 
-      if (noteContent && noteTitle) {
+      if (noteContent !== undefined && noteTitle) {
         LibraryManager.getInstance().updateLibrary((lib) => {
           lib.currentNote.content = noteContent;
           lib.currentNote.title = noteTitle;
@@ -162,6 +162,32 @@ export class UpdateNoteCommand implements AsyncCommand {
           editorInstance.getMarkdown(),
         );
       }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}
+
+export class CreateNoteCommand implements AsyncCommand {
+  private _ressource_father_id: string;
+  private _ressource_name: string;
+
+  constructor(ressource_father_id: string, ressource_name: string) {
+    this._ressource_father_id = ressource_father_id;
+    this._ressource_name = ressource_name;
+  }
+
+  async execute(): Promise<void> {
+    try {
+      const data = await RessourceService.createNote(
+        this._ressource_father_id,
+        this._ressource_name,
+      );
+      console.log(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);

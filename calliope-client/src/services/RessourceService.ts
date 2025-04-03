@@ -69,6 +69,30 @@ export default class RessourceService {
     }
   }
 
+  static async createNote(ressource_father_id: string, ressource_name: string) {
+    try {
+      const response = await axios.post(
+        "api/ressource/note",
+        {
+          ressource_father_id: ressource_father_id,
+          ressource_name: ressource_name,
+        },
+        {
+          headers: {
+            authorization: localStorage.getItem("token"),
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+
   static async updateNote(ressource_id: string, content: string) {
     try {
       await axios.put(
