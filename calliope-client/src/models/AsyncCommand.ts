@@ -74,7 +74,6 @@ export class UploadRessourceCommand implements AsyncCommand {
         this._file,
         this._father_ressource_id,
       );
-      console.log(response);
       if (response.public_ressource_id) {
         await new LoadNoteCommand(response.public_ressource_id).execute();
       }
@@ -209,7 +208,6 @@ export class LoadTranscriptCommand implements AsyncCommand {
       const result = await TranscriptService.getTranscript(
         this._public_ressource_id,
       );
-      console.log(result);
       LibraryManager.getInstance().updateLibrary((lib) => {
         lib.currentTranscript = result.result
           ? new Transcript(
@@ -220,8 +218,6 @@ export class LoadTranscriptCommand implements AsyncCommand {
             )
           : null; // Set to null if no transcript is found
       });
-
-      console.log(LibraryManager.getInstance().library.currentTranscript);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -290,11 +286,10 @@ export class CreateNoteCommand implements AsyncCommand {
    */
   async execute(): Promise<void> {
     try {
-      const data = await RessourceService.createNote(
+      await RessourceService.createNote(
         this._ressource_father_id,
         this._ressource_name,
       );
-      console.log(data);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
