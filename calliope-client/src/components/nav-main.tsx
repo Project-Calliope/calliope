@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  ChevronRight,
-  Folder,
-  FolderPlus,
-  NotebookText,
-  Plus,
-  SquarePen,
-} from "lucide-react";
+import { ChevronRight, Folder, NotebookText } from "lucide-react";
 import NavItem from "@/models/NavItem";
 import {
   Collapsible,
@@ -16,26 +9,54 @@ import {
 } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSubButton,
-  SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { useState } from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
+import { JSX, useState } from "react";
+import FileUploadDialog from "./upload-file";
+import NavItemsActions from "./nav-items-actions";
+import { LoadNoteCommand } from "@/models/AsyncCommand";
+import { ToastSuccessErrorCommandDecorator } from "@/models/AsyncCommandDecorator";
+import CreateFolderDialog from "./create-folder";
+import CreateNoteDialog from "./create-note";
+
+const getDialogComponent = (
+  type: string | null,
+  props: { fatherRessourceId: string; isOpen: boolean; onClose: () => void },
+) => {
+  const dialogMap: Record<string, JSX.Element> = {
+    audio: <FileUploadDialog {...props} />,
+    folder: <CreateFolderDialog {...props} />,
+    note: <CreateNoteDialog {...props} />,
+  };
+
+  return type ? dialogMap[type] || null : null;
+};
 
 export function NavMain({ navMain }: { navMain: NavItem }) {
+  const [openDialog, setOpenDialog] = useState<string | null>(null);
+
+  const handleDialogOpen = (type: string) => setOpenDialog(type);
+  const handleDialogClose = () => setOpenDialog(null);
+
   return (
-    <SidebarGroup>
-      <SidebarGroupLabel>Répertoire</SidebarGroupLabel>
+    <SidebarGroup className="w-full">
+      {getDialogComponent(openDialog, {
+        fatherRessourceId: navMain.url,
+        isOpen: true,
+        onClose: handleDialogClose,
+      })}
+      <SidebarMenuItem className="w-full group">
+        <SidebarMenuButton className="hover:bg-transparent border-b border-gray-300 rounded-none">
+          <div className="w-full flex items-center justify-between gap-2">
+            <div className="flex items-center">
+              <span className="font-bold">Répertoire</span>
+            </div>
+            <NavItemsActions onDialogOpen={handleDialogOpen} />
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
       <SidebarMenu className="w-full">
         {navMain.items.map((item) => (
           <NavItemComponent key={item.title} item={item} level={0} />
@@ -52,6 +73,21 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
 
   const handleToggle = () => setIsOpen(!isOpen);
 
+  const displayNote = async (public_ressource_id: string) => {
+    const command = new LoadNoteCommand(public_ressource_id);
+    const decoratedCommand = new ToastSuccessErrorCommandDecorator(
+      command,
+      "Note chargée avec succès",
+      "Erreur lors du chargement de la note",
+    );
+    decoratedCommand.execute();
+  };
+
+  const [openDialog, setOpenDialog] = useState<string | null>(null);
+
+  const handleDialogOpen = (type: string) => setOpenDialog(type);
+  const handleDialogClose = () => setOpenDialog(null);
+
   if (item.nature === "dossier") {
     return (
       <Collapsible
@@ -60,69 +96,62 @@ function NavItemComponent({ item, level }: { item: NavItem; level: number }) {
         onOpenChange={handleToggle}
         className="w-full"
       >
-        <SidebarMenuItem className="w-full group">
-          <CollapsibleTrigger asChild>
-            <SidebarMenuButton
-              tooltip={item.title}
-              className="w-full flex items-center justify-between"
-              style={{ paddingLeft }}
-            >
-              <div className="flex items-center gap-2">
-                <Folder className="h-4 l-4" />
-                <span>{item.title}</span>
-              </div>
-              <ChevronRight
-                className={`ml-auto transition-transform duration-200 ${
-                  isOpen ? "rotate-90" : ""
-                }`} // Applique l'animation de rotation
-              />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <SidebarMenuAction className="hover:bg-gray-200">
-                    <Plus />
-                  </SidebarMenuAction>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent side="right" align="start">
-                  <DropdownMenuItem>
-                    <FolderPlus />
-                    <span>Nouveau dossier</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <SquarePen />
-                    <span>Nouvelle note</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </SidebarMenuButton>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="w-full">
-            <div className="w-full">
-              {item.items?.map((subItem) => (
-                <NavItemComponent
-                  key={subItem.title}
-                  item={subItem}
-                  level={level + 1}
+        <div>
+          {getDialogComponent(openDialog, {
+            fatherRessourceId: item.url,
+            isOpen: true,
+            onClose: handleDialogClose,
+          })}
+          <SidebarMenuItem className="w-full group">
+            <CollapsibleTrigger asChild>
+              <SidebarMenuButton
+                tooltip={item.title}
+                className="w-full flex items-center justify-between"
+                style={{ paddingLeft }}
+              >
+                <div className="flex items-center gap-2">
+                  <Folder className="h-4 l-4" />
+                  <span>{item.title}</span>
+                </div>
+                <ChevronRight
+                  className={`ml-auto transition-transform duration-200 ${
+                    isOpen ? "rotate-90" : ""
+                  }`} // Applique l'animation de rotation
                 />
-              ))}
-            </div>
-          </CollapsibleContent>
-        </SidebarMenuItem>
+                <NavItemsActions onDialogOpen={handleDialogOpen} />
+              </SidebarMenuButton>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="w-full">
+              <div className="w-full">
+                {item.items?.map((subItem) => (
+                  <NavItemComponent
+                    key={`${subItem.title}-${Math.random()}`}
+                    item={subItem}
+                    level={level + 1}
+                  />
+                ))}
+              </div>
+            </CollapsibleContent>
+          </SidebarMenuItem>
+        </div>
       </Collapsible>
     );
   } else {
     return (
-      <SidebarMenuSubItem className="w-full">
-        <SidebarMenuSubButton asChild className="w-full">
-          <a
-            href={item.url}
-            className="block flex items-center gap-2 w-full"
-            style={{ paddingLeft }}
-          >
-            <NotebookText />
+      <SidebarMenuItem className="w-full group">
+        <SidebarMenuButton
+          asChild
+          className="w-full flex items-center justify-start ml-1"
+          onClick={() => {
+            displayNote(item.url);
+          }}
+        >
+          <div className="flex items-center gap-2" style={{ paddingLeft }}>
+            <NotebookText className="h-4 l-4" />
             <span>{item.title}</span>
-          </a>
-        </SidebarMenuSubButton>
-      </SidebarMenuSubItem>
+          </div>
+        </SidebarMenuButton>
+      </SidebarMenuItem>
     );
   }
 }
