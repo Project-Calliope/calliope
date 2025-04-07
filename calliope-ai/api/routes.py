@@ -17,6 +17,7 @@ from fastapi import APIRouter, UploadFile, File, HTTPException
 from service.api_handler import APIHandler
 
 transcribe_audio = APIRouter()
+summarize_text = APIRouter()
 
 
 @transcribe_audio.post("/transcribe")
@@ -50,3 +51,29 @@ async def transcribe_audio_route(file: UploadFile = File(None)):
         raise HTTPException(status_code=415, detail=message)
 
     return {"transcript": message}
+
+
+@summarize_text.post("/summarize")
+async def summarize_text_route(request: str):
+    """
+    Summarizes the provided French text.
+
+    Args:
+        request (TextRequest): JSON body containing the input text.
+
+    Returns:
+        dict: A JSON response with the summarized text.
+
+    Raises:
+        HTTPException: If the input text is empty (400 error).
+    """
+    if not request():
+        raise HTTPException(status_code=400, detail="Text is required")
+
+    handler = APIHandler()
+    success, summary = handler.summarize(request)
+
+    if not success:
+        raise HTTPException(status_code=415, detail=f"Summarization failed")
+
+    return {"summary": summary}
