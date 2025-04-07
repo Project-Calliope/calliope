@@ -12,6 +12,8 @@ class UserService {
       localStorage.setItem("token", response.data.token);
       return UserAdapter.adapt(response.data);
     } catch (error) {
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
       console.error(error);
       return null;
     }
