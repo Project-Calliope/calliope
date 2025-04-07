@@ -7,8 +7,10 @@ to load and validate audio files, then performs transcription to text using a Mo
 
 from service.data_manager import DataManager
 from service.model_manager import ModelManager
+from pydub import AudioSegment
+from service.audio_segmentation.audio_processor import AudioProcessor
+from service.audio_segmentation.n_split_segmentation import NSplitSegmentation
 from service.model_summarize_manager import ModelSummarizeManager
-
 
 class APIHandler:
     """
@@ -53,6 +55,15 @@ class APIHandler:
 
         if not loading_and_validation_success:
             return False, "Audio file is corrupted or in an unsupported format."
+
+        audio = AudioSegment.from_file(self.data_manager.audio_file)
+        duration_ms = len(audio)
+
+        duration_threshold = 400000 #400s
+        if duration_ms > duration_threshold:
+            audio_processor = AudioProcessor(self.data_manager.audio_file, NSplitSegmentation(5))
+            segments = audio_processor.preprocess_audio()
+            return True, self.model_manager.predict_parallel(segments)
 
         return True, self.model_manager.predict(self.data_manager.audio_file)
 
