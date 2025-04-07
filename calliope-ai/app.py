@@ -20,11 +20,13 @@ Dependencies:
 from fastapi import FastAPI
 import uvicorn
 from api.routes import transcribe_audio
+from api.routes import summarize_text
 
 app = FastAPI()
 
 # Include the transcription API routes under the /api prefix
 app.include_router(transcribe_audio, prefix="/api")
+app.include_router(summarize_text, prefix="/api")
 
 
 @app.get("/")
