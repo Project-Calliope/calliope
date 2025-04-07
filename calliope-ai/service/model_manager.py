@@ -108,3 +108,6 @@ class ModelManager:
             str: The transcribed text.
         """
         return self.model.predict(data)
+    
+    def predict_parallel(self, data):
+        return self.model.predict_parallel(data)
