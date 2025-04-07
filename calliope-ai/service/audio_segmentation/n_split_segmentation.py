@@ -1,6 +1,7 @@
-from segmentation_strategy import SegmentationStrategy
+from service.audio_segmentation.segmentation_strategy import SegmentationStrategy
 from pydub import AudioSegment
 import os
+
 
 class NSplitSegmentation(SegmentationStrategy):
     def __init__(self, n_split):
@@ -23,7 +24,11 @@ class NSplitSegmentation(SegmentationStrategy):
         # Cutting the audio and saving segments
         for i in range(self.n_split):
             start_time = i * segment_duration_ms
-            end_time = start_time + segment_duration_ms if i < self.n_split - 1 else total_duration_ms
+            end_time = (
+                start_time + segment_duration_ms
+                if i < self.n_split - 1
+                else total_duration_ms
+            )
             segment = audio[start_time:end_time]
             segment_path = os.path.join(folder_path, f"{base_name}_part{i+1}.wav")
             segment.export(segment_path, format="wav")
