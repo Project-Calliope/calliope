@@ -3,9 +3,9 @@ import TranscriptService from "@/services/TranscriptService";
 import axios from "axios";
 
 // Mock le module axios
-vi.mock("axios");
 
 describe("TranscriptService", () => {
+  vi.mock("axios");
   describe("getTranscript", () => {
     it("should return transcript data", async () => {
       const mockResponse = {

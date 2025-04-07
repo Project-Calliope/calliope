@@ -12,9 +12,9 @@ class UserService {
       localStorage.setItem("token", response.data.token);
       return UserAdapter.adapt(response.data);
     } catch (error) {
+      console.error("Error during sign-in:", error);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-      console.error(error);
       return null;
     }
   }
@@ -32,17 +32,13 @@ class UserService {
       });
       return UserAdapter.adapt(response.data);
     } catch (error) {
-      console.error(error);
+      console.error("Error during sign-up:", error);
       return null;
     }
   }
 
   static async whoami(): Promise<User | null> {
     try {
-      console.log(
-        "localStorage.getItem('token')",
-        localStorage.getItem("token"),
-      );
       const response = await axios.get("/api/auth/whoami", {
         headers: {
           authorization: localStorage.getItem("token"),
@@ -52,7 +48,7 @@ class UserService {
       localStorage.setItem("user", JSON.stringify(user));
       return user;
     } catch (error) {
-      console.error(error);
+      console.error("Error during whoami:", error);
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       return null;
@@ -61,14 +57,15 @@ class UserService {
 
   static async logout(): Promise<void> {
     try {
-      const response = await axios.post("/api/auth/logout", {
+      await axios.post("/api/auth/logout", {
         headers: {
           authorization: localStorage.getItem("token"),
         },
       });
-      console.log("response", response);
     } catch (error) {
-      console.error(error);
+      console.error("Error during logout:", error);
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
     }
     localStorage.removeItem("token");
     localStorage.removeItem("user");

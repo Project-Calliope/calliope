@@ -1,6 +1,7 @@
 # Variables
 COMPOSE_FILE = docker-compose.yml
 COMPOSE_FILE_DEV = docker-compose.dev.yml
+COMPOSE_FILE_TEST = docker-compose.test.yml
 
 # Démarrer les conteneurs
 docker-up:
@@ -26,7 +27,15 @@ docker-remove-volumes:
 	docker compose -f $(COMPOSE_FILE) down --remove-orphans --volumes
 
 tests:
+	docker compose -f $(COMPOSE_FILE_TEST) up -d --build --remove-orphans
 	docker compose run -T --rm backend npm run test && docker compose run -T --rm ai pytest && docker compose run -T --rm client npm run test
+	docker compose down --remove-orphans
+	docker volume rm calliope_calliope-db-test
+tests-client:
+	docker volume rm calliope_calliope-db-test
+	docker compose -f $(COMPOSE_FILE_TEST) up -d --build --remove-orphans
+	docker compose run -T --rm client npm run test
+	docker compose down --remove-orphans
 
 lint:
 	docker compose exec -T backend npm run lint:fix
