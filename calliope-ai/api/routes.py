@@ -54,7 +54,7 @@ async def transcribe_audio_route(file: UploadFile = File(None)):
 
 
 @summarize_text.post("/summarize")
-async def summarize_text_route(request: str):
+async def summarize_text_route(request: str = None):
     """
     Summarizes the provided French text.
 
