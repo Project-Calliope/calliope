@@ -14,10 +14,16 @@ Dependencies:
 """
 
 from fastapi import APIRouter, UploadFile, File, HTTPException
+from pydantic import BaseModel
 from service.api_handler import APIHandler
+
 
 transcribe_audio = APIRouter()
 summarize_text = APIRouter()
+
+
+class TextRequest(BaseModel):
+    text: str
 
 
 @transcribe_audio.post("/transcribe")
@@ -54,7 +60,7 @@ async def transcribe_audio_route(file: UploadFile = File(None)):
 
 
 @summarize_text.post("/summarize")
-async def summarize_text_route(request: str = None):
+async def summarize_text_route(request: TextRequest):
     """
     Summarizes the provided French text.
 
@@ -65,15 +71,15 @@ async def summarize_text_route(request: str = None):
         dict: A JSON response with the summarized text.
 
     Raises:
-        HTTPException: If the input text is empty (400 error).
+        HTTPException: If the input text is empty (415 error).
     """
-    if not request():
+    if not request.text.strip():
         raise HTTPException(status_code=400, detail="Text is required")
 
     handler = APIHandler()
-    success, summary = handler.summarize(request)
+    success, summary = handler.summarize(request.text)
 
     if not success:
-        raise HTTPException(status_code=415, detail=f"Summarization failed")
+        raise HTTPException(status_code=415, detail="Summarization failed")
 
     return {"summary": summary}
