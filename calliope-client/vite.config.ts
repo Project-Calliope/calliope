@@ -17,6 +17,10 @@ export default defineConfig({
     // 👇 Ajoute ce bloc si tu utilises Vitest
     globals: true,
     environment: "jsdom",
+    coverage: {
+      provider: "v8",
+      include: ["src/models/**", "src/services/**"],
+    },
   },
   server: {
     host: "0.0.0.0",

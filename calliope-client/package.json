@@ -10,7 +10,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "test:ui": "vitest --ui"
   },
   "dependencies": {
@@ -26,6 +26,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@radix-ui/themes": "^3.2.1",
     "@tailwindcss/vite": "^4.0.14",
+    "@vitest/coverage-v8": "^3.1.1",
     "axios": "^1.8.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

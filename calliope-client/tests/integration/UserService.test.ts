@@ -45,4 +45,13 @@ describe("UserService Integration", () => {
     );
     expect(user).toEqual(returnUser);
   });
+
+  it("should log out a user", async () => {
+    const response = await UserService.logout();
+    expect(response).toBeUndefined();
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+    expect(token).toBeNull();
+    expect(user).toBeNull();
+  });
 });

@@ -53,6 +53,7 @@ VALUES
 INSERT INTO CHILD_RESSOURCE (private_child_ressource_id, private_father_ressource_id)
 VALUES
     ('cccccccc-1111-cccc-cccc-cccccccccccc', 'aaaaaaaa-1111-aaaa-aaaa-aaaaaaaaaaaa'),
+    ('bbbbbbbb-1111-bbbb-bbbb-bbbbbbbbbbbb', 'aaaaaaaa-1111-aaaa-aaaa-aaaaaaaaaaaa'),
     ('dddddddd-1111-dddd-dddd-dddddddddddd', 'aaaaaaaa-1111-aaaa-aaaa-aaaaaaaaaaaa'),
     ('eeeeeeee-1111-eeee-eeee-eeeeeeeeeeee', 'bbbbbbbb-1111-bbbb-bbbb-bbbbbbbbbbbb'),
     ('bbbbbbbb-3333-bbbb-bbbb-bbbbbbbbbbbb', 'aaaaaaaa-3333-aaaa-aaaa-aaaaaaaaaaaa'),
