@@ -26,7 +26,7 @@ jobs:
     steps:
       - name: Delete unnecessary tools folder
         run: rm -rf /opt/hostedtoolcache
-    
+
       - name: Checkout repository
         uses: actions/checkout@v2
 
@@ -38,6 +38,7 @@ jobs:
 
       - name: Set environment variables for Docker
         run: |
+
           echo "NODE_ENV=development" >> calliope-backend/.env.prod
           echo "DATABASE_URL=your_database_url" >> calliope-backend/.env.prod
           echo "NODE_ENV=development" > calliope-db/.env
@@ -66,22 +67,10 @@ jobs:
       - name: Install make
         run: sudo apt-get install make
 
-      - name: Create .env.prod files
+      - name: Add environment variables for Docker
         run: |
-          echo "NODE_ENV=development" > calliope-backend/.env.prod
-          echo "DATABASE_URL=your_database_url" >> calliope-backend/.env.prod
-          echo "NODE_ENV=development" > calliope-db/.env
-          echo "POSTGRES_DB=db_name" >> calliope-db/.env
-          echo "POSTGRES_USER=db_user" >> calliope-db/.env
-          echo "POSTGRES_PASSWORD=db_password" >> calliope-db/.env
-          echo "POSTGRES_USER=calliope" >> calliope-db/.env
-          echo "POSTGRES_PASSWORD=calliope" >> calliope-db/.env
-          echo "POSTGRES_DEV_USER=calliope_dev" >> calliope-db/.env
-          echo "POSTGRES_DEV_PASSWORD=calliope_dev" >> calliope-db/.env
-          echo "POSTGRES_TEST_DB=calliope_test" >> calliope-db/.env
-          echo "POSTGRES_APP_USER=calliope" >> calliope-db/.env
-          echo "POSTGRES_APP_PASSWORD=calliope" >> calliope-db/.env
-          # Ajoute toutes les autres variables d'environnement nécessaires à ton projet
+          cp calliope-backend/.env.test.sample calliope-backend/.env.test
+          cp calliope-db/.env.sample calliope-db/.env
 
       - name: Run tests
         run: make tests # Exécuter les tests dans les conteneurs Docker
