@@ -21,6 +21,7 @@ Dependencies:
 
 import os
 import whisper
+from joblib import Parallel, delayed
 
 
 class Model:
@@ -49,6 +50,30 @@ class Model:
         os.unlink(input_data)
 
         return tr
+
+    def predict_parallel(self, input_data: dict, n_jobs=-1):
+        """
+        Transcribes the segmented input audio file into text using parallelisation for faster processing. Ideal on long conversations.
+
+        Args:
+            input_data (dict): A dictionary containing the path to each segment of the audio file to be transcribed.
+
+        Returns:
+            str: The transcribed text.
+        """
+
+        def transcribe_segment(segment_index):
+            return segment_index, self.predict(input_data[segment_index])
+
+        results = Parallel(n_jobs=n_jobs)(
+            delayed(transcribe_segment)(index) for index in input_data.keys()
+        )
+
+        output = dict(results)
+        final_output = ""
+        for i in sorted(output.keys()):
+            final_output += output[i]
+        return final_output
 
 
 class ModelManager:
@@ -83,3 +108,6 @@ class ModelManager:
             str: The transcribed text.
         """
         return self.model.predict(data)
+    
+    def predict_parallel(self, data):
+        return self.model.predict_parallel(data)
