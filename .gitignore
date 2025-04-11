@@ -7,3 +7,5 @@
 .env.prod
 
 .idea/*
+
+coverage/

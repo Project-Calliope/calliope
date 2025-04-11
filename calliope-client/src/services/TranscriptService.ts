@@ -2,7 +2,6 @@ import axios from "axios";
 
 export default class TranscriptService {
   static async getTranscript(ressource_id: string) {
-    console.log(localStorage.getItem("token"));
     try {
       const response = await axios.get(`api/transcript/id`, {
         headers: {

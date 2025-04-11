@@ -43,12 +43,43 @@ psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB TO $POS
 echo "Exécution du script de création des tables..."
 psql -U $POSTGRES_USER -d $POSTGRES_DB -f ./schemas/create_tables.sql
 
+
 # Exécuter tous les fichiers SQL dans functions/
 echo "Exécution des fonctions SQL..."
 for file in $(find ./functions/ -type f -name "*.sql"); do
     echo "Exécution de $file..."
     psql -U $POSTGRES_USER -d $POSTGRES_DB -f "$file"
 done
+
+
+# Donner tous les privilèges sur le schéma public à l'utilisateur de développement
+echo "Attribution des privilèges pour $POSTGRES_DEV_USER sur $POSTGRES_PROD_DB..."
+psql -U $POSTGRES_USER -d $POSTGRES_TEST_DB -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $POSTGRES_DEV_USER;"
+
+echo "Attribution des privilèges pour $POSTGRES_DEV_USER sur $POSTGRES_TEST_DB..."
+psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_TEST_DB TO $POSTGRES_DEV_USER;"
+
+# Si de nouvelles tables sont créées, accorder également les privilèges pour ces nouvelles tables
+echo "Attribution des privilèges par défaut pour $POSTGRES_DEV_USER sur $POSTGRES_TEST_DB..."
+psql -U $POSTGRES_USER -d $POSTGRES_TEST_DB -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO $POSTGRES_DEV_USER;"
+
+# Exécuter le fichier schema/create-table.sql sur la base de données
+echo "Exécution du script de création des tables..."
+psql -U $POSTGRES_USER -d $POSTGRES_TEST_DB -f ./schemas/create_tables.sql
+
+
+# Exécuter tous les fichiers SQL dans functions/
+echo "Exécution des fonctions SQL sur la base de test..."
+for file in $(find ./functions/ -type f -name "*.sql"); do
+    echo "Exécution de $file..."
+    psql -U $POSTGRES_USER -d $POSTGRES_TEST_DB -f "$file"
+done
+
+if [ "$ENV" = "test" ]; then 
+  echo "Ajout des données de test..."
+  psql -U "$POSTGRES_DEV_USER" -d "$POSTGRES_TEST_DB" -f ./test/data.sql
+fi
+
 
 
 echo "Initialisation terminée."

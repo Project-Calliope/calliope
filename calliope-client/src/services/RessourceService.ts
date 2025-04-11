@@ -23,7 +23,6 @@ export default class RessourceService {
   static async getNote(
     ressource_id: string,
   ): Promise<{ note_title: string; note_content: string } | null> {
-    console.log(localStorage.getItem("token"));
     try {
       const response = await axios.get(`api/ressource/note`, {
         headers: {
