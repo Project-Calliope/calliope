@@ -69,8 +69,20 @@ jobs:
 
       - name: Add environment variables for Docker
         run: |
+          cp calliope-backend/.env.prod.sample calliope-backend/.env.prod
+          cp calliope-backend/.env.dev.sample calliope-backend/.env.dev
           cp calliope-backend/.env.test.sample calliope-backend/.env.test
           cp calliope-db/.env.sample calliope-db/.env
+
+      - name: Remove volumes
+        run: |
+          docker volume rm calliope_calliope-db-test || true
+
+      - name: Docker down
+        run: make docker-down # Arrêter les conteneurs avant de commencer les tests
+
+      - name: Build and start containers
+        run: make docker-up-dev # On démarre les conteneurs avec Make
 
       - name: Run tests
         run: make tests # Exécuter les tests dans les conteneurs Docker
