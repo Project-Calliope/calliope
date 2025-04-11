@@ -9,7 +9,7 @@ describe("User model", () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  user.model.test;
+
   describe("get", () => {
     it("should return user if email exists", async () => {
       const fakeUser = { public_user_id: "abc123", email: "test@example.com" };
