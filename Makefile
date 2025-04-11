@@ -28,7 +28,7 @@ docker-remove-volumes:
 
 tests:
 	docker compose -f $(COMPOSE_FILE_TEST) up -d --build --remove-orphans
-	docker compose run -T --rm backend npm run test && docker compose run -T --rm ai pytest && docker compose run -T --rm client npm run test
+	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm backend npm run test && docker compose -f $(COMPOSE_FILE_TEST) run -T --rm ai pytest && docker compose -f $(COMPOSE_FILE_TEST) run -T --rm client npm run test
 	docker compose down --remove-orphans
 	docker volume rm calliope_calliope-db-test
 tests-client:
