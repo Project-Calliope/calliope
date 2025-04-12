@@ -35,7 +35,6 @@ psql -U $POSTGRES_USER -d $POSTGRES_DB -c "GRANT ALL PRIVILEGES ON ALL TABLES IN
 psql -U $POSTGRES_USER -d $POSTGRES_DB -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO $POSTGRES_DEV_USER;"
 
 
-
 echo "Attribution des privilèges pour $POSTGRES_DEV_USER sur $POSTGRES_DB..."
 psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB TO $POSTGRES_DEV_USER;"
 
@@ -43,18 +42,45 @@ psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_DB TO $POS
 echo "Exécution du script de création des tables..."
 psql -U $POSTGRES_USER -d $POSTGRES_DB -f ./schemas/create_tables.sql
 
+# Donner tous les privilèges sur le schéma public à l'utilisateur de développement
+psql -U $POSTGRES_USER -d $POSTGRES_PROD_DB -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $POSTGRES_APP_USER;"
+
+# Donner tous les privilèges sur toutes les tables du schéma public
+psql -U $POSTGRES_USER -d $POSTGRES_PROD_DB -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $POSTGRES_APP_USER;"
+
+# Si de nouvelles tables sont créées, accorder également les privilèges pour ces nouvelles tables
+psql -U $POSTGRES_USER -d $POSTGRES_PROD_DB -c "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO $POSTGRES_APP_USER;"
+
+
+echo "Attribution des privilèges pour $POSTGRES_APP_USER sur $POPOSTGRES_PROD_DBSTGRES_DB..."
+psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_PROD_DB TO $POSTGRES_APP_USER;"
+
+# Exécuter le fichier schema/create-table.sql sur la base de données
+echo "Exécution du script de création des tables..."
+psql -U $POSTGRES_USER -d $POSTGRES_PROD_DB -f ./schemas/create_tables.sql
+
 
 # Exécuter tous les fichiers SQL dans functions/
 echo "Exécution des fonctions SQL..."
 for file in $(find ./functions/ -type f -name "*.sql"); do
     echo "Exécution de $file..."
     psql -U $POSTGRES_USER -d $POSTGRES_DB -f "$file"
+    psql -U $POSTGRES_USER -d $POSTGRES_PROD_DB -f "$file"
 done
 
 
 # Donner tous les privilèges sur le schéma public à l'utilisateur de développement
 echo "Attribution des privilèges pour $POSTGRES_DEV_USER sur $POSTGRES_PROD_DB..."
 psql -U $POSTGRES_USER -d $POSTGRES_TEST_DB -c "GRANT ALL PRIVILEGES ON SCHEMA public TO $POSTGRES_DEV_USER;"
+
+# Donner tous les privilèges sur toutes les tables du schéma public
+echo "Attribution des privilèges pour $POSTGRES_APP_USER sur $POSTGRES_PROD_DB..."
+
+psql -U $POSTGRES_USER -d $POSTGRES_PROD_DB -c "GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO $POSTGRES_APP_USER;"
+
+
+
+
 
 echo "Attribution des privilèges pour $POSTGRES_DEV_USER sur $POSTGRES_TEST_DB..."
 psql -U $POSTGRES_USER -c "GRANT ALL PRIVILEGES ON DATABASE $POSTGRES_TEST_DB TO $POSTGRES_DEV_USER;"
