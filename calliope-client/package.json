@@ -10,7 +10,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "preview": "vite preview",
-    "test": "vitest run --coverage",
+    "test": "vitest run",
+    "coverage": "vitest run --coverage",
     "test:ui": "vitest --ui"
   },
   "dependencies": {
