@@ -57,13 +57,17 @@ docker-remove-volumes:
 
 # ======== QA ========
 
-# Tests
+# Testsmake 
 
-tests: ensure-services-test
+tests: 
+	make docker-down
+	@make clean-db-test-volumes || true
+	@echo "🧪 Démarrage des services de test avec $(COMPOSE_FILE_TEST)..."
+	docker compose -f $(COMPOSE_FILE_TEST) up -d --build --remove-orphans 
 	@echo "🚀 Lancement des tests..."
-	(docker compose -f $(COMPOSE_FILE_TEST) run -T --rm backend npm run test && \
+	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm backend npm run test && \
 	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm ai pytest && \
-	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm client npm run test) || true
+	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm client npm run test
 	@docker compose -f $(COMPOSE_FILE_TEST) down || true
 	@make clean-db-test-volumes || true
 
