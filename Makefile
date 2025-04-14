@@ -121,10 +121,15 @@ format: ensure-services
 
 # Coverage
 
-coverage: ensure-services-test
-	echo "📊 Génération des rapports de couverture..."
+coverage:
+	make docker-down
+	@make clean-db-test-volumes || true
+	@echo "🧪 Démarrage des services de test avec $(COMPOSE_FILE_TEST)..."
+	docker compose -f $(COMPOSE_FILE_TEST) up -d --build --remove-orphans 
+	@echo "📊 Génération des rapports de couverture..."
 	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm backend npm run coverage || true
 	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm client npm run coverage || true
+	docker compose -f $(COMPOSE_FILE_TEST) run -T --rm ai pytest --cov=./service --cov=./api --cov=./app.py --cov-report=html:coverage/
 	docker compose -f $(COMPOSE_FILE_TEST) down || true
 	@make clean-db-test-volumes || true
 	@make generate-index || true
@@ -142,18 +147,18 @@ coverage-frontend: ensure-services-test
 
 coverage-api: ensure-services-test
 	@echo "📊 Génération du rapport de couverture pour l'API..."
-	docker compose exec -T ai sh -c "pytest --cov=ai --cov-report=html:coverage/ai_htmlcov --cov-report=term-missing"
+	docker compose exec -T ai pytest --cov=./calliope_ai --cov-report=html:coverage/"
 	@echo "📊 Rapport de couverture généré dans le répertoire calliope-ai/coverage/"
 
 # Générer un index HTML pour les rapports de couverture
 generate-index:
 	mkdir -p coverage
-	echo "<html><head><title>Coverage Report</title></head><body>" > coverage/index.html
-	echo "<h1>Rapports de couverture</h1><ul>" >> coverage/index.html
-	echo "<li><a href=\"../calliope-backend/coverage/lcov-report/index.html\">Backend Node.js</a></li>" >> coverage/index.html
-	echo "<li><a href=\"../calliope-client/coverage/index.html\">Frontend React</a></li>" >> coverage/index.html
-	echo "<li><a href=\"../python-api/coverage/index.html\">API Python FastAPI</a></li>" >> coverage/index.html
-	echo "</ul></body></html>" >> coverage/index.html
+	@echo "<html><head><title>Coverage Report</title></head><body>" > coverage/index.html
+	@echo "<h1>Rapports de couverture</h1><ul>" >> coverage/index.html
+	@echo "<li><a href=\"../calliope-backend/coverage/lcov-report/index.html\">Backend Node.js</a></li>" >> coverage/index.html
+	@echo "<li><a href=\"../calliope-client/coverage/index.html\">Frontend React</a></li>" >> coverage/index.html
+	@echo "<li><a href=\"../calliope_ai/coverage/index.html\">API Python FastAPI</a></li>" >> coverage/index.html
+	@echo "</ul></body></html>" >> coverage/index.html
 
 
 pre-push:

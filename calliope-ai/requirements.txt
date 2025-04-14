@@ -16,3 +16,4 @@ torchvision
 torchaudio
 tiktoken
 sentencepiece
+pytest-cov
