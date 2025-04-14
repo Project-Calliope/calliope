@@ -4,11 +4,7 @@ const router = express.Router();
 const SummaryController = require("../controllers/summary.controller");
 const JWTController = require("../middleware/jwtMiddleware");
 
-router.get(
-  "/:ressource_id",
-  JWTController.verifyToken,
-  SummaryController.getSummary,
-);
+router.get("/id", JWTController.verifyToken, SummaryController.getSummary);
 router.post(
   "/create",
   JWTController.verifyToken,

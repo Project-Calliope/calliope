@@ -1,9 +1,11 @@
+const pool = require("../config/pg.config");
+
 class Summary {
   static async get_summary(public_user_id, public_ressource_id) {
     try {
       const result = await pool.query(`SELECT * FROM get_summary($1, $2)`, [
-        public_user_id,
         public_ressource_id,
+        public_user_id,
       ]);
       if (result.rows.length > 0) {
         return {

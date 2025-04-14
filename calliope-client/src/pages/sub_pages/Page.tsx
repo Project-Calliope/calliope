@@ -20,6 +20,8 @@ import RessourceService from "@/services/RessourceService";
 import LibraryManager from "@/models/LibraryManager";
 import TranscriptDialog from "@/components/transcript-dialog";
 import { FunctionalObserver } from "@/models/FunctionalObserver";
+import SummaryDialog from "@/components/summary-dialog";
+import DialogDropdownMenu from "@/components/dropdown-dialog-menu";
 
 export default function Page() {
   const libraryManager = LibraryManager.getInstance();
@@ -96,7 +98,10 @@ export default function Page() {
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <TranscriptDialog library={libraryManager.library} />
+          <div className="ml-auto flex items-center gap-2">
+            {/* <TranscriptDialog library={libraryManager.library} /> */}
+            <DialogDropdownMenu library={libraryManager.library} />
+          </div>
         </header>
         <TextEditor library={libraryManager.library} ref={editorRef} />
       </SidebarInset>

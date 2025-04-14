@@ -40,4 +40,4 @@ begin
 
 
 end;
-$$
+$$ language plpgsql;
