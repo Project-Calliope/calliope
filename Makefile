@@ -157,7 +157,7 @@ generate-index:
 	@echo "<h1>Rapports de couverture</h1><ul>" >> coverage/index.html
 	@echo "<li><a href=\"../calliope-backend/coverage/lcov-report/index.html\">Backend Node.js</a></li>" >> coverage/index.html
 	@echo "<li><a href=\"../calliope-client/coverage/index.html\">Frontend React</a></li>" >> coverage/index.html
-	@echo "<li><a href=\"../calliope_ai/coverage/index.html\">API Python FastAPI</a></li>" >> coverage/index.html
+	@echo "<li><a href=\"../calliope-ai/coverage/index.html\">API Python FastAPI</a></li>" >> coverage/index.html
 	@echo "</ul></body></html>" >> coverage/index.html
 
 
