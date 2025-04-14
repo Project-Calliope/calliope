@@ -42,9 +42,5 @@ class AudioProcessor:
         Returns:
             list: A list of segmented audio parts.
         """
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
-        print("All good here")
         segments = self.segmentation_strategy.segment(self.audio)
-        print("Not here")
-        print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
         return segments

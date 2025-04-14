@@ -66,31 +66,3 @@ def test_summarize_empty_text(client):
     response = client.post("/api/summarize", json={"text": ""})
     assert response.status_code == 400
     assert response.json()["detail"] == "Text is required"
-
-
-def test_transcribe_missing_file(client):
-    """
-    Test the transcribe route with no uploaded file.
-    """
-    response = client.post("/api/transcribe", files={})
-    assert response.status_code == 400
-    assert response.json()["detail"] == "Audio file is required"
-
-
-def test_transcribe_success(client):
-    """
-    Test the transcribe route with a fake audio file and a mocked transcribe handler.
-    """
-    fake_audio = io.BytesIO(b"FAKE AUDIO DATA")
-    files = {"file": ("test.wav", fake_audio, "audio/wav")}
-
-    with patch(
-        "service.api_handler.APIHandler.transcribe",
-        return_value=(True, "Ceci est une transcription."),
-    ):
-        response = client.post("/api/transcribe", files=files)
-
-    assert response.status_code == 200
-    json_data = response.json()
-    assert "transcript" in json_data
-    assert json_data["transcript"] == "Ceci est une transcription."

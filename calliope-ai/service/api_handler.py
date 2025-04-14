@@ -36,6 +36,7 @@ class APIHandler:
         self.model_transcribe_manager = ModelTranscribeManager()
         self.model_summarize_manager = ModelSummarizeManager()
         self.model_transcribe_manager.load_model()
+        self.model_summarize_manager.load_model()
 
     def transcribe(self, file):
         """
