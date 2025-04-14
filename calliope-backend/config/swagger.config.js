@@ -1,7 +1,8 @@
 const swaggerJSDoc = require("swagger-jsdoc");
 
+// Swagger documentation
 const swaggerDefinition = {
-  openapi: "3.0.0",
+  openapi: "3.0.0", // OpenAPI version
   info: {
     title: "Calliope Backend API",
     version: "1.0.0",
@@ -11,7 +12,7 @@ const swaggerDefinition = {
 
 const options = {
   swaggerDefinition,
-  apis: ["./swagger_doc/*.swagger.js"], // Path to the API routes in your Node.js application
+  apis: ["./swagger_doc/*.swagger.js"], // Path to the API route documentation files
 };
 
 const swaggerSpec = swaggerJSDoc(options);
