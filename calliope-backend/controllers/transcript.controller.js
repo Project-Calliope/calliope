@@ -10,6 +10,8 @@ exports.getById = async (req, res) => {
     });
   }
 
+  console.log(req.query.ressource_id);
+
   const result = await Transcript.get_transcript(
     req.query.ressource_id,
     public_user_id,

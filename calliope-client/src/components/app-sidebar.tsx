@@ -37,9 +37,6 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
 
-      <Button variant="outline" className="mt-4 mb-2 ml-2 mr-2">
-        <SquarePen /> Nouvelle note
-      </Button>
       <NavMain navMain={library.navMain} />
       <SidebarRail />
     </Sidebar>

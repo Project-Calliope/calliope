@@ -6,6 +6,12 @@ import {
 import { Button } from "./ui/button";
 import Library from "@/models/Library";
 import { Copy, LoaderPinwheel } from "lucide-react";
+import {
+  CreateNoteSummaryCommand,
+  LoadNoteCommand,
+} from "@/models/AsyncCommand";
+import { ToastPromiseCommandDecorator } from "@/models/AsyncCommandDecorator";
+import LibraryManager from "@/models/LibraryManager";
 
 const TranscriptDialog = ({
   library,
@@ -20,6 +26,31 @@ const TranscriptDialog = ({
     if (library.currentTranscript?.content) {
       navigator.clipboard.writeText(library.currentTranscript.content);
       onOpenChange(false); // Ferme le dialog après la copie
+    }
+  };
+
+  const handleGenerateSummary = async () => {
+    const createSummaryCommand = new CreateNoteSummaryCommand();
+    const decoratedCommand = new ToastPromiseCommandDecorator(
+      createSummaryCommand,
+      "Génération du résumé en cours...",
+      "Résumé généré !",
+      "Échec de la génération du résumé",
+    );
+
+    try {
+      onOpenChange(false);
+      await decoratedCommand.execute();
+      const loadNote = new LoadNoteCommand(
+        LibraryManager.getInstance().library.currentNote.public_ressource_id,
+      );
+      await loadNote.execute();
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+      } else {
+        console.log("An unknown error occurred");
+      }
     }
   };
 
@@ -52,7 +83,7 @@ const TranscriptDialog = ({
                   <Copy />
                   <span>Copier</span>
                 </Button>
-                <Button>
+                <Button onClick={handleGenerateSummary}>
                   <LoaderPinwheel />
                   <span>Générer un résumé</span>
                 </Button>

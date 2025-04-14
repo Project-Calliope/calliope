@@ -16,7 +16,7 @@ export default class SummaryService {
   static async createSummary(ressourceId: string) {
     const response = await axios.post(
       `/api/summary/create`,
-      { ressource_id: ressourceId },
+      { public_ressource_id: ressourceId },
       {
         headers: {
           authorization: localStorage.getItem("token"),
