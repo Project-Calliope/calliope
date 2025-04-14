@@ -73,6 +73,7 @@ async def summarize_text_route(request: TextRequest):
     Raises:
         HTTPException: If the input text is empty (415 error).
     """
+
     if not request.text.strip():
         raise HTTPException(status_code=400, detail="Text is required")
 

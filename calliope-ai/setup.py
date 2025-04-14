@@ -11,5 +11,11 @@ Dependencies:
 """
 
 import whisper
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 
 whisper.load_model("small")
+
+model_name = "plguillou/t5-base-fr-sum-cnndm"
+tokenizer = AutoTokenizer.from_pretrained(model_name, use_fast=False)
+model = AutoModelForSeq2SeqLM.from_pretrained(model_name)
+summarizer = pipeline("summarization", model=model, tokenizer=tokenizer)

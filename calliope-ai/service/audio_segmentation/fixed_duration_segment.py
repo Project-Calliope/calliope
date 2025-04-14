@@ -44,7 +44,6 @@ class FixedDurationSegmentation(SegmentationStrategy):
         Returns:
             list: A list of AudioSegment objects representing the segmented audio.
         """
-        print("FixedDurationSegmentation")
         audio = AudioSegment.from_file(audio_file)
         segments = []
         for i in range(0, len(audio), self.duration_ms):
