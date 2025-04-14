@@ -52,17 +52,15 @@ def test_has_predict_method(model_summarize_manager):
     assert callable(model_summarize_manager.predict)
 
 
-# def test_summarize(model_summarize_manager, mock_text_file):
-#    """Test the summarize method of the ModelSummarizeManager class.
-#
-#    Args:
-#        model_summarize_manager (ModelSummarizeManager): The ModelSummarizeManager instance to test.
-#
-#    Asserts:
-#        The test asserts that the 'summarize' method exists and is callable.
-#    """
-#    model_summarize_manager.load_model()
-#    # Test the summarize method with a mock text file
-#    summary = model_summarize_manager.predict(mock_text_file)
-#    assert isinstance(summary, str)
-#    assert len(summary) > 0
+def test_summarize(model_summarize_manager, mock_text_file):
+    """Test the summarize method of the ModelSummarizeManager class.
+    Args:
+        model_summarize_manager (ModelSummarizeManager): The ModelSummarizeManager instance to test.
+    Asserts:
+        The test asserts that the 'summarize' method exists and is callable.
+    """
+    model_summarize_manager.load_model()
+    # Test the summarize method with a mock text file
+    summary = model_summarize_manager.predict(mock_text_file)
+    assert isinstance(summary, str)
+    assert len(summary) > 0
