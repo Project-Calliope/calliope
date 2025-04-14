@@ -80,3 +80,22 @@ it("should handle network errors correctly", async () => {
   // Clean up mocks
   vi.restoreAllMocks();
 });
+
+it("should upload a real audio file", async () => {
+  const mockFile = new File(["../end-to-end/test_audio.wav"], "test_audio.wav");
+  const mockFatherRessourceId = "father_ressource_id";
+  vi.spyOn(AudioService, "upload").mockResolvedValue({
+    success: true,
+    public_ressource_id: "audio_real",
+  });
+  const response = await AudioService.upload(mockFile, mockFatherRessourceId);
+  expect(response).toEqual({
+    success: true,
+    public_ressource_id: "audio_real",
+  });
+  expect(AudioService.upload).toHaveBeenCalledWith(
+    mockFile,
+    mockFatherRessourceId,
+  );
+  vi.restoreAllMocks();
+});
