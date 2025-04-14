@@ -1,12 +1,10 @@
 import {
   AlertDialog,
-  AlertDialogTrigger,
   AlertDialogContent,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "./ui/button";
 import Library from "@/models/Library";
-import { useState } from "react";
 import { Copy, LoaderPinwheel } from "lucide-react";
 
 const TranscriptDialog = ({

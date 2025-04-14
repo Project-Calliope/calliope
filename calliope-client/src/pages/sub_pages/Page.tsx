@@ -18,9 +18,7 @@ import { MDXEditorMethods } from "@mdxeditor/editor";
 import NavItem from "@/models/NavItem";
 import RessourceService from "@/services/RessourceService";
 import LibraryManager from "@/models/LibraryManager";
-import TranscriptDialog from "@/components/transcript-dialog";
 import { FunctionalObserver } from "@/models/FunctionalObserver";
-import SummaryDialog from "@/components/summary-dialog";
 import DialogDropdownMenu from "@/components/dropdown-dialog-menu";
 
 export default function Page() {
