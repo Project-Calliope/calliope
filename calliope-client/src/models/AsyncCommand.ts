@@ -333,13 +333,11 @@ export class LoadSummaryCommand implements AsyncCommand {
   async execute(): Promise<void> {
     try {
       const result = await SummaryService.getSummary(this._public_ressource_id);
-      console.log(result.summary);
       LibraryManager.getInstance().updateLibrary((lib) => {
         lib.currentSummary = result.summary
           ? new Summary(result.summary.summary)
           : null;
       });
-      console.log(LibraryManager.getInstance().library.currentSummary);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
