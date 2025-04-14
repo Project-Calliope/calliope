@@ -15,6 +15,13 @@ type ApiResponse = {
   }[];
 };
 
+/**
+ * Adapter class to convert API response into a hierarchical structure of NavItem objects.
+ *
+ * This class is responsible for transforming the API response into a tree-like structure
+ * where each NavItem can have child NavItems, allowing for easy navigation and representation
+ * of the data.
+ */
 class NavItemAdapter {
   static convertToNavItems(response: ApiResponse): NavItem {
     const map = new Map<string, NavItem>();
