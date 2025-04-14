@@ -8,7 +8,7 @@
   <h1>Calliope</h1>
   <p><i>Application de transcription de note audio</i></p>
   <img alt="GitHub Tag" src="https://img.shields.io/github/v/tag/Project-Calliope/calliope">
-  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Project-Calliope/calliope/ci-pipeline.yml">
+  <img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/Project-Calliope/calliope/ci-pipeline.yml?label=build%20%26%20tests">
 
 
 </div>
