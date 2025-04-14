@@ -1,6 +1,6 @@
 <div align="center">
   <img 
-    src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Calliope.jpg/382px-Calliope.jpg" 
+    src="./public/calliope.png" 
     alt="Calliope"
     style="width:150px; height:150px; object-fit:cover; object-position: center; border-radius:8px;" 
   />
