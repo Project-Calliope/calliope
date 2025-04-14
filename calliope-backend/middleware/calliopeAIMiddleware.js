@@ -1,6 +1,18 @@
 const calliopeAiAPI = require("../config/ai.config");
 const FormData = require("form-data");
 
+/**
+ * Middleware for transcribing uploaded files via Calliope AI API.
+ *
+ * Attaches the transcript to `req.file.transcript`. Responds with 400 if no file
+ * is uploaded, or 500 if an error occurs during transcription.
+ *
+ * @async
+ * @function transcribe
+ * @param {Object} req - Express request object.
+ * @param {Object} res - Express response object.
+ * @param {Function} next - Express middleware function.
+ */
 const transcribe = async (req, res, next) => {
   if (!req.file) {
     return res.status(400).json({ error: "No file uploaded" });

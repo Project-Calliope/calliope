@@ -1,5 +1,6 @@
 const { Pool } = require("pg");
 
+// Create a new Pool instance with database connection configuration
 const pool = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
@@ -8,4 +9,5 @@ const pool = new Pool({
   port: process.env.DB_PORT,
 });
 
+// Export the pool instance
 module.exports = pool;

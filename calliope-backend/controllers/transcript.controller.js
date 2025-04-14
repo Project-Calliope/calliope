@@ -10,6 +10,14 @@ exports.getById = async (req, res) => {
     });
   }
 
+  /**
+   * Retrieves a transcript based on the provided resource ID and public user ID.
+   *
+   * @param {string} req.query.ressource_id - The ID of the resource for which the transcript is being retrieved.
+   * @param {string} public_user_id - The public user ID associated with the request.
+   * @returns {Promise<Object>} The transcript data retrieved from the database.
+   * @throws {Error} If there is an issue retrieving the transcript.
+   */
   const result = await Transcript.get_transcript(
     req.query.ressource_id,
     public_user_id,
