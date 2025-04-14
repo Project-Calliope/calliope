@@ -26,4 +26,5 @@ def test_api_handler_attributes():
     handler = APIHandler()
 
     assert hasattr(handler, "data_manager")
-    assert hasattr(handler, "model_manager")
+    assert hasattr(handler, "model_transcribe_manager")
+    assert hasattr(handler, "model_summarize_manager")

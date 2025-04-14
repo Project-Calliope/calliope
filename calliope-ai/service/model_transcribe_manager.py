@@ -5,13 +5,13 @@ The `Model` class is responsible for loading the Whisper model and performing au
 It uses the Whisper model to transcribe audio files into text and manages temporary file removal
 after transcription.
 
-The `ModelManager` class manages the `Model` instance, providing an interface for loading the model
+The `ModelTranscribeManager` class manages the `Model` instance, providing an interface for loading the model
 and making predictions. The model is loaded only when needed, and it allows for the transcription
 of audio files through the `predict` method.
 
 Usage:
-    - Load the model using `ModelManager.load_model()`.
-    - Use `ModelManager.predict(data)` to transcribe an audio file, where `data` is the file path to
+    - Load the model using `ModelTranscribeManager.load_model()`.
+    - Use `ModelTranscribeManager.predict(data)` to transcribe an audio file, where `data` is the file path to
     the audio.
 
 Dependencies:
@@ -76,7 +76,7 @@ class Model:
         return final_output
 
 
-class ModelManager:
+class ModelTranscribeManager:
     """
     Manages the model and handles the prediction process.
 
@@ -87,7 +87,7 @@ class ModelManager:
 
     def __init__(self):
         """
-        Initializes the ModelManager instance without a model initially.
+        Initializes the ModelTranscribeManager instance without a model initially.
         """
         self.model = None
 
@@ -97,7 +97,7 @@ class ModelManager:
         """
         self.model = Model()
 
-    def predict(self, data):
+    def predict_transcription(self, data):
         """
         Predicts the transcription of the provided audio data.
 

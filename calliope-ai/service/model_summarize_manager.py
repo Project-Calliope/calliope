@@ -74,7 +74,7 @@ class ModelSummarizeManager:
         """
         self.model = ModelSummarize()
 
-    def predict(self, data):
+    def predict_summary(self, data):
         """
         Predicts the summary of the provided text.
 
