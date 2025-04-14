@@ -54,10 +54,8 @@ def test_has_predict_method(model_summarize_manager):
 
 def test_summarize(model_summarize_manager, mock_text_file):
     """Test the summarize method of the ModelSummarizeManager class.
-
     Args:
         model_summarize_manager (ModelSummarizeManager): The ModelSummarizeManager instance to test.
-
     Asserts:
         The test asserts that the 'summarize' method exists and is callable.
     """
