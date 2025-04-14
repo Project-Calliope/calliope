@@ -20,5 +20,3 @@ exports.getSummary = async (req, res) => {
     return res.status(400).json(result);
   }
 };
-
-exports.createSummary = async (req, res) => {};
