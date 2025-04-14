@@ -29,11 +29,23 @@ class Model:
     Class to handle transcription using the Whisper model.
     """
 
+    _instance = None
+
+    def __new__(cls):   # Making sure it is a singleton
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
+    
     def __init__(self):
         """
         Initializes the model by loading the 'small' version of the Whisper model.
         """
-        self.model = whisper.load_model("small")
+        if self._initialized :
+            return
+        else:
+            self._initialized = True
+            self.model = whisper.load_model("small")
 
     def predict(self, input_data):
         """
@@ -84,7 +96,7 @@ class ModelManager:
     for audio transcription. The model is loaded only when required, and
     predictions can be made on audio files through the `predict` method.
     """
-
+    
     def __init__(self):
         """
         Initializes the ModelManager instance without a model initially.
