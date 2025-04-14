@@ -1,11 +1,12 @@
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import Library from "@/models/Library";
+import { Observer, Subject } from "@/models/Observer";
 
-class LibraryManager {
+class LibraryManager implements Subject {
   private static instance: LibraryManager | null = null;
   private _editorRef: React.RefObject<MDXEditorMethods> | undefined = undefined;
   private _library: Library = new Library();
-  private listeners: (() => void)[] = []; // Liste des callbacks pour les re-renders
+  private observers: Observer[] = [];
 
   private constructor() {}
 
@@ -30,22 +31,23 @@ class LibraryManager {
 
   public set library(lib: Library) {
     this._library = lib;
-    this.notifyListeners(); // Déclenche un re-render
+    this.notifyObservers(); // Déclenche un re-render
   }
 
   public updateLibrary(updateFn: (lib: Library) => void) {
     updateFn(this._library);
-    this.notifyListeners(); // Déclenche un re-render
+    this.notifyObservers(); // Déclenche un re-render
   }
 
-  private notifyListeners() {
-    this.listeners.forEach((callback) => callback());
+  public notifyObservers(): void {
+    this.observers.forEach((observer) => observer.update());
   }
 
-  public subscribe(callback: () => void) {
-    this.listeners.push(callback);
+  // Subject methods
+  public subscribe(observer: Observer): () => void {
+    this.observers.push(observer);
     return () => {
-      this.listeners = this.listeners.filter((cb) => cb !== callback);
+      this.observers = this.observers.filter((obs) => obs !== observer);
     };
   }
 }

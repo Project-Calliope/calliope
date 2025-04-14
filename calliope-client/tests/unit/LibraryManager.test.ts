@@ -20,14 +20,16 @@ describe("LibraryManager", () => {
 
   it("should subscribe to updates", () => {
     const instance = LibraryManager.getInstance();
-    const callback = vi.fn();
-    const unsubscribe = instance.subscribe(callback);
+
+    const mockObserver = { update: vi.fn() }; // 👈 objet conforme à Observer
+
+    const unsubscribe = instance.subscribe(mockObserver);
 
     instance.updateLibrary((lib) => {
       lib.currentTitle = "Updated Title";
     });
 
-    expect(callback).toHaveBeenCalledTimes(1);
+    expect(mockObserver.update).toHaveBeenCalledTimes(1);
 
     unsubscribe();
 
@@ -35,7 +37,7 @@ describe("LibraryManager", () => {
       lib.currentTitle = "Another Update";
     });
 
-    expect(callback).toHaveBeenCalledTimes(1); // Callback should not be called again
+    expect(mockObserver.update).toHaveBeenCalledTimes(1); // pas appelé à nouveau
   });
 
   it("should set and get editorRef", () => {

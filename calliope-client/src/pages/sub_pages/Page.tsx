@@ -19,6 +19,7 @@ import NavItem from "@/models/NavItem";
 import RessourceService from "@/services/RessourceService";
 import LibraryManager from "@/models/LibraryManager";
 import TranscriptDialog from "@/components/transcript-dialog";
+import { FunctionalObserver } from "@/models/FunctionalObserver";
 
 export default function Page() {
   const libraryManager = LibraryManager.getInstance();
@@ -28,14 +29,16 @@ export default function Page() {
   const [, forceUpdate] = useState(0);
 
   useEffect(() => {
-    const unsubscribe = libraryManager.subscribe(() => {
-      const library = LibraryManager.getInstance().library;
+    const observer = new FunctionalObserver(() => {
+      const library = libraryManager.library;
       forceUpdate((prev) => prev + 1);
-      const editorInstance = LibraryManager.getInstance().editorRef?.current;
+      const editorInstance = libraryManager.editorRef?.current;
       if (editorInstance) {
         editorInstance.setMarkdown(String(library.currentNote.content));
       }
     });
+
+    const unsubscribe = libraryManager.subscribe(observer);
 
     libraryManager.library.currentTitle = "Default Title";
     libraryManager.library.currentNote = new Note(
