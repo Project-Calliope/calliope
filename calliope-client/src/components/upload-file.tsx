@@ -1,11 +1,30 @@
 import { useState } from "react";
-import { Button, Dialog } from "@radix-ui/themes";
-import AudioService from "../services/AudioService";
-import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
-const FileUploadDialog = () => {
+import {
+  UpdateNavMainCommand,
+  UploadRessourceCommand,
+} from "@/models/AsyncCommand";
+import { ToastPromiseCommandDecorator } from "@/models/AsyncCommandDecorator";
+
+const FileUploadDialog = ({
+  fatherRessourceId,
+  isOpen,
+  onClose,
+}: {
+  fatherRessourceId: string;
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -16,79 +35,52 @@ const FileUploadDialog = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (selectedFile) {
-      console.log("Fichier sélectionné :", selectedFile.name);
+      onClose();
+      const uploadCommand = new UploadRessourceCommand(
+        selectedFile,
+        fatherRessourceId,
+      );
+      const decoratedCommand = new ToastPromiseCommandDecorator(
+        uploadCommand,
+        "Transcription du fichier audio en cours...",
+        "Transcription réalisée avec succès !",
+        "Échec de la transcription",
+      );
+
       try {
-        const response = await AudioService.upload(selectedFile);
-        console.log("Réponse de l'API :", response);
-        setIsDialogOpen(false); // Fermer la boîte de dialogue après l'envoi
-        toast.success("Fichier envoyé avec succès !");
+        await decoratedCommand.execute();
+        await new UpdateNavMainCommand().execute();
       } catch (error) {
         if (error instanceof Error) {
-          toast.error("Erreur lors de l'envoi du fichier : " + error.message);
-          console.error("Erreur lors de l'envoi du fichier :", error);
+          console.log(error.message);
         } else {
-          toast.error("Erreur lors de l'envoi du fichier");
-          console.error("Erreur lors de l'envoi du fichier :", error);
+          console.log("An unknown error occurred");
         }
       }
     }
   };
 
   return (
-    <Dialog.Root
-      open={isDialogOpen}
-      onOpenChange={() => setIsDialogOpen(!isDialogOpen)}
-    >
-      {/* Bouton pour ouvrir la modale */}
-      <Dialog.Trigger>
-        <Button onClick={() => setIsDialogOpen(true)}>
-          Téléverser un fichier audio
-        </Button>
-      </Dialog.Trigger>
-
-      <Dialog.Content
-        className="p-4 bg-white rounded-lg shadow-lg"
-        style={{ zIndex: 1 }}
-      >
-        <Dialog.Title className="text-xl font-bold">
-          Envoyer un fichier
-        </Dialog.Title>
-        <Dialog.Description>
-          Sélectionnez un fichier à transcrire.
-        </Dialog.Description>
-
-        {/* Formulaire d'upload */}
-        <form onSubmit={handleSubmit} className="mt-4">
+    <AlertDialog open={isOpen} onOpenChange={onClose}>
+      <AlertDialogContent>
+        <AlertDialogTitle>Envoyer un fichier</AlertDialogTitle>
+        <AlertDialogDescription>Sélection</AlertDialogDescription>
+        <form onSubmit={handleSubmit}>
           <input
             type="file"
             accept="audio/mpeg, audio/wav, audio/mp3, audio/m4a, audio/x-wav"
             onChange={handleFileChange}
             className="block w-full border p-2 rounded-md"
           />
-          <Button
-            type="submit"
-            color="blue"
-            variant="solid"
-            className="mt-4"
-            disabled={!selectedFile}
-          >
-            Envoyer
-          </Button>
+          <AlertDialogFooter className="flex justify-end gap-2 mt-2">
+            <Button type="submit" disabled={!selectedFile}>
+              Envoyer
+            </Button>
+            <AlertDialogCancel onClick={onClose}>Annuler</AlertDialogCancel>
+          </AlertDialogFooter>
         </form>
-
-        {/* Bouton pour fermer le dialogue */}
-        <Dialog.Close>
-          <Button
-            color="red"
-            variant="solid"
-            className="mt-4"
-            onClick={() => setIsDialogOpen(false)}
-          >
-            Fermer
-          </Button>
-        </Dialog.Close>
-      </Dialog.Content>
-    </Dialog.Root>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 };
 

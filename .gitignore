@@ -1,6 +1,11 @@
 .vscode/*
 
+.venv/
 
 .env
 .env.dev
 .env.prod
+
+.idea/*
+
+coverage/

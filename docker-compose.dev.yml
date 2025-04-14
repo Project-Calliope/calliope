@@ -33,6 +33,7 @@ services:
       - "8000:8000"
     volumes:
       - ./calliope-ai:/app
+      - calliope-ai-requirements:/root/.cache/pip
     environment:
       - PYTHONUNBUFFERED=1
 
@@ -45,7 +46,10 @@ services:
     volumes:
       - calliope-db:/var/lib/postgresql/data
       - ./calliope-db/init-scripts:/docker-entrypoint-initdb.d
+      - ./calliope-db/init-scripts/schemas:/schemas
+      - ./calliope-db/init-scripts/functions:/functions
 
 volumes:
   calliope-db:
+  calliope-ai-requirements:
 

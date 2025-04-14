@@ -1,0 +1,59 @@
+services:
+  backend:
+    build:
+      context: ./calliope-backend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./calliope-backend:/app
+      - /app/node_modules
+    env_file:
+      - ./calliope-backend/.env.test
+
+  client:
+    build:
+      context: ./calliope-client
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    extra_hosts:
+      - "host.docker.internal:host-gateway" # Spécifiquement pour Linux
+    volumes:
+      - /app/node_modules
+      - ./calliope-client:/app
+    environment:
+        - NODE_ENV=test
+        - VITE_API_URL=http://localhost:5000
+
+  ai:
+    build:
+      context: ./calliope-ai
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./calliope-ai:/app
+      - calliope-ai-requirements:/root/.cache/pip
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file:
+      - ./calliope-db/.env
+    environment:
+      - ENV=test
+    volumes:
+      - calliope-db-test:/var/lib/postgresql/data
+      - ./calliope-db/init-scripts:/docker-entrypoint-initdb.d
+      - ./calliope-db/init-scripts/schemas:/schemas
+      - ./calliope-db/init-scripts/functions:/functions
+      - ./calliope-db/init-scripts/test:/test
+
+volumes:
+  calliope-db-test:
+  calliope-ai-requirements:
+

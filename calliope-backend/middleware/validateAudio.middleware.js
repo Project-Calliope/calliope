@@ -12,7 +12,10 @@ module.exports = (req, res, next) => {
     "audio/mp3",
     "audio/x-wav",
     "audio/m4a",
+    "audio/wave",
   ];
+
+  console.log(req.file.mimetype);
   console.log(req.file.mimetype);
   if (!allowedMimeTypes.includes(req.file.mimetype)) {
     return res.status(400).json({
