@@ -1,3 +1,9 @@
+/**
+ * Represents a navigation item in a hierarchical structure, such as a menu or a file system.
+ * Each `NavItem` can have a title, a nature (either "dossier" or "note"), a URL, an active state,
+ * and a list of child navigation items.
+ */
+
 class NavItem {
   private _title: string;
   private _nature: "dossier" | "note";

@@ -220,7 +220,6 @@ export class LoadTranscriptCommand implements AsyncCommand {
               result.result.public_id,
             )
           : null; // Set to null if no transcript is found
-        console.log(LibraryManager.getInstance().library);
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -339,7 +338,6 @@ export class LoadSummaryCommand implements AsyncCommand {
           ? new Summary(result.summary.summary)
           : null;
       });
-      console.log(LibraryManager.getInstance().library);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
