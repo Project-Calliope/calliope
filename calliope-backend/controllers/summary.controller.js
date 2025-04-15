@@ -63,6 +63,7 @@ exports.createSummary = async (req, res) => {
       return res.status(400).json({
         sucess: false,
         message: "Problème lors de la génération du résumé",
+        error : error
       });
     }
     return res.status(201).json({
@@ -72,6 +73,7 @@ exports.createSummary = async (req, res) => {
     return res.status(400).json({
       sucess: false,
       message: "Problème lors de la génération du résumé",
+      error : error
     });
   }
 };
