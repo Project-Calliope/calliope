@@ -1,5 +1,6 @@
 import NavItem from "./NavItem";
 import Note from "./Note";
+import Summary from "./Summary";
 import Transcript from "./Transcript";
 
 class Library {
@@ -8,6 +9,8 @@ class Library {
   private _navMain: NavItem = new NavItem("Main", "dossier", "/main");
 
   private _currentTranscript: Transcript | null = null;
+
+  private _currentSummary: Summary | null = null;
 
   private _currentTitle: string = "Default title";
 
@@ -35,6 +38,14 @@ class Library {
 
   public set currentTranscript(transcript: Transcript | null) {
     this._currentTranscript = transcript;
+  }
+
+  public get currentSummary(): Summary | null {
+    return this._currentSummary;
+  }
+
+  public set currentSummary(summary: Summary | null) {
+    this._currentSummary = summary;
   }
 
   public get currentTitle(): string {

@@ -3,6 +3,8 @@ import LibraryManager from "./LibraryManager";
 import AudioService from "@/services/AudioService";
 import TranscriptService from "@/services/TranscriptService";
 import Transcript from "./Transcript";
+import SummaryService from "@/services/SummaryService";
+import Summary from "./Summary";
 
 /**
  * Represents an asynchronous command that can be executed.
@@ -129,6 +131,7 @@ export class LoadNoteCommand implements AsyncCommand {
       }
 
       await new LoadTranscriptCommand(this._public_note_id).execute();
+      await new LoadSummaryCommand(this._public_note_id).execute();
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);
@@ -217,6 +220,7 @@ export class LoadTranscriptCommand implements AsyncCommand {
               result.result.public_id,
             )
           : null; // Set to null if no transcript is found
+        console.log(LibraryManager.getInstance().library);
       });
     } catch (error) {
       if (error instanceof Error) {
@@ -290,6 +294,52 @@ export class CreateNoteCommand implements AsyncCommand {
         this._ressource_father_id,
         this._ressource_name,
       );
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}
+
+export class CreateNoteSummaryCommand implements AsyncCommand {
+  async execute(): Promise<void> {
+    try {
+      const library = LibraryManager.getInstance().library;
+      const editorInstance = LibraryManager.getInstance().editorRef?.current;
+      if (editorInstance) {
+        await SummaryService.createSummary(
+          library.currentNote.public_ressource_id,
+        );
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        throw new Error(error.message);
+      } else {
+        throw new Error("An unknown error occurred");
+      }
+    }
+  }
+}
+
+export class LoadSummaryCommand implements AsyncCommand {
+  private _public_ressource_id: string;
+
+  constructor(public_ressource_id: string) {
+    this._public_ressource_id = public_ressource_id;
+  }
+
+  async execute(): Promise<void> {
+    try {
+      const result = await SummaryService.getSummary(this._public_ressource_id);
+      LibraryManager.getInstance().updateLibrary((lib) => {
+        lib.currentSummary = result.summary
+          ? new Summary(result.summary.summary)
+          : null;
+      });
+      console.log(LibraryManager.getInstance().library);
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(error.message);

@@ -83,6 +83,9 @@ app.use("/api/ressource", ressourceRoutes);
 const transcriptRoutes = require("./routes/transcript.routes");
 app.use("/api/transcript", transcriptRoutes);
 
+const summaryRoutes = require("./routes/summary.routes");
+app.use("/api/summary", summaryRoutes);
+
 app.listen(port, () => {
   console.log(`Calliope Backend listening on port ${port}`);
 });

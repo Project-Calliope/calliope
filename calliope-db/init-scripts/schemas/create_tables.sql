@@ -65,3 +65,11 @@ CREATE TABLE API_AUTHORIZATION
     callLimit INT CHECK ( callLimit >= 0 ),
     FOREIGN KEY (private_user_id) REFERENCES UTILISATEUR(private_user_id)
 );
+
+CREATE TABLE SUMMARY
+(
+    private_ressource_id UUID NOT NULL,
+    summary TEXT,
+    PRIMARY KEY (private_ressource_id),
+    FOREIGN KEY (private_ressource_id) REFERENCES RESSOURCE(private_ressource_id)
+);

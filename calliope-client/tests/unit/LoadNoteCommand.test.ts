@@ -1,5 +1,9 @@
 import { vi, describe, it, expect } from "vitest";
-import { LoadNoteCommand, LoadTranscriptCommand } from "@/models/AsyncCommand";
+import {
+  LoadNoteCommand,
+  LoadSummaryCommand,
+  LoadTranscriptCommand,
+} from "@/models/AsyncCommand";
 import RessourceService from "@/services/RessourceService";
 import LibraryManager from "@/models/LibraryManager";
 
@@ -19,6 +23,7 @@ describe("LoadNoteCommand", () => {
       },
     );
     vi.spyOn(LoadTranscriptCommand.prototype, "execute").mockResolvedValue();
+    vi.spyOn(LoadSummaryCommand.prototype, "execute").mockResolvedValue();
 
     // Create the command
     const command = new LoadNoteCommand(mockPublicNoteId);
@@ -34,6 +39,9 @@ describe("LoadNoteCommand", () => {
 
     // Assert that LoadTranscriptCommand was executed
     expect(LoadTranscriptCommand.prototype.execute).toHaveBeenCalled();
+
+    // Assert that LoadSummaryCommand was executed
+    expect(LoadSummaryCommand.prototype.execute).toHaveBeenCalled();
 
     // Clean up mocks
     vi.restoreAllMocks();
