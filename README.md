@@ -26,6 +26,17 @@ Le projet Calliope a été réalisé dans le cadre du cours **IFT785 - Approches
 | ![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white) | ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)  |  ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)                |                      | ![ESLint](https://img.shields.io/badge/eslint-%234B32C3.svg?style=for-the-badge&logo=eslint&logoColor=white) |
 | ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) | |                  |                      | ![Pylint](https://img.shields.io/badge/pylint-4B8BBE?style=for-the-badge&logo=python&logoColor=white) |
 
+### Rapport
+
+Le rapport du projet est accessible dans `public/IFT785-Rapport-Projet.pdf`. Il contient les informations suivantes :
+- Chapitre 1 : Introduction
+- Chapitre 2 : Architecture
+- **Chapitre 3 : Les patrons de conception**
+- Chapitre 4 : API
+- Chapitre 5 : Guide de déploiement
+- Chapitre 6 : Test
+- Chapitre 7 : Conclusion
+
 ## Utilisation
 
 ### Pre-requis

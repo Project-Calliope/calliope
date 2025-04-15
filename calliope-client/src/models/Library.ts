@@ -1,13 +1,27 @@
 import NavItem from "./NavItem";
 import Note from "./Note";
+import Summary from "./Summary";
 import Transcript from "./Transcript";
 
 class Library {
+  /**
+   * Represents a library that contains notes and transcripts.
+   */
+
+  /**
+   * The current note being edited or viewed.
+   */
   private _currentNote: Note = new Note("Default content", "Default title", "");
-
+  /**
+   * The main navigation item for the library.
+   */
   private _navMain: NavItem = new NavItem("Main", "dossier", "/main");
-
+  /**
+   * The current transcript associated with the note.
+   */
   private _currentTranscript: Transcript | null = null;
+
+  private _currentSummary: Summary | null = null;
 
   private _currentTitle: string = "Default title";
 
@@ -35,6 +49,14 @@ class Library {
 
   public set currentTranscript(transcript: Transcript | null) {
     this._currentTranscript = transcript;
+  }
+
+  public get currentSummary(): Summary | null {
+    return this._currentSummary;
+  }
+
+  public set currentSummary(summary: Summary | null) {
+    this._currentSummary = summary;
   }
 
   public get currentTitle(): string {

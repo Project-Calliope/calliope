@@ -1,3 +1,8 @@
+/**
+ * Represents a transcript associated with an audio file.
+ * This class encapsulates the content of the transcript,
+ * the name of the audio file, its size, and a unique public identifier.
+ */
 class Transcript {
   private _content: string;
   private _audioname: string;
