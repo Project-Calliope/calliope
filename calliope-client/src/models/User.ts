@@ -1,3 +1,7 @@
+/**
+ * Represents a User model with properties for public user ID, username, and email.
+ * This class provides getter methods to access these properties.
+ */
 class User {
   private _public_user_id: string;
   private _username: string;

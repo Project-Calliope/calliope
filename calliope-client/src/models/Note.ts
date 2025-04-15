@@ -1,3 +1,7 @@
+/**
+ * Represents a Note with content, title, and a public resource ID.
+ * This class provides getters and setters for managing the note's properties.
+ */
 class Note {
   private _content: string;
   private _title: string;

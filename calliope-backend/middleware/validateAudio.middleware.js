@@ -6,6 +6,18 @@ module.exports = (req, res, next) => {
   }
 
   // Vérification du type MIME (exemple : audio/mp3, audio/wav)
+  /**
+   * An array of allowed MIME types for audio files.
+   * These MIME types are used to validate the format of uploaded audio files.
+   *
+   * Supported MIME types include:
+   * - "audio/mpeg": MPEG audio files
+   * - "audio/wav": WAV audio files
+   * - "audio/mp3": MP3 audio files
+   * - "audio/x-wav": WAV audio files with "x-" prefix
+   * - "audio/m4a": M4A audio files
+   * - "audio/wave": Alternate MIME type for WAV audio files
+   */
   const allowedMimeTypes = [
     "audio/mpeg",
     "audio/wav",

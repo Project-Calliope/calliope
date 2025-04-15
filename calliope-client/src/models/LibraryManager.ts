@@ -3,6 +3,10 @@ import Library from "@/models/Library";
 import { Observer, Subject } from "@/models/Observer";
 
 class LibraryManager implements Subject {
+  /**
+   * Singleton instance of LibraryManager.
+   */
+
   private static instance: LibraryManager | null = null;
   private _editorRef: React.RefObject<MDXEditorMethods> | undefined = undefined;
   private _library: Library = new Library();
@@ -10,6 +14,12 @@ class LibraryManager implements Subject {
 
   private constructor() {}
 
+  /**
+   * Returns the singleton instance of LibraryManager.
+   * If the instance does not exist, it creates a new one.
+   *
+   * @returns {LibraryManager} The singleton instance of LibraryManager.
+   */
   public static getInstance(): LibraryManager {
     if (!LibraryManager.instance) {
       LibraryManager.instance = new LibraryManager();
@@ -34,6 +44,14 @@ class LibraryManager implements Subject {
     this.notifyObservers(); // Déclenche un re-render
   }
 
+  /**
+   * Updates the library with the provided update function.
+   * This method allows for modifying the library's properties
+   * and notifies observers of the changes.
+   *
+   * @param {function} updateFn - A function that takes a Library object
+   * and modifies its properties.
+   */
   public updateLibrary(updateFn: (lib: Library) => void) {
     updateFn(this._library);
     this.notifyObservers(); // Déclenche un re-render

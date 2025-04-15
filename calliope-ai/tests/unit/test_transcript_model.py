@@ -1,4 +1,4 @@
-from service.model_manager import Model
+from service.model_transcribe_manager import Model
 
 
 def test_is_singleton():

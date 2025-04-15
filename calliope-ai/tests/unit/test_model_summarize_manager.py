@@ -48,8 +48,8 @@ def test_has_predict_method(model_summarize_manager):
     Asserts:
         The test asserts that the 'predict' method exists and is callable.
     """
-    assert hasattr(model_summarize_manager, "predict")
-    assert callable(model_summarize_manager.predict)
+    assert hasattr(model_summarize_manager, "predict_summary")
+    assert callable(model_summarize_manager.predict_summary)
 
 
 def test_summarize(model_summarize_manager, mock_text_file):
@@ -61,6 +61,6 @@ def test_summarize(model_summarize_manager, mock_text_file):
     """
     model_summarize_manager.load_model()
     # Test the summarize method with a mock text file
-    summary = model_summarize_manager.predict(mock_text_file)
+    summary = model_summarize_manager.predict_summary(mock_text_file)
     assert isinstance(summary, str)
     assert len(summary) > 0

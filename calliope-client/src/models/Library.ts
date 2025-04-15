@@ -4,10 +4,21 @@ import Summary from "./Summary";
 import Transcript from "./Transcript";
 
 class Library {
+  /**
+   * Represents a library that contains notes and transcripts.
+   */
+
+  /**
+   * The current note being edited or viewed.
+   */
   private _currentNote: Note = new Note("Default content", "Default title", "");
-
+  /**
+   * The main navigation item for the library.
+   */
   private _navMain: NavItem = new NavItem("Main", "dossier", "/main");
-
+  /**
+   * The current transcript associated with the note.
+   */
   private _currentTranscript: Transcript | null = null;
 
   private _currentSummary: Summary | null = null;
