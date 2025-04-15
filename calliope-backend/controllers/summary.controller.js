@@ -33,14 +33,12 @@ exports.createSummary = async (req, res) => {
     });
   }
 
-  console.log(req.body.public_ressource_id);
 
   const transcript = await Transcript.get_transcript(
     req.body.public_ressource_id,
     public_user_id,
   );
 
-  console.log(transcript);
 
   if (!transcript.result) {
     return res.status(400).json({
